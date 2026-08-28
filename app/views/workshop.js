@@ -23,7 +23,7 @@ export async function workshopView() {
   head.innerHTML = `
     <span class="eyebrow">שלום ${user.name} 👋</span>
     <h1>מסע הסדנה</h1>
-    <p class="wk-sub">בכל שלב נפתח לכם החלק הבא. כרגע פתוחות ${openCount} מתוך ${totalCount} יחידות.</p>`;
+    <p class="wk-sub">בכל שלב ייפתח לך החלק הבא. כרגע פתוחות ${openCount} מתוך ${totalCount} יחידות.</p>`;
   wrap.append(head);
 
   meetings.forEach((m) => {
@@ -49,7 +49,7 @@ export async function workshopView() {
       if (open) { btn.type = "button"; btn.addEventListener("click", () => navigate("/unit/" + u.id)); }
       btn.innerHTML = `
         <span class="unit-num">${num}</span>
-        <span class="unit-main"><strong>${u.title}</strong><small>${u.lead}</small></span>
+        <span class="unit-main"><strong>${u.title}</strong>${u.lead ? `<small>${u.lead}</small>` : ""}</span>
         ${state}`;
       li.append(btn);
       list.append(li);

@@ -11,9 +11,7 @@ export function loginView() {
     <div class="login-hero">
       <span class="eyebrow">סדנת סגל · Vibe Coding בהוראה</span>
       <h1>מהצורך לכלי</h1>
-      <p class="login-lead">כאן לא לומדים לתכנת. כאן לוקחים צורך אמיתי מההוראה שלך —
-        והופכים אותו, צעד אחר צעד, לכלי דיגיטלי קטן שעובד.</p>
-      <p class="login-invite">חשבו על דבר אחד שהסטודנטים שלכם מפספסים שוב ושוב.<br>משם נתחיל.</p>
+      <p class="login-invite">חשבי על דבר אחד שהסטודנטים שלך מפספסים שוב ושוב.<br>משם נתחיל.</p>
     </div>
     <form class="login-card" novalidate>
       <h2>כניסה לסדנה</h2>
@@ -30,7 +28,7 @@ export function loginView() {
   const form = wrap.querySelector("form");
   const note = wrap.querySelector(".login-note");
   note.textContent = BACKEND === "firebase"
-    ? "נשלח לך קישור כניסה למייל — בלי סיסמה לזכור."
+    ? "יישלח לך קישור כניסה למייל — בלי סיסמה לזכור."
     : "מצב הדגמה: הכניסה מיידית (ב-Firebase יישלח קישור למייל).";
 
   form.addEventListener("submit", async (e) => {
@@ -43,9 +41,9 @@ export function loginView() {
     try {
       const res = await auth.requestLink(email, name);
       if (res?.immediate) navigate("/workshop");
-      else { note.classList.remove("err"); note.textContent = "שלחנו לך קישור כניסה למייל. פִּתחו אותו כדי להיכנס."; btn.textContent = "נשלח ✓"; }
+      else { note.classList.remove("err"); note.textContent = "שלחנו לך קישור כניסה למייל. פתחי אותו כדי להיכנס."; btn.textContent = "נשלח ✓"; }
     } catch (err) {
-      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
+      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסי שוב.";
       btn.disabled = false; btn.textContent = "כניסה";
     }
   });

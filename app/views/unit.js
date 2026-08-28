@@ -41,7 +41,7 @@ export async function unitView(unitId) {
   const header = document.createElement("div");
   header.className = "unit-card-head";
   header.innerHTML = `<span class="unit-eyebrow">${unit.meetingTitle} · יחידה ${idx + 1} מתוך ${openUnits.length}</span>
-    <h1>${unit.title}</h1><p class="lead">${unit.lead}</p>`;
+    <h1>${unit.title}</h1>${unit.lead ? `<p class="lead">${unit.lead}</p>` : ""}`;
   card.append(header);
 
   const body = document.createElement("div");

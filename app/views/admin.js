@@ -8,7 +8,7 @@ export async function adminView() {
   wrap.className = "admin";
 
   wrap.innerHTML = `<div class="wk-head"><span class="eyebrow">לוח מנחָה</span><h1>ניהול הסדנה</h1>
-    <p class="wk-sub">כאן שולטים במה שהמשתתפים רואים. הכל נשמר מיד.</p></div>`;
+    <p class="wk-sub">מכאן פותחים וסוגרים יחידות למשתתפות. הכל נשמר מיד.</p></div>`;
 
   // --- משתתפים ---
   const usersSec = document.createElement("section");
@@ -22,7 +22,7 @@ export async function adminView() {
       const li = document.createElement("li");
       li.innerHTML = `<span class="avatar" aria-hidden="true">${(u.name||"?").charAt(0)}</span>
         <span class="u-main"><strong>${u.name}</strong><small>${u.email}</small></span>
-        <span class="u-role ${u.role}">${u.role === "admin" ? "מנחָה" : "משתתפ/ת"}</span>`;
+        <span class="u-role ${u.role}">${u.role === "admin" ? "מנחָה" : "משתתפת"}</span>`;
       ul.append(li);
     });
     usersSec.append(ul);
