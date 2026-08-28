@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="סביבת הלמידה של סדנת מהצורך לכלי — Vibe Coding בהוראה" />
+    <title>מהצורך לכלי | Vibe Coding בהוראה</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">דלגו לתוכן</a>
+    <main id="main-content">
+      <div class="context-bar">
+        <div class="context-shapes" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span>מפגש 1</span>
+        <span class="context-divider" aria-hidden="true"></span>
+        <strong>מתחילים מצורך בהוראה</strong>
+        <span class="participant"><span class="avatar" aria-hidden="true">נ</span><span>נועה</span></span>
+      </div>
+
+      <section class="workspace" aria-labelledby="journey-title">
+        <aside class="journey">
+          <span class="visually-hidden" id="journey-title">שלבי המפגש</span>
+          <ol class="journey-list">
+            <li class="active"><button data-unit="0"><span class="step-number">01</span><span><strong>מזהים צורך</strong><small>מה חוזר שוב ושוב?</small></span><i>עכשיו</i></button></li>
+            <li><button data-unit="1"><span class="step-number">02</span><span><strong>מנסחים מטרה</strong><small>מה היינו רוצים שיקרה?</small></span></button></li>
+            <li><button data-unit="2"><span class="step-number">03</span><span><strong>מתארים ל־AI</strong><small>מה לבקש ואיך?</small></span></button></li>
+            <li><button data-unit="3"><span class="step-number">04</span><span><strong>עוצרים יחד</strong><small>משתפים ומחדדים</small></span></button></li>
+            <li class="locked"><button disabled><span class="step-number">05</span><span><strong>יוצרים כלי ראשון</strong><small>ייפתח בהמשך המפגש</small></span><span class="lock" aria-label="נעול">⌑</span></button></li>
+          </ol>
+          <div class="meeting-progress"><span>מפגש 1 מתוך 3</span><span>25%</span><div><i></i></div></div>
+        </aside>
+
+        <article class="unit-card" aria-live="polite">
+          <div class="unit-count">יחידה <span id="unit-number">1</span> מתוך 4</div>
+          <div id="unit-content"></div>
+          <footer class="unit-navigation">
+            <button class="text-button" id="previous-button" disabled><span aria-hidden="true">→</span> חזרה</button>
+            <span class="save-status"><i></i> נשמר בדפדפן</span>
+            <button class="next-button" id="next-button">סיימתי, לשלב הבא <span aria-hidden="true">←</span></button>
+          </footer>
+        </article>
+      </section>
+
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
