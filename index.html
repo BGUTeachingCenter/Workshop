@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="סביבת הלמידה של סדנת מהצורך לכלי — Vibe Coding בהוראה" />
+    <title>מהצורך לכלי | Vibe Coding בהוראה</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">דלגו לתוכן</a>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="מהצורך לכלי — דף הבית">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>מהצורך לכלי</strong><small>Vibe Coding בהוראה</small></span>
+      </a>
+      <div class="participant"><span class="avatar" aria-hidden="true">נ</span><span><small>שלום,</small><strong>נועה</strong></span></div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero">
+        <div class="hero-shapes" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="eyebrow"><span></span> מפגש 1 · מתחילים כאן</div>
+        <h1>מה הסטודנטים שלך<br /><em>מפספסים?</em></h1>
+        <p>לפני שחושבים על אפליקציה, עוצרים לזהות צורך אמיתי בהוראה. דבר אחד קטן שהיית רוצה לעזור לסטודנטים להבין, לראות או לתרגל.</p>
+        <button class="primary-button" data-start>מתחילים מהשאלה <span aria-hidden="true">←</span></button>
+      </section>
+
+      <section class="workspace" aria-labelledby="journey-title">
+        <aside class="journey">
+          <div class="section-label">המסלול שלך</div>
+          <h2 id="journey-title">מצורך פדגוגי<br />לכלי עובד</h2>
+          <ol class="journey-list">
+            <li class="active"><button data-unit="0"><span class="step-number">01</span><span><strong>מזהים צורך</strong><small>מה חוזר שוב ושוב?</small></span><i>עכשיו</i></button></li>
+            <li><button data-unit="1"><span class="step-number">02</span><span><strong>מנסחים מטרה</strong><small>מה היינו רוצים שיקרה?</small></span></button></li>
+            <li><button data-unit="2"><span class="step-number">03</span><span><strong>מתארים ל־AI</strong><small>מה לבקש ואיך?</small></span></button></li>
+            <li><button data-unit="3"><span class="step-number">04</span><span><strong>עוצרים יחד</strong><small>משתפים ומחדדים</small></span></button></li>
+            <li class="locked"><button disabled><span class="step-number">05</span><span><strong>יוצרים כלי ראשון</strong><small>ייפתח בהמשך המפגש</small></span><span class="lock" aria-label="נעול">⌑</span></button></li>
+          </ol>
+          <div class="meeting-progress"><span>מפגש 1 מתוך 3</span><span>25%</span><div><i></i></div></div>
+        </aside>
+
+        <article class="unit-card" aria-live="polite">
+          <div class="unit-count">יחידה <span id="unit-number">1</span> מתוך 4</div>
+          <div id="unit-content"></div>
+          <footer class="unit-navigation">
+            <button class="text-button" id="previous-button" disabled><span aria-hidden="true">→</span> חזרה</button>
+            <span class="save-status"><i></i> נשמר בדפדפן</span>
+            <button class="next-button" id="next-button">סיימתי, לשלב הבא <span aria-hidden="true">←</span></button>
+          </footer>
+        </article>
+      </section>
+
+      <section class="meetings" aria-labelledby="meetings-title">
+        <div><span class="section-label">מבט קדימה</span><h2 id="meetings-title">שלושה מפגשים,<br />תהליך אחד</h2></div>
+        <div class="meeting-cards">
+          <article class="current"><span>01</span><div><small>המפגש הנוכחי</small><h3>מרעיון לעמוד עובד</h3><p>נזהה צורך וניצור כלי קטן שעובד בדפדפן.</p></div></article>
+          <article><span>02</span><div><small>ייפתח בהמשך</small><h3>מפריט לפרויקט</h3><p>נעבור לסביבת פיתוח ונלמד לנהל תהליך עם AI.</p></div><i aria-label="נעול">⌑</i></article>
+          <article><span>03</span><div><small>ייפתח בהמשך</small><h3>מכלי למערכת זוכרת</h3><p>נוסיף שמירת מידע ונכיר את השכבה שמאחורי המסך.</p></div><i aria-label="נעול">⌑</i></article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><strong>מהצורך לכלי</strong><span>סדנת Vibe Coding בהוראה</span><span>נבנה מתוך סקרנות, צעד אחר צעד.</span></footer>
+    <script src="script.js"></script>
+  </body>
+</html>
