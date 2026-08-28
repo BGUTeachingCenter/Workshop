@@ -55,8 +55,9 @@ const renderers = {
 
   prompt: (b) => {
     const n = el("div", "b-prompt-box");
-    n.append(el("span", "b-label", "פְּרוֹמְפְּט ל־AI"));
+    n.append(el("span", "b-label", b.label || "פְּרוֹמְפְּט ל־AI"));
     n.append(copyable(b.code));
+    if (b.note) n.append(el("p", "b-note", b.note));
     return n;
   },
 
