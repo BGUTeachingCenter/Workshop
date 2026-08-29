@@ -64,7 +64,7 @@ export async function unitView(unitId) {
     toggle.className = "reveal-toggle";
     const paint = () => {
       toggle.classList.toggle("on", open);
-      toggle.innerHTML = `<span class="rt-dot"></span>` + (open ? "גלוי למשתתפות" : "חשפי למשתתפות");
+      toggle.innerHTML = `<span class="rt-dot"></span>` + (open ? "פתוח" : "סגור");
       toggle.title = open ? "לחצי כדי להסתיר מהמשתתפות" : "לחצי כדי לחשוף למשתתפות";
     };
     paint();
