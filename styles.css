@@ -131,14 +131,14 @@ a { color: var(--accent-ink); }
 /* ---------- shared page ---------- */
 .workshop, .unit, .admin { max-width: 760px; margin: 0 auto; padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 24px) 80px; }
 .wk-head {
-  background: linear-gradient(135deg, #ece9fb 0%, #f4f1fd 100%);
-  border: 1px solid #e2ddf4;
+  background: linear-gradient(135deg, #34306a 0%, #211d3e 100%);
   border-radius: 18px;
-  padding: 26px clamp(20px, 4vw, 32px);
+  padding: 30px clamp(22px, 4vw, 34px);
   margin-bottom: 32px;
 }
-.wk-head h1 { font-weight: 900; font-size: clamp(1.9rem, 5vw, 2.6rem); margin-top: 6px; color: #55535f; }
-.wk-sub { color: #6f6d7b; margin-top: 8px; }
+.wk-head .eyebrow { color: #b3a8ef; }
+.wk-head h1 { font-weight: 900; font-size: clamp(1.9rem, 5vw, 2.6rem); margin-top: 6px; color: #f5f3fc; }
+.wk-sub { color: #c6c2dc; margin-top: 8px; }
 
 /* ---------- workshop journey ---------- */
 .meeting-block { margin-top: 34px; }
