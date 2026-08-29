@@ -1,8 +1,8 @@
-// צבע ייחודי לכל יחידה. גוון (hue) נגזר מהמיקום ברשימת היחידות,
-// פרוס באופן שווה כדי שכל היחידות ייבדלו זו מזו — בהיר וקריא על רקע לבן.
-export function accentVars(index, total) {
-  const start = 250; // מתחילים מהסגול של המותג ומסתובבים
-  const h = Math.round((start + index * (360 / Math.max(total, 1))) % 360);
+// צבע לכל מפגש. כל היחידות של מפגש חולקות את צבע המפגש.
+// גוונים מוגדרים ידנית כדי שיהיו נעימים ומובחנים (מפגש 1 = סגול המותג).
+const MEETING_HUES = [250, 168, 30, 330, 200, 96];
+
+function varsForHue(h) {
   return {
     "--accent": `hsl(${h} 62% 53%)`,
     "--accent-deep": `hsl(${h} 60% 45%)`,
@@ -11,7 +11,7 @@ export function accentVars(index, total) {
   };
 }
 
-export function applyAccent(el, index, total) {
-  const v = accentVars(index, total);
+export function applyMeetingAccent(el, meetingIndex) {
+  const v = varsForHue(MEETING_HUES[meetingIndex % MEETING_HUES.length]);
   for (const k in v) el.style.setProperty(k, v[k]);
 }

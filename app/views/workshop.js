@@ -1,8 +1,8 @@
 // מסע הסדנה — כל המפגשים והיחידות, עם מצב פתוח/נעול (progressive disclosure).
 import { auth, data } from "../api.js";
-import { meetings, allUnits } from "../../content/index.js";
+import { meetings } from "../../content/index.js";
 import { navigate } from "../router.js";
-import { applyAccent } from "../colors.js";
+import { applyMeetingAccent } from "../colors.js";
 
 const unitTouched = (unit, progress) =>
   unit.blocks.some((b) => (b.id && progress.answers[b.id]) ||
@@ -27,9 +27,10 @@ export async function workshopView() {
     <p class="wk-sub">בכל שלב ייפתח לך החלק הבא. כרגע פתוחות ${openCount} מתוך ${totalCount} יחידות.</p>`;
   wrap.append(head);
 
-  meetings.forEach((m) => {
+  meetings.forEach((m, mi) => {
     const sec = document.createElement("section");
     sec.className = "meeting-block";
+    applyMeetingAccent(sec, mi);
     sec.innerHTML = `<div class="meeting-head"><span class="m-sub">${m.subtitle}</span><h2>${m.title}</h2><p class="m-summary">${m.summary}</p></div>`;
     const list = document.createElement("ol");
     list.className = "unit-list";
@@ -39,7 +40,6 @@ export async function workshopView() {
       const touched = open && unitTouched(u, progress);
       const li = document.createElement("li");
       li.className = "unit-row" + (open ? "" : " locked") + (touched ? " done" : "");
-      applyAccent(li, allUnits.findIndex((x) => x.id === u.id), allUnits.length);
 
       const num = String(i + 1).padStart(2, "0");
       const state = open

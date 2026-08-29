@@ -5,8 +5,8 @@ import meeting2 from "./meeting-2.js";
 export const meetings = [meeting1, meeting2].sort((a, b) => a.order - b.order);
 
 // רשימה שטוחה של כל היחידות, לפי סדר המפגשים — נוח לניווט ולנעילה.
-export const allUnits = meetings.flatMap((m) =>
-  m.units.map((u) => ({ ...u, meetingId: m.id, meetingTitle: m.subtitle }))
+export const allUnits = meetings.flatMap((m, mi) =>
+  m.units.map((u) => ({ ...u, meetingId: m.id, meetingIndex: mi, meetingTitle: m.subtitle }))
 );
 
 export function findUnit(unitId) {

@@ -3,7 +3,7 @@ import { auth, data } from "../api.js";
 import { allUnits, findUnit } from "../../content/index.js";
 import { renderBlock } from "../render/blocks.js";
 import { navigate } from "../router.js";
-import { applyAccent } from "../colors.js";
+import { applyMeetingAccent } from "../colors.js";
 
 export async function unitView(unitId) {
   const user = auth.current();
@@ -19,7 +19,7 @@ export async function unitView(unitId) {
     return wrap;
   }
 
-  applyAccent(wrap, allUnits.findIndex((u) => u.id === unit.id), allUnits.length);
+  applyMeetingAccent(wrap, unit.meetingIndex);
 
   const progress = await data.getProgress(user.uid);
   const saved = document.createElement("span");
