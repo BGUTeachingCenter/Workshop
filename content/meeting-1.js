@@ -81,8 +81,7 @@ export default {
       title: "מהקוד לקובץ שעובד",
       lead: "",
       slides: [
-        { title: "מה זה קובץ HTML?", body: "קובץ טקסט אחד שהדפדפן יודע להציג.<ul><li>רץ <b>מקומית</b> - בלי אינטרנט ובלי התקנה</li><li>לחיצה כפולה פותחת אותו בדפדפן</li><li>הכל בקובץ אחד: תוכן, עיצוב והתנהגות</li></ul>" },
-        { title: "מרעיון לכלי עובד", body: "<div class='workflow'><div><b>1</b><span>צורך</span></div><div><b>2</b><span>תיאור ל־AI</span></div><div><b>3</b><span>קוד</span></div><div><b>4</b><span>קובץ HTML</span></div><div><b>5</b><span>בדיקה בדפדפן</span></div></div><p class='workflow-loop'><b>משהו לא עובד?</b> מתארות ל־AI מה צריך לתקן, מעדכנות ובודקות שוב.</p>" }
+        { title: "מה זה קובץ HTML?", body: "קובץ טקסט אחד שהדפדפן יודע להציג.<ul><li>רץ <b>מקומית</b> - בלי אינטרנט ובלי התקנה</li><li>לחיצה כפולה פותחת אותו בדפדפן</li><li>הכל בקובץ אחד: תוכן, עיצוב והתנהגות</li></ul>" }
       ],
       blocks: [
         {
@@ -125,6 +124,7 @@ export default {
       title: "משנות שני דברים",
       lead: "",
       slides: [
+        { title: "מרעיון לכלי עובד", body: "<div class='workflow'><div><b>1</b><span>תיאור ל־AI</span></div><div><b>3</b><span>קוד</span></div><div><b>4</b><span>קובץ HTML</span></div><div><b>5</b><span>בדיקה בדפדפן</span></div></div><p class='workflow-loop'><b>משהו לא עובד?</b> מתארות ל־AI מה צריך לתקן, מעדכנות ובודקות שוב.</p>" },
         { title: "שינוי קטן, השפעה מיידית", body: "כדי להרגיש שליטה בקוד - נשנה שני דברים קטנים ונראה את התוצאה מיד ברענון.<br>אין ממה לחשוש: תמיד אפשר לבטל ולנסות שוב." },
         { title: "מה נשנה", body: "<ul><li><b>טקסט</b> - נמצא מילה עם <code>Ctrl+F</code> ונחליף אותה</li><li><b>גודל פונט</b> - נחפש <code>font-size</code> ונשנה את המספר</li></ul>" }
       ],
