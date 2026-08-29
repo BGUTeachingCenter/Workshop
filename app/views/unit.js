@@ -2,6 +2,7 @@
 import { auth, data } from "../api.js";
 import { allUnits, findUnit } from "../../content/index.js";
 import { renderBlock } from "../render/blocks.js";
+import { renderSlides } from "../render/slides.js";
 import { navigate } from "../router.js";
 import { applyMeetingAccent } from "../colors.js";
 
@@ -50,7 +51,23 @@ export async function unitView(unitId) {
   const body = document.createElement("div");
   body.className = "unit-body";
   unit.blocks.forEach((b) => body.append(renderBlock(b, ctx)));
-  card.append(body);
+
+  if (unit.slides && unit.slides.length) {
+    // מצב הנחיה: שקף/ים למעלה, וכפתור שחושף את ההנחיה מתחת.
+    card.append(renderSlides(unit.slides));
+    const reveal = document.createElement("button");
+    reveal.className = "reveal-btn"; reveal.type = "button";
+    reveal.textContent = "▾ הצג את ההנחיה";
+    body.hidden = true;
+    reveal.addEventListener("click", () => {
+      body.hidden = !body.hidden;
+      reveal.textContent = (body.hidden ? "▾ הצג" : "▴ הסתר") + " את ההנחיה";
+      if (!body.hidden) body.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    card.append(reveal, body);
+  } else {
+    card.append(body);
+  }
 
   const footer = document.createElement("footer");
   footer.className = "unit-nav";
