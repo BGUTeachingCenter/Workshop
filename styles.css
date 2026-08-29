@@ -213,7 +213,10 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 /* ---------- slides (מצב הנחיה) ---------- */
 .slides { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin: 6px 0 22px; }
 .slide-stage {
-  background: linear-gradient(135deg, var(--accent-deep) 0%, var(--accent) 100%);
+  /* גוון מט: מערבבים את צבע המפגש עם אפור־צפחה כדי להוריד רוויה ובוהק */
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-deep) 70%, #4a4a58) 0%,
+    color-mix(in srgb, var(--accent) 70%, #4a4a58) 100%);
   color: #fff; padding: clamp(28px, 5vw, 52px); min-height: 240px;
   display: flex; align-items: center;
 }
