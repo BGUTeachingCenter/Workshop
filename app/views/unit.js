@@ -40,34 +40,25 @@ export async function unitView(unitId) {
   const prev = openUnits[idx - 1];
   const next = openUnits[idx + 1];
 
+  // המנחָה (אדמין) רואה את השקף עם הכותרת שבתוכו; המשתתפת רואה את כותרת היחידה.
+  const showSlides = user.role === "admin" && unit.slides && unit.slides.length;
+
   const card = document.createElement("article");
   card.className = "unit-card";
   const header = document.createElement("div");
   header.className = "unit-card-head";
-  header.innerHTML = `<span class="unit-eyebrow">${unit.meetingTitle} · יחידה ${idx + 1} מתוך ${openUnits.length}</span>
-    <h1>${unit.title}</h1>${unit.lead ? `<p class="lead">${unit.lead}</p>` : ""}`;
+  const eyebrow = `<span class="unit-eyebrow">${unit.meetingTitle} · יחידה ${idx + 1} מתוך ${openUnits.length}</span>`;
+  header.innerHTML = showSlides
+    ? eyebrow
+    : `${eyebrow}<h1>${unit.title}</h1>${unit.lead ? `<p class="lead">${unit.lead}</p>` : ""}`;
   card.append(header);
+
+  if (showSlides) card.append(renderSlides(unit.slides));
 
   const body = document.createElement("div");
   body.className = "unit-body";
   unit.blocks.forEach((b) => body.append(renderBlock(b, ctx)));
-
-  if (unit.slides && unit.slides.length) {
-    // מצב הנחיה: שקף/ים למעלה, וכפתור שחושף את ההנחיה מתחת.
-    card.append(renderSlides(unit.slides));
-    const reveal = document.createElement("button");
-    reveal.className = "reveal-btn"; reveal.type = "button";
-    reveal.textContent = "▾ הצג את ההנחיה";
-    body.hidden = true;
-    reveal.addEventListener("click", () => {
-      body.hidden = !body.hidden;
-      reveal.textContent = (body.hidden ? "▾ הצג" : "▴ הסתר") + " את ההנחיה";
-      if (!body.hidden) body.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    card.append(reveal, body);
-  } else {
-    card.append(body);
-  }
+  card.append(body);
 
   const footer = document.createElement("footer");
   footer.className = "unit-nav";
