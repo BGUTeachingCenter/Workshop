@@ -114,6 +114,39 @@ const renderers = {
     n.append(el("p", null, b.html));
     return n;
   },
+
+  // טאבים — כל אחת בוחרת את שלה ורואה רק את התוכן שבו. remember=מפתח לשמירת הבחירה.
+  tabs: (b, ctx) => {
+    const wrap = el("div", "b-tabs");
+    const bar = el("div", "tab-bar");
+    bar.setAttribute("role", "tablist");
+    const panels = el("div", "tab-panels");
+    const key = b.remember ? "wk:tab:" + b.remember : null;
+    const btns = [], pans = [];
+
+    (b.tabs || []).forEach((t, i) => {
+      const btn = el("button", "tab-btn", t.label);
+      btn.type = "button"; btn.setAttribute("role", "tab");
+      const pan = el("div", "tab-panel");
+      (t.blocks || []).forEach((bl) => pan.append(renderBlock(bl, ctx)));
+      btn.addEventListener("click", () => select(i));
+      bar.append(btn); panels.append(pan);
+      btns.push(btn); pans.push(pan);
+    });
+
+    function select(i) {
+      btns.forEach((x, j) => { x.classList.toggle("active", j === i); x.setAttribute("aria-selected", j === i); });
+      pans.forEach((x, j) => { x.hidden = j !== i; });
+      if (key) { try { localStorage.setItem(key, String(i)); } catch {} }
+    }
+
+    let active = 0;
+    if (key) { try { const s = localStorage.getItem(key); if (s != null) active = Math.min(Math.max(parseInt(s) || 0, 0), btns.length - 1); } catch {} }
+    select(active);
+
+    wrap.append(bar, panels);
+    return wrap;
+  },
 };
 
 export function renderBlock(block, ctx) {

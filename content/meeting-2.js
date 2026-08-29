@@ -62,36 +62,61 @@ export default {
     },
     {
       id: "m2-u3",
-      title: "מחברות את Claude Code",
+      title: "מחברות את עוזר ה־AI",
       lead: "",
       blocks: [
-        { kind: "text", html: "Claude Code הוא עוזר AI שמפתח איתך ישר בתוך הסביבה. נתקין אותו בטרמינל." },
+        { kind: "text", html: "בחרי את הטאב לפי המנוי שיש לך. ההתקנה וזרימת העבודה זהות — רק הכלי משתנה, והפרומפטים בהמשך עובדים עם כולם." },
         {
-          kind: "steps",
-          items: [
-            "פתחי טרמינל (<b>Terminal ← New Terminal</b>).",
-            "הדביקי את הפקודה הבאה והריצי (Enter):"
+          kind: "tabs",
+          remember: "provider",
+          tabs: [
+            {
+              label: "מנוי Claude",
+              blocks: [
+                { kind: "steps", items: [
+                  "פתחי טרמינל (<b>Terminal ← New Terminal</b>).",
+                  "הדביקי את הפקודה והריצי (Enter):"
+                ] },
+                { kind: "code", code: "npm install -g @anthropic-ai/claude-code" },
+                { kind: "steps", start: 3, items: [
+                  "כתבי <code>claude</code> והריצי.",
+                  "התחברי עם חשבון Claude (ייפתח קישור התחברות)."
+                ] },
+                { kind: "selfcheck", id: "chk-claude", label: "בדקי את עצמך", items: ["Claude Code רץ בטרמינל ומחכה להוראות."] }
+              ]
+            },
+            {
+              label: "מנוי ChatGPT",
+              blocks: [
+                { kind: "steps", items: [
+                  "פתחי טרמינל (<b>Terminal ← New Terminal</b>).",
+                  "הדביקי את הפקודה והריצי (Enter):"
+                ] },
+                { kind: "code", code: "npm install -g @openai/codex" },
+                { kind: "steps", start: 3, items: [
+                  "כתבי <code>codex</code> והריצי.",
+                  "התחברי עם חשבון ChatGPT."
+                ] },
+                { kind: "selfcheck", id: "chk-codex", label: "בדקי את עצמך", items: ["Codex רץ בטרמינל ומחכה להוראות."] }
+              ]
+            },
+            {
+              label: "מנוי Gemini",
+              blocks: [
+                { kind: "steps", items: [
+                  "פתחי טרמינל (<b>Terminal ← New Terminal</b>).",
+                  "הדביקי את הפקודה והריצי (Enter):"
+                ] },
+                { kind: "code", code: "npm install -g @google/gemini-cli" },
+                { kind: "steps", start: 3, items: [
+                  "כתבי <code>gemini</code> והריצי.",
+                  "התחברי עם חשבון Google."
+                ] },
+                { kind: "selfcheck", id: "chk-gemini", label: "בדקי את עצמך", items: ["Gemini רץ בטרמינל ומחכה להוראות."] }
+              ]
+            }
           ]
-        },
-        { kind: "code", code: "npm install -g @anthropic-ai/claude-code" },
-        {
-          kind: "steps",
-          start: 3,
-          items: [
-            "כשההתקנה הסתיימה, כתבי <code>claude</code> והריצי.",
-            "עקבי אחרי ההוראות כדי להתחבר לחשבון (ייפתח קישור התחברות)."
-          ]
-        },
-        {
-          kind: "selfcheck",
-          label: "בדקי את עצמך",
-          items: [
-            "Claude Code רץ בטרמינל ומחכה להוראות."
-          ]
-        },
-        { kind: "text", html: "יש לך מנוי אחר? אפשר עוזר קוד תואם — ההתקנה זהה, וזרימת העבודה זהה (מתארים, בודקים, מאשרים). הפרומפטים בהמשך עובדים עם כולם." },
-        { kind: "task", label: "יש לך ChatGPT? · Codex CLI", html: "התקנה: <code>npm install -g @openai/codex</code> · הפעלה: <code>codex</code> · מתחברים עם חשבון ChatGPT." },
-        { kind: "task", label: "יש לך Google / Gemini? · Gemini CLI", html: "התקנה: <code>npm install -g @google/gemini-cli</code> · הפעלה: <code>gemini</code> · מתחברים עם חשבון Google." }
+        }
       ]
     },
     {

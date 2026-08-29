@@ -204,6 +204,14 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .b-selfcheck li { display: flex; align-items: flex-start; gap: 10px; }
 .b-selfcheck input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: 0 0 auto; }
 .b-selfcheck label { color: var(--body); cursor: pointer; }
+.b-tabs { }
+.tab-bar { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.tab-btn { background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 10px 16px; font: inherit; font-weight: 700; color: var(--muted); cursor: pointer; }
+.tab-btn:hover { color: var(--heading); }
+.tab-btn.active { color: var(--accent-ink); border-bottom-color: var(--accent); }
+.tab-panel { display: flex; flex-direction: column; gap: 20px; }
+.tab-panel[hidden] { display: none; }
+
 .b-pause { text-align: center; background: linear-gradient(135deg, var(--accent-deep), var(--accent)); color: #fff; border-radius: 18px; padding: 32px; }
 .b-pause strong { display: block; font-size: 1.2rem; margin-bottom: 8px; }
 .b-pause p { color: rgba(255,255,255,.94); }
