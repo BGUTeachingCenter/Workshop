@@ -1,4 +1,4 @@
-// מסע הסדנה — כל המפגשים והיחידות, עם מצב פתוח/נעול (progressive disclosure).
+// מסע הסדנה - כל המפגשים והיחידות, עם מצב פתוח/נעול (progressive disclosure).
 import { auth, data } from "../api.js";
 import { meetings } from "../../content/index.js";
 import { navigate } from "../router.js";

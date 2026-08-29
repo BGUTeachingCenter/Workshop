@@ -1,7 +1,7 @@
 :root {
   /* כחול → סגול */
   --primary:        #5b4bd6;  /* סגול-אינדיגו */
-  --primary-deep:   #3a53c9;  /* כחול — תחילת הגרדיאנט */
+  --primary-deep:   #3a53c9;  /* כחול - תחילת הגרדיאנט */
   --primary-ink:    #4a3fb5;  /* טקסט/קישורים על רקע בהיר */
   --primary-40:     #d7d2f4;  /* מסגרת רכה / focus ring */
   --primary-tint:   #f2f0fc;  /* רקע בהיר מאוד */

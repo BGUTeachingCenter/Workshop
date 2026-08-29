@@ -1,4 +1,4 @@
-// Router מינימלי מבוסס hash. אין תלות בשרת — עובד מקומית וב-Codespaces.
+// Router מינימלי מבוסס hash. אין תלות בשרת - עובד מקומית וב-Codespaces.
 export function currentRoute() {
   const h = (location.hash || "#/").replace(/^#/, "");
   const parts = h.split("/").filter(Boolean); // "/unit/m1-u1" → ["unit","m1-u1"]
