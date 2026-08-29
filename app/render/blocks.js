@@ -69,6 +69,7 @@ const renderers = {
 
   steps: (b) => {
     const ol = el("ol", "b-steps");
+    if (b.start) ol.style.counterReset = "step " + (b.start - 1); // המשך מספור רציף
     b.items.forEach((it) => { const li = el("li"); li.innerHTML = it; ol.append(li); });
     return ol;
   },
