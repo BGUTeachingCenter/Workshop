@@ -234,13 +234,13 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .slide-counter { font-size: .82rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; direction: ltr; }
 
 .reveal-toggle {
-  display: flex; align-items: center; gap: 10px; width: fit-content; margin: 0 auto 24px;
+  display: inline-flex; align-items: center; gap: 7px; width: fit-content; margin: 0 0 18px;
   background: var(--accent); color: #fff; border: 0; border-radius: 999px;
-  padding: 12px 24px; font: inherit; font-weight: 700; cursor: pointer;
+  padding: 6px 14px; font: inherit; font-weight: 600; font-size: .82rem; cursor: pointer;
   transition: filter .15s;
 }
 .reveal-toggle:hover { filter: brightness(1.05); }
-.reveal-toggle .rt-dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.reveal-toggle .rt-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .reveal-toggle.on { background: #e8f5ee; color: var(--ok); }
 
 .b-tabs { }
