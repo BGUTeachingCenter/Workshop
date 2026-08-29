@@ -28,7 +28,7 @@ export function loginView() {
   const form = wrap.querySelector("form");
   const note = wrap.querySelector(".login-note");
   note.textContent = BACKEND === "firebase"
-    ? "יישלח לך קישור כניסה למייל — בלי סיסמה לזכור."
+    ? "יישלח לך קישור כניסה למייל - בלי סיסמה לזכור."
     : "מצב הדגמה: הכניסה מיידית (ב-Firebase יישלח קישור למייל).";
 
   form.addEventListener("submit", async (e) => {

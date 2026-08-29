@@ -1,5 +1,5 @@
 // קונטיינר שקפים (מצגת) לראש היחידה. מכיל שקף אחד או יותר, עם ניווט ביניהם.
-// כל שקף: { title, body }  (body = HTML — פסקאות, רשימות, הדגשות).
+// כל שקף: { title, body }  (body = HTML - פסקאות, רשימות, הדגשות).
 const el = (tag, cls, html) => {
   const n = document.createElement(tag);
   if (cls) n.className = cls;

@@ -1,4 +1,4 @@
-// Backend מדומה מבוסס localStorage — מדמה את Firebase כדי שנוכל לפתח ולבדוק בלי פרויקט ענן.
+// Backend מדומה מבוסס localStorage - מדמה את Firebase כדי שנוכל לפתח ולבדוק בלי פרויקט ענן.
 // אותו ממשק בדיוק ימומש ב-backend/firebase.js בשלב 3.
 import { defaultOpenUnits } from "../../content/index.js";
 
@@ -25,7 +25,7 @@ export const auth = {
   current() { return read(K.user, null); },
   onChange(cb) { listeners.push(cb); cb(this.current()); return () => { listeners = listeners.filter((x) => x !== cb); }; },
 
-  // במצב מדומה אין מייל אמיתי — נכנסים מיד. ב-Firebase כאן יישלח קישור התחברות.
+  // במצב מדומה אין מייל אמיתי - נכנסים מיד. ב-Firebase כאן יישלח קישור התחברות.
   async requestLink(email, name) {
     const users = read(K.users, {});
     let user = Object.values(users).find((u) => u.email === email);
