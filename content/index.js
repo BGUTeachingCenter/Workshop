@@ -1,8 +1,9 @@
 // רישום המפגשים של הסדנה. הוספת מפגש = import + הוספה למערך (לפי order).
 import meeting1 from "./meeting-1.js";
 import meeting2 from "./meeting-2.js";
+import meeting3 from "./meeting-3.js";
 
-export const meetings = [meeting1, meeting2].sort((a, b) => a.order - b.order);
+export const meetings = [meeting1, meeting2, meeting3].sort((a, b) => a.order - b.order);
 
 // רשימה שטוחה של כל היחידות, לפי סדר המפגשים - נוח לניווט ולנעילה.
 export const allUnits = meetings.flatMap((m, mi) =>
