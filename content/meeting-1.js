@@ -109,12 +109,13 @@ export default {
       title: "מה יש בתוך הקובץ?",
       lead: "",
       slides: [
-        { title: "הקוד אינו קופסה שחורה", body: "אפשר לפתוח אותו, לזהות חלקים, ולשנות.<br>לכל קובץ HTML שלושה חלקים - נכיר אותם." },
-        { title: "שלושת החלקים", body: "<ul><li><b>head</b> - מה יש בדף (כותרת, קידוד)</li><li><b>CSS</b> (<code>&lt;style&gt;</code>) - איך זה נראה</li><li><b>JavaScript</b> (<code>&lt;script&gt;</code>) - מה זה עושה</li></ul>נשתמש ב־<code>Ctrl+F</code> כדי למצוא כל חלק." }
+        { title: "הקוד אינו קופסה שחורה", body: "אפשר לפתוח אותו, לזהות חלקים, ולשנות.<br>בכל קובץ HTML יש ארבעה חלקים מרכזיים - נכיר אותם." },
+        { title: "ארבעת החלקים", body: "<ul><li><b>head</b> - מידע והגדרות על הדף</li><li><b>body</b> - התוכן שמופיע על המסך</li><li><b>CSS</b> (<code>&lt;style&gt;</code>) - איך זה נראה</li><li><b>JavaScript</b> (<code>&lt;script&gt;</code>) - מה זה עושה</li></ul>נשתמש ב־<code>Ctrl+F</code> כדי למצוא כל חלק." }
       ],
       blocks: [
         { kind: "text", html: "פתחי את הקובץ בעורך הטקסט. לכל חלק, לחצי <code>Ctrl+F</code> וחפשי את המילה המודגשת - כך תראי איפה הוא יושב בקוד." },
-        { kind: "task", label: "head · מה יש לנו", html: "כאן מוגדר מה הדף מכיל - כותרת החלון, קידוד וקישורים. חפשי: <code>&lt;head&gt;</code>" },
+        { kind: "task", label: "head · מידע והגדרות", html: "כאן נמצאים מידע והגדרות על הדף - כמו כותרת החלון, קידוד וקישורים. חפשי: <code>&lt;head&gt;</code>" },
+        { kind: "task", label: "body · מה רואים", html: "כאן נמצא התוכן שמופיע על המסך - כמו כותרות, טקסט וכפתורים. חפשי: <code>&lt;body&gt;</code>" },
         { kind: "task", label: "CSS · איך זה מעוצב", html: "כאן נקבעים הצבעים, הגדלים והמרווחים. חפשי: <code>&lt;style&gt;</code>" },
         { kind: "task", label: "JavaScript · מה זה עושה", html: "כאן ההתנהגות - מה קורה כשלוחצים או מקלידים. חפשי: <code>&lt;script&gt;</code>" }
       ]
@@ -124,7 +125,7 @@ export default {
       title: "משנות שני דברים",
       lead: "",
       slides: [
-        { title: "מרעיון לכלי עובד", body: "<div class='workflow'><div><b>1</b><span>תיאור ל־AI</span></div><div><b>3</b><span>קוד</span></div><div><b>4</b><span>קובץ HTML</span></div><div><b>5</b><span>בדיקה בדפדפן</span></div></div><p class='workflow-loop'><b>משהו לא עובד?</b> מתארות ל־AI מה צריך לתקן, מעדכנות ובודקות שוב.</p>" },
+        { title: "מרעיון לכלי עובד", body: "<div class='workflow'><div><b>1</b><span>תיאור ל־AI</span></div><div><b>2</b><span>קוד</span></div><div><b>3</b><span>קובץ HTML</span></div><div><b>4</b><span>בדיקה בדפדפן</span></div></div><p class='workflow-loop'><b>משהו לא עובד?</b> מתארות ל־AI מה צריך לתקן, מעדכנות ובודקות שוב.</p>" },
         { title: "שינוי קטן, השפעה מיידית", body: "כדי להרגיש שליטה בקוד - נשנה שני דברים קטנים ונראה את התוצאה מיד ברענון.<br>אין ממה לחשוש: תמיד אפשר לבטל ולנסות שוב." },
         { title: "מה נשנה", body: "<ul><li><b>טקסט</b> - נמצא מילה עם <code>Ctrl+F</code> ונחליף אותה</li><li><b>גודל פונט</b> - נחפש <code>font-size</code> ונשנה את המספר</li></ul>" }
       ],
@@ -174,7 +175,8 @@ export default {
       title: "עוצרות ומשתפות",
       lead: "",
       slides: [
-        { title: "נעצור לשתף", body: "יש לך כלי ראשון שעובד, שנבנה מצורך אמיתי שלך.<br>לפני שממשיכים - נחזור לקבוצה, נראה מה כל אחת בנתה, ונלמד אחת מהשנייה." }
+        { title: "נעצור לשתף", body: "יש לך כלי ראשון שעובד, שנבנה מצורך אמיתי שלך.<br>לפני שממשיכים - נחזור לקבוצה, נראה מה כל אחת בנתה, ונלמד אחת מהשנייה." },
+        { title: "שלוש שאלות לשיתוף", body: "<ol><li>איזה צורך בחרת?</li><li>מה הכלי מאפשר לסטודנטיות ולסטודנטים לעשות?</li><li>מה הדבר הראשון שתרצי לשפר בו?</li></ol>" }
       ],
       blocks: [
         {
