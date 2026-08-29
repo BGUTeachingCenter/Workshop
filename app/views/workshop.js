@@ -46,9 +46,10 @@ export async function workshopView() {
         ? (touched ? `<span class="state done">✓ המשך</span>` : `<span class="state open">פתוח</span>`)
         : `<span class="state lock">⌑ ייפתח בהמשך</span>`;
 
-      const btn = document.createElement(open ? "button" : "div");
+      const canEnter = open || user.role === "admin"; // המנחָה יכולה להיכנס גם לנעולות
+      const btn = document.createElement(canEnter ? "button" : "div");
       btn.className = "unit-row-inner";
-      if (open) { btn.type = "button"; btn.addEventListener("click", () => navigate("/unit/" + u.id)); }
+      if (canEnter) { btn.type = "button"; btn.addEventListener("click", () => navigate("/unit/" + u.id)); }
       btn.innerHTML = `
         <span class="unit-num">${num}</span>
         <span class="unit-main"><strong>${u.title}</strong>${u.lead ? `<small>${u.lead}</small>` : ""}</span>

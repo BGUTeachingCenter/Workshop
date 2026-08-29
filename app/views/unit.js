@@ -14,7 +14,7 @@ export async function unitView(unitId) {
   wrap.className = "unit";
 
   if (!unit) { wrap.innerHTML = `<div class="notice">היחידה לא נמצאה.</div>`; return wrap; }
-  if (!config.openUnits[unit.id]) {
+  if (user.role !== "admin" && !config.openUnits[unit.id]) {
     wrap.innerHTML = `<div class="notice locked"><strong>היחידה עדיין נעולה</strong><p>היא תיפתח בהמשך המפגש, בהנחיית המנחָה.</p>
       <button class="text-btn" type="button" onclick="location.hash='#/workshop'">→ חזרה למסע</button></div>`;
     return wrap;
@@ -34,11 +34,12 @@ export async function unitView(unitId) {
     saveCheck: (k, v) => { progress.checks[k] = v; data.saveCheck(user.uid, k, v); flashSaved(); },
   };
 
-  // ניווט בין יחידות פתוחות בלבד
-  const openUnits = allUnits.filter((u) => config.openUnits[u.id]);
-  const idx = openUnits.findIndex((u) => u.id === unit.id);
-  const prev = openUnits[idx - 1];
-  const next = openUnits[idx + 1];
+  // המנחָה מנווטת על כל היחידות; משתתפת רק על הפתוחות.
+  const navUnits = user.role === "admin" ? allUnits : allUnits.filter((u) => config.openUnits[u.id]);
+  const idx = navUnits.findIndex((u) => u.id === unit.id);
+  const prev = navUnits[idx - 1];
+  const next = navUnits[idx + 1];
+  const openUnits = navUnits;
 
   // המנחָה (אדמין) רואה את השקף עם הכותרת שבתוכו; המשתתפת רואה את כותרת היחידה.
   const showSlides = user.role === "admin" && unit.slides && unit.slides.length;
@@ -54,6 +55,26 @@ export async function unitView(unitId) {
   card.append(header);
 
   if (showSlides) card.append(renderSlides(unit.slides));
+
+  // המנחָה חושפת את ההנחיה למשתתפות ישירות מהיחידה (מתחת לשקפים, מעל ההנחיה).
+  if (user.role === "admin") {
+    let open = !!config.openUnits[unit.id];
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "reveal-toggle";
+    const paint = () => {
+      toggle.classList.toggle("on", open);
+      toggle.innerHTML = `<span class="rt-dot"></span>` +
+        (open ? "ההנחיה גלויה למשתתפות · לחצי כדי להסתיר" : "חשפי את ההנחיה למשתתפות");
+    };
+    paint();
+    toggle.addEventListener("click", async () => {
+      open = !open; paint();
+      await data.setUnitOpen(unit.id, open);
+      config.openUnits[unit.id] = open;
+    });
+    card.append(toggle);
+  }
 
   const body = document.createElement("div");
   body.className = "unit-body";
