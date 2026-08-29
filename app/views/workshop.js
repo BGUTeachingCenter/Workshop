@@ -1,7 +1,8 @@
 // מסע הסדנה — כל המפגשים והיחידות, עם מצב פתוח/נעול (progressive disclosure).
 import { auth, data } from "../api.js";
-import { meetings } from "../../content/index.js";
+import { meetings, allUnits } from "../../content/index.js";
 import { navigate } from "../router.js";
+import { applyAccent } from "../colors.js";
 
 const unitTouched = (unit, progress) =>
   unit.blocks.some((b) => (b.id && progress.answers[b.id]) ||
@@ -38,6 +39,7 @@ export async function workshopView() {
       const touched = open && unitTouched(u, progress);
       const li = document.createElement("li");
       li.className = "unit-row" + (open ? "" : " locked") + (touched ? " done" : "");
+      applyAccent(li, allUnits.findIndex((x) => x.id === u.id), allUnits.length);
 
       const num = String(i + 1).padStart(2, "0");
       const state = open

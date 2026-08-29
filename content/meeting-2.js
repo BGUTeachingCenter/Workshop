@@ -88,7 +88,10 @@ export default {
           items: [
             "Claude Code רץ בטרמינל ומחכה להוראות."
           ]
-        }
+        },
+        { kind: "text", html: "יש לך מנוי אחר? אפשר עוזר קוד תואם — ההתקנה זהה, וזרימת העבודה זהה (מתארים, בודקים, מאשרים). הפרומפטים בהמשך עובדים עם כולם." },
+        { kind: "task", label: "יש לך ChatGPT? · Codex CLI", html: "התקנה: <code>npm install -g @openai/codex</code> · הפעלה: <code>codex</code> · מתחברים עם חשבון ChatGPT." },
+        { kind: "task", label: "יש לך Google / Gemini? · Gemini CLI", html: "התקנה: <code>npm install -g @google/gemini-cli</code> · הפעלה: <code>gemini</code> · מתחברים עם חשבון Google." }
       ]
     },
     {

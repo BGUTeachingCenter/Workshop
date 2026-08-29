@@ -3,6 +3,7 @@ import { auth, data } from "../api.js";
 import { allUnits, findUnit } from "../../content/index.js";
 import { renderBlock } from "../render/blocks.js";
 import { navigate } from "../router.js";
+import { applyAccent } from "../colors.js";
 
 export async function unitView(unitId) {
   const user = auth.current();
@@ -17,6 +18,8 @@ export async function unitView(unitId) {
       <button class="text-btn" type="button" onclick="location.hash='#/workshop'">→ חזרה למסע</button></div>`;
     return wrap;
   }
+
+  applyAccent(wrap, allUnits.findIndex((u) => u.id === unit.id), allUnits.length);
 
   const progress = await data.getProgress(user.uid);
   const saved = document.createElement("span");
