@@ -1,7 +1,7 @@
 :root {
   /* כחול → סגול */
   --primary:        #5b4bd6;  /* סגול-אינדיגו */
-  --primary-deep:   #3a53c9;  /* כחול — תחילת הגרדיאנט */
+  --primary-deep:   #3a53c9;  /* כחול - תחילת הגרדיאנט */
   --primary-ink:    #4a3fb5;  /* טקסט/קישורים על רקע בהיר */
   --primary-40:     #d7d2f4;  /* מסגרת רכה / focus ring */
   --primary-tint:   #f2f0fc;  /* רקע בהיר מאוד */
@@ -228,6 +228,11 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .slide-body b { color: #fff; }
 .slide-body u { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .slide-body code { background: rgba(255,255,255,.18); color: #fff; padding: 1px 7px; border-radius: 5px; direction: ltr; display: inline-block; }
+.workflow { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; margin-top: 6px; }
+.workflow div { display: flex; align-items: center; gap: 8px; min-height: 54px; padding: 9px 11px; border: 1px solid rgba(255,255,255,.28); border-radius: 10px; background: rgba(255,255,255,.1); }
+.workflow div b { display: grid; place-items: center; width: 26px; height: 26px; flex: 0 0 auto; border-radius: 50%; background: #fff; color: var(--accent-ink); font-size: .82rem; }
+.workflow div span { font-weight: 700; line-height: 1.25; }
+.workflow-loop { margin-top: 16px; padding: 11px 14px; border-radius: 10px; background: rgba(255,255,255,.14); }
 .slide-footer { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-top: 0; border-radius: 0 0 16px 16px; }
 .slide-nav { background: none; border: 1px solid var(--border-strong); border-radius: 999px; padding: 7px 16px; font: inherit; font-weight: 600; font-size: .9rem; color: var(--heading); cursor: pointer; }
 .slide-nav:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }

@@ -1,6 +1,6 @@
-# מהצורך לכלי — סביבת הלמידה של סדנת Vibe Coding בהוראה
+# מהצורך לכלי - סביבת הלמידה של סדנת Vibe Coding בהוראה
 
-האתר שמפעיל ומלווה את סדרת הסדנאות. הוא **אינו** האפליקציה שהמשתתפים בונים —
+האתר שמפעיל ומלווה את סדרת הסדנאות. הוא **אינו** האפליקציה שהמשתתפים בונים -
 הוא הסביבה שדרכה הם נכנסים, מקבלים משימות ורואים תוכן שנחשף בהדרגה (Progressive Disclosure).
 
 ## הרצה מקומית
@@ -13,7 +13,7 @@ python3 -m http.server 8000
 
 ואז לפתוח את <http://localhost:8000>. (פתיחה ישירה של `index.html` דרך `file://` לא תעבוד עם מודולים.)
 
-## מצב נוכחי — שלב 1
+## מצב נוכחי - שלב 1
 
 - ✅ שלד מלא: router, מודל תוכן block-based, renderer גנרי, זרימת משתתפת מלאה.
 - ✅ כניסה (passwordless במסגרת מדומה), מסע השלבים עם נעול/פתוח **לפי יחידה**, תצוגת יחידה.
@@ -23,8 +23,8 @@ python3 -m http.server 8000
 
 ## מה עוד לפנינו
 
-- **שלב 3** — חיבור Firebase אמיתי (Authentication passwordless + Firestore + security rules). הממשק כבר מופרד ב-`app/backend/firebase.js`; ההחלפה היא ב-`app/config.js` בלבד.
-- **שלב 4** — תוכן מפגשים 2–3, Hosting וליטוש.
+- **שלב 3** - חיבור Firebase אמיתי (Authentication passwordless + Firestore + security rules). הממשק כבר מופרד ב-`app/backend/firebase.js`; ההחלפה היא ב-`app/config.js` בלבד.
+- **שלב 4** - תוכן מפגשים 2–3, Hosting וליטוש.
 
 ## מבנה הקוד
 

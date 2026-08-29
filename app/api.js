@@ -1,4 +1,4 @@
-// נקודת גישה אחת ל-backend. שאר האפליקציה מייבאת מכאן בלבד —
+// נקודת גישה אחת ל-backend. שאר האפליקציה מייבאת מכאן בלבד -
 // כך שהחלפת mock ⟷ firebase נעשית במקום אחד (app/config.js).
 import { BACKEND } from "./config.js";
 import * as mock from "./backend/mock.js";

@@ -1,4 +1,4 @@
-// תצוגת יחידה בודדת — כותרת, פתיח, ובלוקים דרך ה-renderer הגנרי.
+// תצוגת יחידה בודדת - כותרת, פתיח, ובלוקים דרך ה-renderer הגנרי.
 import { auth, data } from "../api.js";
 import { allUnits, findUnit } from "../../content/index.js";
 import { renderBlock } from "../render/blocks.js";
@@ -90,7 +90,7 @@ export async function unitView(unitId) {
 
   const fwd = document.createElement("button");
   fwd.className = "primary"; fwd.type = "button";
-  fwd.innerHTML = next ? `הבא <span aria-hidden="true">←</span>` : `סיימתי — למסע <span aria-hidden="true">←</span>`;
+  fwd.innerHTML = next ? `הבא <span aria-hidden="true">←</span>` : `סיימתי - למסע <span aria-hidden="true">←</span>`;
   fwd.addEventListener("click", () => navigate(next ? "/unit/" + next.id : "/workshop"));
 
   footer.append(back, saved, fwd);

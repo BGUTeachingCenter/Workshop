@@ -1,4 +1,4 @@
-// Backend אמיתי — Firebase Authentication (קישור במייל, passwordless) + Firestore.
+// Backend אמיתי - Firebase Authentication (קישור במייל, passwordless) + Firestore.
 // שלד לשלב 3. הממשק זהה ל-backend/mock.js כדי שהחלפה לא תדרוש שינוי בשאר הקוד.
 //
 // כשנפעיל: נטען את Firebase SDK מ-CDN (ESM), נאתחל עם firebaseConfig, ונממש:
