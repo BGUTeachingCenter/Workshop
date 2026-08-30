@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כרטיס זיכרון לסדנה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#ffffff; --ground:#f6f5fb; --ink:#1b1926; --muted:#6b697c;
+    --line:#e7e5f1; --line-soft:#efedf7;
+    --brand:#5b4bd6; --brand-ink:#4a3fb5; --brand-tint:#f1effc;
+    --m2:#128a73; --m2-bright:#18a98c; --m2-tint:#e6f6f1;
+    --m3:#b96b22; --m3-bright:#d9852f; --m3-tint:#fbf0e3;
+    --good:#1f9d6b; --warn:#b26a00; --warn-tint:#fbf1df; --warn-line:#f0d9a8;
+    --shadow:0 1px 2px rgba(27,25,38,.04), 0 8px 24px -12px rgba(27,25,38,.14);
+    --font:"Assistant",-apple-system,"Segoe UI",Arial,sans-serif;
+    --display:"Rubik",var(--font);
+    --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --radius:14px;
+  }
+  :root:not([data-theme="light"]){ }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#211f2e; --ground:#15131f; --ink:#eceafa; --muted:#a4a1b8;
+      --line:#322e46; --line-soft:#2a2739;
+      --brand:#8a7df0; --brand-ink:#ab9ff6; --brand-tint:#211d38;
+      --m2:#3fd0af; --m2-bright:#4fe0be; --m2-tint:#12312a;
+      --m3:#e79b56; --m3-bright:#f0aa66; --m3-tint:#33261a;
+      --good:#4bd39a; --warn:#e6a552; --warn-tint:#332710; --warn-line:#5a4519;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#211f2e; --ground:#15131f; --ink:#eceafa; --muted:#a4a1b8;
+    --line:#322e46; --line-soft:#2a2739;
+    --brand:#8a7df0; --brand-ink:#ab9ff6; --brand-tint:#211d38;
+    --m2:#3fd0af; --m2-bright:#4fe0be; --m2-tint:#12312a;
+    --m3:#e79b56; --m3-bright:#f0aa66; --m3-tint:#33261a;
+    --good:#4bd39a; --warn:#e6a552; --warn-tint:#332710; --warn-line:#5a4519;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    direction:rtl; margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--font); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px; margin:0 auto; padding:clamp(20px,4vw,48px) clamp(16px,4vw,40px) 64px}
+
+  /* ---- header ---- */
+  header.top{margin-bottom:40px}
+  .eyebrow{display:inline-flex; align-items:center; gap:9px;
+    font-family:var(--display); font-weight:600; font-size:.72rem;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--brand-ink)}
+  .chip-skew{width:22px; height:13px; border-radius:3px;
+    background:linear-gradient(135deg,var(--brand-ink),var(--brand));
+    transform:skewX(-20deg); flex:0 0 auto}
+  header.top h1{font-family:var(--display); font-weight:700;
+    font-size:clamp(1.9rem,5vw,2.7rem); line-height:1.1; text-wrap:balance;
+    margin:.5rem 0 .4rem}
+  header.top p{max-width:60ch; color:var(--muted); font-size:1.05rem; margin:0}
+
+  /* ---- meeting section ---- */
+  .meeting{margin-top:38px; scroll-margin-top:20px}
+  .m-head{display:flex; align-items:center; gap:16px; margin-bottom:20px}
+  .m-num{font-family:var(--display); font-weight:700; font-size:1.5rem; color:#fff;
+    width:52px; height:44px; display:grid; place-items:center; border-radius:11px;
+    transform:skewX(-9deg); flex:0 0 auto; box-shadow:var(--shadow)}
+  .m-num span{transform:skewX(9deg)}
+  .m-head h2{font-family:var(--display); font-weight:600; font-size:1.4rem; margin:0}
+  .m-head .m-tag{font-family:var(--display); font-weight:600; font-size:.7rem;
+    letter-spacing:.14em; text-transform:uppercase; display:block; margin-bottom:2px}
+  .m2 .m-num{background:linear-gradient(135deg,var(--m2),var(--m2-bright))}
+  .m2 .m-tag{color:var(--m2)}
+  .m3 .m-num{background:linear-gradient(135deg,var(--m3),var(--m3-bright))}
+  .m3 .m-tag{color:var(--m3)}
+
+  .block-label{font-family:var(--display); font-weight:600; font-size:.78rem;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
+    margin:26px 0 12px; display:flex; align-items:center; gap:8px}
+  .block-label::before{content:""; width:14px; height:8px; border-radius:2px;
+    transform:skewX(-20deg); background:currentColor; opacity:.5}
+
+  /* ---- location cards ---- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:12px}
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    padding:15px 16px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+  .card::before{content:""; position:absolute; inset-inline-start:0; top:0; bottom:0;
+    width:4px}
+  .m2 .card::before{background:var(--m2-bright)}
+  .m3 .card::before{background:var(--m3-bright)}
+  .card h3{font-family:var(--display); font-weight:600; font-size:1rem; margin:0 0 8px}
+  .path{display:flex; flex-wrap:wrap; gap:5px 4px; align-items:center; font-size:.82rem}
+  .path .seg{background:var(--ground); border:1px solid var(--line-soft); border-radius:7px;
+    padding:2px 8px; font-weight:600; white-space:nowrap; direction:ltr; unicode-bidi:plaintext}
+  .path .arrow{color:var(--muted); font-weight:700}
+  .card .hint{margin:9px 0 0; font-size:.85rem; color:var(--muted)}
+
+  /* ---- copy rows (commands) ---- */
+  .cmd{display:flex; align-items:stretch; gap:0; background:var(--paper);
+    border:1px solid var(--line); border-radius:11px; overflow:hidden; box-shadow:var(--shadow)}
+  .cmd + .cmd{margin-top:9px}
+  .cmd .who{flex:0 0 auto; display:flex; align-items:center; padding:0 14px;
+    font-family:var(--display); font-weight:600; font-size:.82rem; border-inline-end:1px solid var(--line);
+    background:var(--brand-tint); color:var(--brand-ink); min-width:118px}
+  .cmd code{flex:1; font-family:var(--mono); font-size:.83rem; padding:12px 14px;
+    direction:ltr; text-align:left; overflow-x:auto; white-space:nowrap; color:var(--ink)}
+  .copy{flex:0 0 auto; border:0; border-inline-start:1px solid var(--line);
+    background:var(--paper); color:var(--muted); font-family:var(--font); font-weight:600;
+    font-size:.8rem; padding:0 15px; cursor:pointer; transition:color .15s, background .15s}
+  .copy:hover{color:var(--brand-ink); background:var(--brand-tint)}
+  .copy.done{color:var(--good)}
+  .copy:focus-visible{outline:2px solid var(--brand); outline-offset:-2px}
+
+  /* ---- featured rules block ---- */
+  .rules{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden}
+  .rules .rules-head{display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:13px 16px; background:var(--m3-tint); border-bottom:1px solid var(--line)}
+  .rules .rules-head strong{font-family:var(--display); font-weight:600; color:var(--m3)}
+  .rules pre{margin:0; padding:16px; overflow-x:auto; direction:ltr; text-align:left;
+    font-family:var(--mono); font-size:.82rem; line-height:1.7; color:var(--ink)}
+  .rules pre .tok-k{color:var(--m3)} .rules pre .tok-c{color:var(--muted)}
+
+  /* ---- reminders ---- */
+  .reminders{list-style:none; margin:12px 0 0; padding:0; display:grid; gap:8px}
+  .reminders li{background:var(--paper); border:1px solid var(--line); border-radius:11px;
+    padding:11px 14px 11px 40px; position:relative; font-size:.92rem}
+  .reminders li::before{content:""; position:absolute; inset-inline-start:14px; top:15px;
+    width:12px; height:12px; border-radius:3px; transform:skewX(-18deg)}
+  .m2 .reminders li::before{background:var(--m2-bright)}
+  .m3 .reminders li::before{background:var(--m3-bright)}
+  .reminders b{font-weight:700}
+  code.inl{font-family:var(--mono); font-size:.86em; background:var(--ground);
+    border:1px solid var(--line-soft); border-radius:5px; padding:1px 5px; direction:ltr;
+    unicode-bidi:plaintext}
+
+  /* ---- hard-refresh tip ---- */
+  kbd{font-family:var(--mono); font-size:.8em; background:var(--paper); border:1px solid var(--line);
+    border-bottom-width:2px; border-radius:6px; padding:2px 8px; white-space:nowrap;
+    direction:ltr; display:inline-block; color:var(--ink)}
+  .tip{background:var(--m2-tint); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; margin-top:12px; box-shadow:var(--shadow)}
+  .tip-head{font-family:var(--display); font-weight:600; color:var(--m2);
+    display:flex; align-items:center; gap:9px; margin-bottom:8px}
+  .tip-head .chip-skew{background:linear-gradient(135deg,var(--m2),var(--m2-bright))}
+  .tip p{margin:0}
+  .tip .keys{display:flex; gap:14px 26px; flex-wrap:wrap; margin:12px 0}
+  .tip .keys .os{font-family:var(--display); font-weight:600; font-size:.7rem;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-inline-end:8px}
+  .tip .hint{font-size:.85rem; color:var(--muted); margin-top:10px}
+
+  /* ---- safety net ---- */
+  .safety{background:var(--warn-tint); border:1px solid var(--warn-line); border-radius:var(--radius);
+    padding:18px 20px; box-shadow:var(--shadow)}
+  .safety .safety-head{font-family:var(--display); font-weight:600; color:var(--warn);
+    display:flex; align-items:center; gap:9px; margin-bottom:12px}
+  .safety .safety-head .chip-skew{background:linear-gradient(135deg,var(--warn),var(--m3-bright))}
+  .safety ol{margin:0 0 12px; padding-inline-start:20px; display:grid; gap:7px}
+  .safety ol li{padding-inline-start:4px}
+  .safety .warn-note{margin:12px 0 0; font-size:.88rem; color:var(--ink);
+    background:var(--paper); border:1px solid var(--warn-line); border-radius:10px; padding:10px 13px}
+  .safety .cmd{margin-top:4px}
+  .safety .cmd .who{background:var(--warn-tint); color:var(--warn)}
+
+  footer{margin-top:48px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; display:flex; align-items:center; gap:9px; flex-wrap:wrap}
+
+  @media (max-width:520px){
+    .cmd{flex-wrap:wrap}
+    .cmd .who{width:100%; min-width:0; border-inline-end:0; border-bottom:1px solid var(--line); padding:8px 14px}
+    .cmd .copy{border-inline-start:0; border-top:1px solid var(--line); width:100%; padding:9px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow"><span class="chip-skew"></span>כרטיס זיכרון · סדנת Vibe Coding בהוראה</span>
+    <h1>מה כדאי לזכור מהסדנה</h1>
+    <p>את הכול ראית בלייב. כאן שמורים העוגנים שקל לשכוח — המיקומים הקבורים בתפריטים, הפקודות להעתקה וכללי ההגנה — כדי שתוכלי לחזור ולעשות את זה לבד.</p>
+  </header>
+
+  <!-- ============ MEETING 2 ============ -->
+  <section class="meeting m2" id="m2">
+    <div class="m-head">
+      <div class="m-num"><span>2</span></div>
+      <div><span class="m-tag">מפגש 2</span><h2>מכלי בודד לאפליקציה מלאה</h2></div>
+    </div>
+
+    <div class="block-label">איפה זה יושב</div>
+    <div class="cards">
+      <div class="card">
+        <h3>לפתוח סביבת פיתוח</h3>
+        <div class="path"><span class="seg">Code</span><span class="arrow">›</span><span class="seg">Codespaces</span><span class="arrow">›</span><span class="seg">Create codespace on main</span></div>
+        <p class="hint">הכפתור הירוק ב־repo. נפתח VS Code בדפדפן.</p>
+      </div>
+      <div class="card">
+        <h3>שלושת האזורים ב־VS Code</h3>
+        <div class="path"><span class="seg">קבצים</span><span class="arrow">·</span><span class="seg">עורך</span><span class="arrow">·</span><span class="seg">טרמינל</span></div>
+        <p class="hint">טרמינל סגור? ‏<code class="inl">Terminal › New Terminal</code>.</p>
+      </div>
+      <div class="card">
+        <h3>לפרסם לאתר (GitHub Pages)</h3>
+        <div class="path"><span class="seg">Settings</span><span class="arrow">›</span><span class="seg">Pages</span><span class="arrow">›</span><span class="seg">Branch: main</span><span class="arrow">›</span><span class="seg">/(root)</span><span class="arrow">›</span><span class="seg">Save</span></div>
+        <p class="hint">הקישור: <code class="inl">username.github.io/repo</code></p>
+      </div>
+      <div class="card">
+        <h3>להעלות למודל (SCORM)</h3>
+        <div class="path"><span class="seg">הוספת משאב או פעילות</span><span class="arrow">›</span><span class="seg">חבילת SCORM</span></div>
+        <p class="hint">במצב עריכה בקורס. גוררים את קובץ ה־zip.</p>
+      </div>
+    </div>
+
+    <div class="block-label">פקודות התקנה — לפי הכלי שלך</div>
+    <div class="cmd"><span class="who">מנוי Claude</span><code>npm install -g @anthropic-ai/claude-code</code><button class="copy" type="button">העתקה</button></div>
+    <div class="cmd"><span class="who">מנוי ChatGPT</span><code>npm install -g @openai/codex</code><button class="copy" type="button">העתקה</button></div>
+    <div class="cmd"><span class="who">מנוי Gemini</span><code>npm install -g @google/gemini-cli</code><button class="copy" type="button">העתקה</button></div>
+
+    <div class="block-label">לזכור</div>
+    <ul class="reminders">
+      <li>הקובץ הראשי חייב להיקרא <code class="inl">index.html</code> כדי ש־Pages יציג אותו.</li>
+      <li><b>שמירה = commit + push.</b> רק אחריהם השינוי מופיע ב־GitHub ובאתר.</li>
+      <li>ב־Codex העבודה עוברת דרך <b>branch › PR › Merge</b>. ב־Claude/Gemini אפשר פשוט לבקש מהעוזר לשמור.</li>
+      <li>הפרסום לא מיידי — ממתינים דקה, מרעננים ובודקים שוב.</li>
+    </ul>
+
+    <div class="tip">
+      <div class="tip-head"><span class="chip-skew"></span>לא רואים את השינוי? רענון קשיח</div>
+      <p>אחרי פרסום או עדכון, הדפדפן מרבה להציג גרסה <b>ישנה מהזיכרון (cache)</b>. רענון רגיל לא תמיד מספיק — עושים <b>רענון קשיח</b>, שמתעלם מהזיכרון וטוען מחדש:</p>
+      <div class="keys">
+        <div><span class="os">Windows</span><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></div>
+        <div><span class="os">Mac</span><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></div>
+      </div>
+      <p class="hint">עובד לאתר ב־GitHub Pages, לאפליקציה עם Firebase, וגם לקובץ מקומי. חלופה: <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>F5</kbd>. עדיין ישן? נסי חלון פרטי.</p>
+    </div>
+  </section>
+
+  <!-- ============ MEETING 3 ============ -->
+  <section class="meeting m3" id="m3">
+    <div class="m-head">
+      <div class="m-num"><span>3</span></div>
+      <div><span class="m-tag">מפגש 3</span><h2>בסיס נתונים והגנות · Firebase</h2></div>
+    </div>
+
+    <div class="block-label">איפה זה יושב · קונסולת Firebase</div>
+    <div class="cards">
+      <div class="card">
+        <h3>לחבר את האפליקציה (config)</h3>
+        <div class="path"><span class="seg">הפרויקט</span><span class="arrow">›</span><span class="seg">&lt;/&gt;</span><span class="arrow">›</span><span class="seg">Register app</span></div>
+        <p class="hint">משם מעתיקים את ה־<code class="inl">firebaseConfig</code>.</p>
+      </div>
+      <div class="card">
+        <h3>בסיס הנתונים</h3>
+        <div class="path"><span class="seg">Build</span><span class="arrow">›</span><span class="seg">Firestore Database</span></div>
+        <p class="hint">אוספים (collections) ובתוכם מסמכים (documents).</p>
+      </div>
+      <div class="card">
+        <h3>זהות משתמשים</h3>
+        <div class="path"><span class="seg">Build</span><span class="arrow">›</span><span class="seg">Authentication</span><span class="arrow">›</span><span class="seg">Sign-in method</span></div>
+        <p class="hint">שם בוחרים ומפעילים שיטת התחברות.</p>
+      </div>
+      <div class="card">
+        <h3>הגנות (Rules)</h3>
+        <div class="path"><span class="seg">Firestore Database</span><span class="arrow">›</span><span class="seg">Rules</span><span class="arrow">›</span><span class="seg">Publish</span></div>
+        <p class="hint">כאן מפרסמים את כללי האבטחה שלמטה.</p>
+      </div>
+    </div>
+
+    <div class="block-label">כללי אבטחה — נקודת פתיחה להעתקה</div>
+    <div class="rules">
+      <div class="rules-head">
+        <strong>Firestore · Security Rules</strong>
+        <button class="copy" type="button">העתקת הכללים</button>
+      </div>
+      <pre id="rules-src"><span class="tok-c">// כל אחד ניגש רק למסמכים שה־uid שלו מופיע בהם.</span>
+<span class="tok-c">// עוזר ה־AI יתאים את השדות למבנה של הכלי שלך.</span>
+rules_version = <span class="tok-k">'2'</span>;
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{collection}/{docId} {
+      allow read, write: <span class="tok-k">if</span> request.auth != null
+        &amp;&amp; request.auth.uid == resource.data.uid;
+      allow create: <span class="tok-k">if</span> request.auth != null
+        &amp;&amp; request.auth.uid == request.resource.data.uid;
+    }
+  }
+}</pre>
+    </div>
+
+    <div class="block-label">לזכור</div>
+    <ul class="reminders">
+      <li><b>"מצב בדיקה" פתוח לכולם — וזמני.</b> ההגנה האמיתית היא בכללי האבטחה.</li>
+      <li>ה־<code class="inl">firebaseConfig</code> אינו סוד. אין טעם להסתיר אותו; להשקיע בכללים.</li>
+      <li>כל נתון נשמר תחת ה־<code class="inl">uid</code> של המשתמש — כך הוא "שייך" רק לו.</li>
+      <li>בודקים שההגנה עובדת: להיכנס כמשתמשת אחרת (חלון פרטי) ולוודא שלא רואים נתונים של אחרת.</li>
+    </ul>
+  </section>
+
+  <!-- ============ SAFETY NET (both meetings) ============ -->
+  <section class="meeting" id="safety" style="margin-top:38px">
+    <div class="block-label" style="margin-top:0">רשת ביטחון · משהו נשבר?</div>
+    <div class="safety">
+      <div class="safety-head"><span class="chip-skew"></span>אם עוזר ה־AI קלקל משהו — אף פעם לא נתקעים. חוזרים לגרסה שעבדה.</div>
+      <ol>
+        <li><b>הכי פשוט וללא סיכון:</b> בקשי מעוזר ה־AI — "בטל את השינוי האחרון" או "חזור לגרסה הקודמת שעבדה".</li>
+        <li>כל <b>commit</b> ששמרת הוא נקודת חזרה — ב־GitHub אפשר לחזור לכל גרסה קודמת בכל רגע.</li>
+        <li><b>לזרוק הכול ולחזור לשמירה האחרונה</b> (בטרמינל):</li>
+      </ol>
+      <div class="cmd"><span class="who">Hard reset</span><code>git reset --hard</code><button class="copy" type="button">העתקה</button></div>
+      <p class="warn-note">⚠️ <b>מוחק כל שינוי שלא שמרת ב־commit מאז.</b> משתמשים בזה רק כשבאמת רוצים לוותר על מה שהשתנה מאז השמירה האחרונה. כל מה ששמרת ודחפת (push) ל־GitHub — בטוח ולא נמחק.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span class="chip-skew"></span>
+    <span>המרכז לקידום ההוראה · סדנת Vibe Coding בהוראה — כרטיס זיכרון להמשך עצמאי.</span>
+  </footer>
+</div>
+
+<script>
+  function flash(btn){
+    const prev = btn.textContent;
+    btn.textContent = "הועתק ✓"; btn.classList.add("done");
+    setTimeout(()=>{ btn.textContent = prev; btn.classList.remove("done"); }, 1600);
+  }
+  document.querySelectorAll(".copy").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      // command rows: the <code> sibling; rules: the #rules-src pre
+      let text;
+      const cmd = btn.closest(".cmd");
+      if(cmd){ text = cmd.querySelector("code").textContent; }
+      else { text = document.getElementById("rules-src").innerText; }
+      try{ await navigator.clipboard.writeText(text); flash(btn); }
+      catch(e){
+        const r=document.createRange(); const t=cmd?cmd.querySelector("code"):document.getElementById("rules-src");
+        r.selectNodeContents(t); const s=getSelection(); s.removeAllRanges(); s.addRange(r);
+        try{ document.execCommand("copy"); flash(btn); }catch(_){ btn.textContent="בחרו והעתיקו"; }
+      }
+    });
+  });
+</script>
+</body>
+</html>
