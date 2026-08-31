@@ -15,7 +15,7 @@ export async function unitView(unitId) {
 
   if (!unit) { wrap.innerHTML = `<div class="notice">היחידה לא נמצאה.</div>`; return wrap; }
   if (user.role !== "admin" && !config.openUnits[unit.id]) {
-    wrap.innerHTML = `<div class="notice locked"><strong>היחידה עדיין נעולה</strong><p>היא תיפתח בהמשך המפגש, בהנחיית המנחָה.</p>
+    wrap.innerHTML = `<div class="notice locked"><strong>היחידה עדיין נעולה</strong><p>היא תיפתח בהמשך המפגש, בהנחיית המנחה.</p>
       <button class="text-btn" type="button" onclick="location.hash='#/workshop'">→ חזרה למסע</button></div>`;
     return wrap;
   }
@@ -34,14 +34,14 @@ export async function unitView(unitId) {
     saveCheck: (k, v) => { progress.checks[k] = v; data.saveCheck(user.uid, k, v); flashSaved(); },
   };
 
-  // המנחָה מנווטת על כל היחידות; משתתפת רק על הפתוחות.
+  // המנחה מנווט/ת על כל היחידות; משתתפ/ת רק על הפתוחות.
   const navUnits = user.role === "admin" ? allUnits : allUnits.filter((u) => config.openUnits[u.id]);
   const idx = navUnits.findIndex((u) => u.id === unit.id);
   const prev = navUnits[idx - 1];
   const next = navUnits[idx + 1];
   const openUnits = navUnits;
 
-  // המנחָה (אדמין) רואה את השקף עם הכותרת שבתוכו; המשתתפת רואה את כותרת היחידה.
+  // המנחה (אדמין) רואה את השקף עם הכותרת שבתוכו; המשתתפ/ת רואה את כותרת היחידה.
   const showSlides = user.role === "admin" && unit.slides && unit.slides.length;
 
   const card = document.createElement("article");
@@ -56,7 +56,7 @@ export async function unitView(unitId) {
 
   if (showSlides) card.append(renderSlides(unit.slides));
 
-  // המנחָה חושפת את ההנחיה למשתתפות ישירות מהיחידה (מתחת לשקפים, מעל ההנחיה).
+  // המנחה חושף/ת את ההנחיה למשתתפים ישירות מהיחידה (מתחת לשקפים, מעל ההנחיה).
   if (user.role === "admin") {
     let open = !!config.openUnits[unit.id];
     const toggle = document.createElement("button");
@@ -65,7 +65,7 @@ export async function unitView(unitId) {
     const paint = () => {
       toggle.classList.toggle("on", open);
       toggle.innerHTML = `<span class="rt-dot"></span>` + (open ? "פתוח" : "סגור");
-      toggle.title = open ? "לחצי כדי להסתיר מהמשתתפות" : "לחצי כדי לחשוף למשתתפות";
+      toggle.title = open ? "לחצו כדי להסתיר מהמשתתפים" : "לחצו כדי לחשוף למשתתפים";
     };
     paint();
     toggle.addEventListener("click", async () => {
