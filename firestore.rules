@@ -17,7 +17,8 @@ service cloud.firestore {
     // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js.
     function isAdmin() {
       return isSignedIn() && request.auth.token.email in [
-        'inbaltsa@post.bgu.ac.il'
+        'inbaltsa@post.bgu.ac.il',
+        'motkep@bgu.ac.il'
       ];
     }
 
