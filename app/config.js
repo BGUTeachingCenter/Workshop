@@ -6,11 +6,14 @@
 export const BACKEND = "mock"; // "mock" | "firebase"
 
 // קטע ההגדרות מהקונסולה של Firebase (Project settings → Your apps → SDK setup).
+// (ה-apiKey כאן אינו סוד - הוא נשלח לדפדפן ממילא; ההגנה היא בכללי האבטחה.)
 export const firebaseConfig = {
-  // apiKey: "…",
-  // authDomain: "…",
-  // projectId: "…",
-  // appId: "…",
+  apiKey: "AIzaSyBs0D8P1_SO7FozTEfnVWCgd2LQaWy62SA",
+  authDomain: "gen-lang-client-0866732986.firebaseapp.com",
+  projectId: "gen-lang-client-0866732986",
+  storageBucket: "gen-lang-client-0866732986.firebasestorage.app",
+  messagingSenderId: "603576156098",
+  appId: "1:603576156098:web:956ecbc2f5650baae4a05b",
 };
 
 // סיסמת הסדנה המשותפת - כל משתתף מקליד אותה כדי להיכנס (שער הכניסה).
