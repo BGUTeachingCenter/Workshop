@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// כללי האבטחה של Firestore לסדנה.
+// להדביק בקונסולה: Firestore Database → לשונית Rules → Publish.
+//
+// עיקרון: משתמש מחובר ניגש רק לנתונים של עצמו; מנחה (אדמין) קורא את רשימת
+// המשתמשים ומנהל את מצב היחידות. רשימת המנחים כאן חייבת להיות זהה ל-ADMIN_EMAILS
+// שב-app/config.js.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js.
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email in [
+        'inbaltsa@post.bgu.ac.il',
+        'motkep@bgu.ac.il'
+      ];
+    }
+
+    // פרופיל משתמש: כל אחד קורא/כותב את שלו; מנחה קורא את כולם (ללוח הניהול).
+    match /users/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create, update: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // התקדמות (תשובות + צ'קליסטים): רק הבעלים.
+    match /progress/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // הגדרות הסדנה (אילו יחידות פתוחות): כולם קוראים, רק מנחה כותב.
+    match /workshop/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

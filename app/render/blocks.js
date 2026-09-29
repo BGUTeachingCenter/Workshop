@@ -1,5 +1,5 @@
 // Renderer גנרי לבלוקי תוכן. כל kind → פונקציה שמחזירה אלמנט DOM.
-// ctx: { getAnswer, saveAnswer, getCheck, saveCheck } - לשמירת התקדמות המשתתפת.
+// ctx: { getAnswer, saveAnswer, getCheck, saveCheck } - לשמירת התקדמות המשתתפים.
 
 const el = (tag, cls, html) => {
   const n = document.createElement(tag);
@@ -115,7 +115,7 @@ const renderers = {
     return n;
   },
 
-  // טאבים - כל אחת בוחרת את שלה ורואה רק את התוכן שבו. remember=מפתח לשמירת הבחירה.
+  // טאבים - כל אחד בוחר את שלו ורואה רק את התוכן שבו. remember=מפתח לשמירת הבחירה.
   tabs: (b, ctx) => {
     const wrap = el("div", "b-tabs");
     const bar = el("div", "tab-bar");
