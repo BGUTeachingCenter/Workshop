@@ -3,6 +3,7 @@ import { auth, data } from "../api.js";
 import { allUnits, findUnit } from "../../content/index.js";
 import { renderBlock } from "../render/blocks.js";
 import { renderSlides } from "../render/slides.js";
+import { renderGlossary } from "../render/glossary.js";
 import { navigate } from "../router.js";
 import { applyMeetingAccent } from "../colors.js";
 
@@ -96,6 +97,7 @@ export async function unitView(unitId) {
   footer.append(back, saved, fwd);
   card.append(footer);
   wrap.append(card);
+  wrap.append(renderGlossary(unit.id));
   wrap.scrollTo?.(0, 0);
   return wrap;
 }

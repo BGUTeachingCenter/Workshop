@@ -283,4 +283,35 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .switch .knob { position: absolute; top: 3px; inset-inline-end: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .18s; }
 .switch.on .knob { transform: translateX(-20px); }
 
+/* ---------- glossary (מילון מושגים) ---------- */
+.gloss-toggle {
+  position: fixed; bottom: 20px; right: 20px; z-index: 30;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent-deep), var(--accent)); color: #fff;
+  border: 0; border-radius: 999px; padding: 11px 18px; font: inherit; font-weight: 700;
+  cursor: pointer; box-shadow: var(--shadow); transition: filter .15s, transform .05s;
+}
+.gloss-toggle:hover { filter: brightness(1.05); }
+.gloss-toggle:active { transform: translateY(1px); }
+.gloss-count { background: rgba(255,255,255,.22); border-radius: 999px; padding: 1px 9px; font-size: .82rem; font-variant-numeric: tabular-nums; }
+.gloss-overlay { position: fixed; inset: 0; background: rgba(30,28,50,.38); z-index: 40; opacity: 0; transition: opacity .22s; }
+.gloss-overlay.show { opacity: 1; }
+.gloss-drawer {
+  position: fixed; top: 0; bottom: 0; right: 0; z-index: 50;
+  width: min(360px, 88vw); background: var(--surface);
+  border-inline-start: 1px solid var(--border); box-shadow: -14px 0 40px -24px rgba(40,38,60,.5);
+  display: flex; flex-direction: column; transform: translateX(100%); transition: transform .22s ease;
+}
+.gloss-drawer.open { transform: translateX(0); }
+.gloss-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border); flex: 0 0 auto; }
+.gloss-head strong { font-size: 1.15rem; color: var(--heading); font-weight: 800; }
+.gloss-close { background: none; border: 0; font-size: 1.7rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 6px; }
+.gloss-close:hover { color: var(--heading); }
+.gloss-list { margin: 0; padding: 16px 20px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.gloss-item { border-inline-start: 3px solid var(--border); padding-inline-start: 12px; }
+.gloss-item.is-new { border-inline-start-color: var(--accent); }
+.gloss-item .gt { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--heading); flex-wrap: wrap; }
+.gloss-item .gd { display: block; margin-top: 3px; color: var(--body); font-size: .94rem; line-height: 1.5; }
+.gloss-badge { font-size: .66rem; font-weight: 800; letter-spacing: .04em; background: var(--accent-tint); color: var(--accent-ink); padding: 2px 8px; border-radius: 999px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
