@@ -128,21 +128,6 @@ export default {
                 ] },
                 { kind: "selfcheck", id: "chk-codex", label: "בדקו את עצמכם", items: ["Codex רץ בטרמינל ומחכה להוראות."] }
               ]
-            },
-            {
-              label: "מנוי Gemini",
-              blocks: [
-                { kind: "steps", items: [
-                  "פתחו טרמינל (<b>Terminal ← New Terminal</b>).",
-                  "הדביקו את הפקודה והריצו (Enter):"
-                ] },
-                { kind: "code", code: "npm install -g @google/gemini-cli" },
-                { kind: "steps", start: 3, items: [
-                  "כתבו <code>gemini</code> והריצו.",
-                  "התחברו עם חשבון Google."
-                ] },
-                { kind: "selfcheck", id: "chk-gemini", label: "בדקו את עצמכם", items: ["Gemini רץ בטרמינל ומחכה להוראות."] }
-              ]
             }
           ]
         }
@@ -232,7 +217,7 @@ export default {
         { title: "מילון קטן: Commit ו־Push", body: "<b>Commit</b> הוא נקודת שמירה מתועדת בתוך הפרויקט.<br><b>Push</b> שולח אותה מה־Codespace אל GitHub.<br><br>רק אחרי commit ו־push נראה את השינוי גם באתר GitHub." },
         { title: "מילון קטן: Branch", body: "<b>Branch</b> הוא מסלול עבודה נפרד. אפשר לנסות בו שינוי בלי לגעת מיד בגרסה הראשית, שנקראת בדרך כלל <b>main</b>.<br><br>כך יש מקום בטוח לבדוק לפני שמחברים את השינוי לפרויקט." },
         { title: "מילון קטן: Pull Request ו־Merge", body: "<b>Pull Request</b> (PR) הוא בקשה לחבר שינוי מה־branch אל main - שם רואים מה השתנה ובודקים.<br><b>Merge</b> הוא החיבור עצמו, אחרי שבדקנו.<br><br>הרצף: branch → שינוי → PR → merge." },
-        { title: "תלוי בכלי", body: "<ul><li><b>Codex</b> - עובד דרך branch ו־PR כברירת מחדל, אז נכיר ונדגים את הזרימה</li><li><b>Claude / Gemini</b> - אפשר פשוט לבקש מהם לשמור, ואם רוצים - גם לפתוח branch ו־PR</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
+        { title: "תלוי בכלי", body: "<ul><li><b>Codex</b> - עובד דרך branch ו־PR כברירת מחדל, אז נכיר ונדגים את הזרימה</li><li><b>Claude</b> - אפשר פשוט לבקש ממנו לשמור, ואם רוצים - גם לפתוח branch ו־PR</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
       ],
       blocks: [
         { kind: "text", html: "יש לכם גרסה שעובדת - עכשיו נשמור אותה. הדרך תלויה בכלי שבחרתם; בחרו את הטאב שלכם." },
@@ -261,17 +246,6 @@ export default {
                   "היכנסו ל־GitHub, קראו את ה־PR, ולחצו <b>Merge</b> כדי לחבר ל־main."
                 ] },
                 { kind: "selfcheck", id: "chk-save-codex", label: "בדקו את עצמכם", items: ["נפתח PR ב־GitHub.", "אחרי Merge השינוי נמצא ב־main."] }
-              ]
-            },
-            {
-              label: "מנוי Gemini",
-              blocks: [
-                { kind: "steps", items: [
-                  "בקשו מ־Gemini לשמור: ‘שמור את השינוי (commit) ושלח ל־GitHub (push)’.",
-                  "רוצים מסלול בטוח? בקשו לפתוח branch ו־Pull Request.",
-                  "ב־GitHub קראו את ה־PR ולחצו <b>Merge</b> כדי לחבר ל־main."
-                ] },
-                { kind: "selfcheck", id: "chk-save-gemini", label: "בדקו את עצמכם", items: ["השינוי מופיע ב־GitHub (ואם פתחתם PR - הוא מחובר ל־main)."] }
               ]
             }
           ]
