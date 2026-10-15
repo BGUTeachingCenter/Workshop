@@ -217,7 +217,7 @@ export default {
         { title: "מילון קטן: Commit ו־Push", body: "<b>Commit</b> הוא נקודת שמירה מתועדת בתוך הפרויקט.<br><b>Push</b> שולח אותה מה־Codespace אל GitHub.<br><br>רק אחרי commit ו־push נראה את השינוי גם באתר GitHub." },
         { title: "מילון קטן: Branch", body: "<b>Branch</b> הוא מסלול עבודה נפרד. אפשר לנסות בו שינוי בלי לגעת מיד בגרסה הראשית, שנקראת בדרך כלל <b>main</b>.<br><br>כך יש מקום בטוח לבדוק לפני שמחברים את השינוי לפרויקט." },
         { title: "מילון קטן: Pull Request ו־Merge", body: "<b>Pull Request</b> (PR) הוא בקשה לחבר שינוי מה־branch אל main - שם רואים מה השתנה ובודקים.<br><b>Merge</b> הוא החיבור עצמו, אחרי שבדקנו.<br><br>הרצף: branch → שינוי → PR → merge." },
-        { title: "תלוי בכלי", body: "<ul><li><b>Codex</b> - עובד דרך branch ו־PR כברירת מחדל, אז נכיר ונדגים את הזרימה</li><li><b>Claude</b> - אפשר פשוט לבקש ממנו לשמור, ואם רוצים - גם לפתוח branch ו־PR</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
+        { title: "תלוי בכלי", body: "<ul><li><b>Codex</b> - עובד דרך branch ו־PR כברירת מחדל, אז נכיר ונדגים את הזרימה</li><li><b>Claude</b> - אפשר פשוט לבקש ממנו לשמור, ואם רוצים - גם לפתוח branch ו־PR</li><li><b>Copilot</b> - אפשר לבקש ממנו לשמור, או לשמור דרך כפתורי ה־Source Control בעורך</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
       ],
       blocks: [
         { kind: "text", html: "יש לכם גרסה שעובדת - עכשיו נשמור אותה. הדרך תלויה בכלי שבחרתם; בחרו את הטאב שלכם." },
@@ -246,6 +246,18 @@ export default {
                   "היכנסו ל־GitHub, קראו את ה־PR, ולחצו <b>Merge</b> כדי לחבר ל־main."
                 ] },
                 { kind: "selfcheck", id: "chk-save-codex", label: "בדקו את עצמכם", items: ["נפתח PR ב־GitHub.", "אחרי Merge השינוי נמצא ב־main."] }
+              ]
+            },
+            {
+              label: "Copilot",
+              blocks: [
+                { kind: "text", html: "אפשר לשמור בשתי דרכים - בחרו מה שנוח." },
+                { kind: "steps", items: [
+                  "<b>הדרך הקלה:</b> בקשו מ־Copilot (במצב Agent) לשמור: ‘שמור את השינוי (commit) ושלח ל־GitHub (push)’.",
+                  "<b>או בכפתורים:</b> בעורך פתחו את לשונית <b>Source Control</b>, כתבו תיאור קצר, לחצו <b>Commit</b> ואז <b>Sync/Push</b>.",
+                  "רוצים מסלול בטוח? בקשו מ־Copilot לפתוח branch ו־Pull Request, ואז ב־GitHub לחצו <b>Merge</b>."
+                ] },
+                { kind: "selfcheck", id: "chk-save-copilot", label: "בדקו את עצמכם", items: ["השינוי מופיע ב־GitHub (ואם פתחתם PR - הוא מחובר ל־main)."] }
               ]
             }
           ]
