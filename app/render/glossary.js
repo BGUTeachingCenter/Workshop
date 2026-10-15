@@ -1,5 +1,5 @@
 // מילון מושגים נפתח (מגירה). מתמלא בהדרגה לפי מיקום היחידה הנוכחית ברצף.
-// מושגים חדשים (שמופיעים ביחידה הנוכחית) מוצגים ראשונים ומסומנים "חדש".
+// המושגים מוצגים לפי סדר ההופעה בתוכנית הלימוד; החדשים (ביחידה הנוכחית) מסומנים "חדש".
 import { glossaryUpTo } from "../../content/glossary.js";
 
 export function renderGlossary(unitId) {
@@ -25,9 +25,8 @@ export function renderGlossary(unitId) {
   drawer.setAttribute("role", "dialog");
   drawer.setAttribute("aria-label", "מילון מושגים");
 
-  // מושגים חדשים קודם, ואז השאר לפי סדר תוכנית הלימוד.
-  const ordered = [...terms.filter((t) => t.isNew), ...terms.filter((t) => !t.isNew)];
-  const items = ordered.map((t) => `
+  // לפי סדר ההופעה בתוכנית הלימוד; המושגים החדשים מגיעים אחרונים ומסומנים "חדש".
+  const items = terms.map((t) => `
     <div class="gloss-item${t.isNew ? " is-new" : ""}">
       <span class="gt">${t.term}${t.isNew ? `<span class="gloss-badge">חדש</span>` : ""}</span>
       <span class="gd">${t.def}</span>
