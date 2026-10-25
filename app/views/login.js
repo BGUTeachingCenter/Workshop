@@ -15,7 +15,7 @@ export function loginView() {
 
   wrap.innerHTML = `
     <div class="login-hero">
-      <div class="login-brand"><span class="brand-mark" aria-hidden="true"></span>אוניברסיטת בן-גוריון בנגב · המרכז לקידום ההוראה</div>
+      <img class="login-logo" src="assets/logo-unit.jpg" alt="היחידה לקידום איכות ההוראה והלמידה · אוניברסיטת בן-גוריון בנגב" />
       <span class="eyebrow">סדנת סגל · Vibe Coding בהוראה</span>
       <h1>מהצורך לכלי</h1>
       <p class="login-invite">חשבו על דבר אחד שהסטודנטים שלכם מפספסים שוב ושוב.<br>משם נתחיל.</p>
