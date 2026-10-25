@@ -15,10 +15,12 @@ service cloud.firestore {
     }
 
     // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js.
+    // ההשוואה באותיות קטנות (.lower) כדי שלא תהיה תלות ברישיות בהקלדה.
     function isAdmin() {
-      return isSignedIn() && request.auth.token.email in [
+      return isSignedIn() && request.auth.token.email.lower() in [
         'inbaltsa@post.bgu.ac.il',
-        'motkep@bgu.ac.il'
+        'motkep@bgu.ac.il',
+        'teacher@bgu.ac.il'
       ];
     }
 

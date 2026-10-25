@@ -25,4 +25,5 @@ export const WORKSHOP_PASSWORD = "VibeCodingBGU2026";
 export const ADMIN_EMAILS = [
   "inbaltsa@post.bgu.ac.il",
   "motkep@bgu.ac.il",
+  "teacher@bgu.ac.il",
 ];
