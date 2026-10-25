@@ -15,9 +15,11 @@ export function loginView() {
 
   wrap.innerHTML = `
     <div class="login-hero">
+      <div class="login-brand"><span class="brand-mark" aria-hidden="true"></span>אוניברסיטת בן-גוריון בנגב · המרכז לקידום ההוראה</div>
       <span class="eyebrow">סדנת סגל · Vibe Coding בהוראה</span>
       <h1>מהצורך לכלי</h1>
       <p class="login-invite">חשבו על דבר אחד שהסטודנטים שלכם מפספסים שוב ושוב.<br>משם נתחיל.</p>
+      <p class="login-credit">פותח על ידי ד"ר ענבל צרפתי-ברעד</p>
     </div>
     <form class="login-card" novalidate>
       <h2>כניסה לסדנה</h2>

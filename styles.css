@@ -104,6 +104,16 @@ a { color: var(--accent-ink); }
 .login-note.err { color: #c0392b; }
 @media (max-width: 760px) { .login { grid-template-columns: 1fr; } .login-hero { border: 0; } }
 
+.login-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: .9rem; color: var(--heading); margin-bottom: 22px; letter-spacing: -.01em; }
+.login-credit { margin-top: 30px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+
+/* ---------- global site footer (branding + credit) ---------- */
+.site-footer {
+  display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap;
+  padding: 16px; font-size: .82rem; font-weight: 500; color: var(--muted);
+  background: var(--ground); border-top: 1px solid var(--border); text-align: center;
+}
+
 /* ---------- appbar ---------- */
 .appbar {
   position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 16px;
