@@ -20,10 +20,9 @@ export const firebaseConfig = {
 // למלא לפני הפעלת Firebase.
 export const WORKSHOP_PASSWORD = "VibeCodingBGU2026";
 
-// אימיילים של מנחים (אדמינים). מי שנכנס עם אימייל מהרשימה מקבל תצוגת מנחה.
+// אימיילים של מנחים (אדמינים). מנחה נכנס עם Google בלבד (״כניסת מנחים עם Google״),
+// והאימייל חייב להיות מאומת - הסיסמה המשותפת לא מקנה הרשאת מנחה.
 // חשוב: הרשימה הזו חייבת להיות זהה לרשימה שב-firestore.rules (שם היא נאכפת).
 export const ADMIN_EMAILS = [
   "inbaltsa@post.bgu.ac.il",
-  "motkep@bgu.ac.il",
-  "teacher@bgu.ac.il",
 ];

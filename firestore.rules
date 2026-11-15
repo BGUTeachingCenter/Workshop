@@ -14,14 +14,16 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js.
-    // ההשוואה באותיות קטנות (.lower) כדי שלא תהיה תלות ברישיות בהקלדה.
+    // מנחה = כניסה עם Google + אימייל מאומת + אימייל מהרשימה.
+    // הסיסמה המשותפת של הסדנה גלויה לכל דפדפן, ולכן כניסה בסיסמה לעולם לא מקנה הרשאת מנחה.
+    // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js (אותיות קטנות).
     function isAdmin() {
-      return isSignedIn() && request.auth.token.email.lower() in [
-        'inbaltsa@post.bgu.ac.il',
-        'motkep@bgu.ac.il',
-        'teacher@bgu.ac.il'
-      ];
+      return isSignedIn()
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in [
+          'inbaltsa@post.bgu.ac.il'
+        ];
     }
 
     // פרופיל משתמש: כל אחד קורא/כותב את שלו; מנחה קורא את כולם (ללוח הניהול).

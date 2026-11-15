@@ -102,6 +102,7 @@ a { color: var(--accent-ink); }
 .login-card .primary { margin-top: 6px; }
 .login-note { font-size: .86rem; color: var(--muted); min-height: 1.2em; }
 .login-note.err { color: #c0392b; }
+.login-google { align-self: center; margin-top: 4px; font-size: .88rem; }
 @media (max-width: 760px) { .login { grid-template-columns: 1fr; } .login-hero { border: 0; } }
 
 .login-logo { width: 100%; max-width: 340px; height: auto; display: block; margin-bottom: 26px; border-radius: 8px; }

@@ -30,7 +30,8 @@ export function loginView() {
         <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
       </label>${passwordField}
       <button class="primary" type="submit">כניסה</button>
-      <p class="login-note"></p>
+      <p class="login-note"></p>${needsPassword ? `
+      <button class="text-btn login-google" type="button">כניסת מנחים עם Google</button>` : ""}
     </form>`;
 
   const form = wrap.querySelector("form");
@@ -48,7 +49,7 @@ export function loginView() {
       note.textContent = needsPassword ? "נא למלא שם, אימייל וסיסמה." : "נא למלא שם ואימייל.";
       note.classList.add("err"); return;
     }
-    const btn = form.querySelector("button");
+    const btn = form.querySelector("button.primary");
     btn.disabled = true; btn.textContent = "רגע…";
     try {
       const res = await auth.requestLink(email, name, password);
@@ -57,6 +58,18 @@ export function loginView() {
     } catch (err) {
       note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
       btn.disabled = false; btn.textContent = "כניסה";
+    }
+  });
+
+  const googleBtn = wrap.querySelector(".login-google");
+  googleBtn?.addEventListener("click", async () => {
+    googleBtn.disabled = true; note.classList.remove("err"); note.textContent = "נפתח חלון התחברות של Google…";
+    try {
+      await auth.signInWithGoogle();
+      navigate("/workshop");
+    } catch (err) {
+      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
+      googleBtn.disabled = false;
     }
   });
 
