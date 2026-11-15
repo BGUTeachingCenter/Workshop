@@ -202,6 +202,9 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .b-answer { width: 100%; margin-top: 12px; min-height: 92px; resize: vertical; font: inherit; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface); color: var(--heading); }
 .b-answer:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--primary-40); }
 .b-hint { display: block; margin-top: 8px; font-size: .84rem; color: var(--muted); }
+.b-recall { background: var(--surface-2); border: 1px solid var(--border); border-inline-start: 4px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; }
+.b-recall blockquote { margin: 0; color: var(--heading); font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; }
+.b-recall blockquote.empty { color: var(--muted); font-weight: 400; }
 .b-prompt-box, .b-code { }
 .b-note { margin-top: 8px; font-size: .86rem; color: var(--muted); }
 .codebox { position: relative; background: #2c2a28; border-radius: var(--radius); overflow: hidden; }

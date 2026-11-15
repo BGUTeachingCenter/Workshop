@@ -53,6 +53,18 @@ const renderers = {
     return n;
   },
 
+  // מציג תשובה שנשמרה ביחידה קודמת (answer = מפתח התשובה). לקריאה בלבד - לא שומר דבר.
+  recall: (b, ctx) => {
+    const n = el("div", "b-recall");
+    if (b.label) n.append(el("span", "b-label", b.label));
+    const saved = (ctx.getAnswer(b.answer) || "").trim();
+    const q = el("blockquote", saved ? null : "empty");
+    q.textContent = saved || b.empty || "";
+    n.append(q);
+    if (b.note) n.append(el("p", "b-note", b.note));
+    return n;
+  },
+
   prompt: (b) => {
     const n = el("div", "b-prompt-box");
     n.append(el("span", "b-label", b.label || "פְּרוֹמְפְּט ל־AI"));
