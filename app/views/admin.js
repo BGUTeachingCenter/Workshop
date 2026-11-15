@@ -29,6 +29,27 @@ export async function adminView() {
   }
   wrap.append(usersSec);
 
+  // --- פתיחה/סגירה של כל היחידות בבת אחת ---
+  const allIds = meetings.flatMap((m) => m.units.map((u) => u.id));
+  const bulk = document.createElement("div");
+  bulk.className = "admin-bulk";
+  [[true, "פתיחת כל היחידות"], [false, "סגירת כל היחידות"]].forEach(([open, label]) => {
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.textContent = label;
+    btn.addEventListener("click", async () => {
+      if (!confirm(`${open ? "לפתוח" : "לסגור"} את כל ${allIds.length} היחידות למשתתפים?`)) return;
+      btn.disabled = true;
+      try {
+        await data.setAllUnitsOpen(allIds, open);
+        allIds.forEach((id) => { config.openUnits[id] = open; });
+        wrap.querySelectorAll(".switch").forEach((t) => { t.classList.toggle("on", open); t.setAttribute("aria-checked", String(open)); });
+      } catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
+      finally { btn.disabled = false; }
+    });
+    bulk.append(btn);
+  });
+  wrap.append(bulk);
+
   // --- שליטה בפתיחת יחידות ---
   meetings.forEach((m) => {
     const sec = document.createElement("section");

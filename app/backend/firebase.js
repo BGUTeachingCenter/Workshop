@@ -172,6 +172,10 @@ export const data = {
   async setUnitOpen(unitId, open) {
     await setDoc(doc(db, "workshop", "config"), { openUnits: { [unitId]: !!open } }, { merge: true });
   },
+  async setAllUnitsOpen(unitIds, open) {
+    const openUnits = Object.fromEntries(unitIds.map((id) => [id, !!open]));
+    await setDoc(doc(db, "workshop", "config"), { openUnits }, { merge: true });
+  },
   async listUsers() {
     const qs = await getDocs(collection(db, "users"));
     return qs.docs.map((d) => ({ uid: d.id, ...d.data() }));

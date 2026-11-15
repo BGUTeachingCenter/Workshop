@@ -287,6 +287,10 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .user-list .u-main small { color: var(--muted); font-size: .84rem; }
 .u-role { font-size: .74rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
 .u-role.admin { background: var(--accent-tint); color: var(--accent-ink); }
+.admin-bulk { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.admin-bulk button { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; padding: 8px 18px; font: inherit; font-weight: 600; font-size: .9rem; color: var(--heading); cursor: pointer; }
+.admin-bulk button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }
+.admin-bulk button:disabled { opacity: .5; cursor: default; }
 .gate-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .gate-list li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border); }
 .gate-list li:first-child { border-top: 0; }

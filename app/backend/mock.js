@@ -56,6 +56,11 @@ export const data = {
     write(K.config, cfg);
     return cfg;
   },
+  async setAllUnitsOpen(unitIds, open) {
+    const cfg = await this.getConfig();
+    unitIds.forEach((id) => { cfg.openUnits[id] = !!open; });
+    write(K.config, cfg);
+  },
   async listUsers() { return Object.values(read(K.users, {})); },
 
   async getProgress(uid) { return read(K.progress(uid), { answers: {}, checks: {} }); },
