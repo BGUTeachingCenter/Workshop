@@ -54,6 +54,7 @@ content/
 { id: "m1-u1", title: "…", lead: "…", blocks: [
   { kind: "text", html: "…" },
   { kind: "reflection", id: "need", prompt: "…", placeholder: "…", hint: "…" },
+  { kind: "recall", answer: "need", label: "…", empty: "…", note: "…" },  // מציג תשובה שנשמרה קודם
   { kind: "task", label: "…", html: "…" },
   { kind: "prompt", code: "…" },     // פרומפט להעתקה
   { kind: "code", code: "…" },

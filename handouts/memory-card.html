@@ -44,6 +44,7 @@
   }
 
   *{box-sizing:border-box}
+  code,pre,kbd{font-variant-ligatures:none}
   body{
     direction:rtl; margin:0; background:var(--ground); color:var(--ink);
     font-family:var(--font); font-size:16px; line-height:1.6;
@@ -129,7 +130,7 @@
   /* ---- reminders ---- */
   .reminders{list-style:none; margin:12px 0 0; padding:0; display:grid; gap:8px}
   .reminders li{background:var(--paper); border:1px solid var(--line); border-radius:11px;
-    padding:11px 14px 11px 40px; position:relative; font-size:.92rem}
+    padding:11px 14px; padding-inline-start:40px; position:relative; font-size:.92rem}
   .reminders li::before{content:""; position:absolute; inset-inline-start:14px; top:15px;
     width:12px; height:12px; border-radius:3px; transform:skewX(-18deg)}
   .m2 .reminders li::before{background:var(--m2-bright)}
@@ -217,16 +218,16 @@
       </div>
     </div>
 
-    <div class="block-label">פקודות התקנה — לפי הכלי שלך</div>
+    <div class="block-label">פקודות התקנה — לפי הכלי שלכם</div>
     <div class="cmd"><span class="who">מנוי Claude</span><code>npm install -g @anthropic-ai/claude-code</code><button class="copy" type="button">העתקה</button></div>
     <div class="cmd"><span class="who">מנוי ChatGPT</span><code>npm install -g @openai/codex</code><button class="copy" type="button">העתקה</button></div>
-    <div class="cmd"><span class="who">מנוי Gemini</span><code>npm install -g @google/gemini-cli</code><button class="copy" type="button">העתקה</button></div>
 
     <div class="block-label">לזכור</div>
     <ul class="reminders">
       <li>הקובץ הראשי חייב להיקרא <code class="inl">index.html</code> כדי ש־Pages יציג אותו.</li>
       <li><b>שמירה = commit + push.</b> רק אחריהם השינוי מופיע ב־GitHub ובאתר.</li>
-      <li>ב־Codex העבודה עוברת דרך <b>branch › PR › Merge</b>. ב־Claude/Gemini אפשר פשוט לבקש מהעוזר לשמור.</li>
+      <li>ב־Codex העבודה עוברת דרך <b>branch › PR › Merge</b>. ב־Claude וב־Copilot אפשר פשוט לבקש מהעוזר לשמור.</li>
+      <li><b>בלי מנוי?</b> Copilot חינמי: פותחים את הפאנל שלו ב־Codespace ועוברים למצב <b>Agent</b>. אין מה להתקין.</li>
       <li>הפרסום לא מיידי — ממתינים דקה, מרעננים ובודקים שוב.</li>
     </ul>
 
@@ -245,25 +246,30 @@
   <section class="meeting m3" id="m3">
     <div class="m-head">
       <div class="m-num"><span>3</span></div>
-      <div><span class="m-tag">מפגש 3</span><h2>בסיס נתונים והגנות · Firebase</h2></div>
+      <div><span class="m-tag">מפגש 3</span><h2>אפליקציה שזוכרת · Firebase</h2></div>
     </div>
 
     <div class="block-label">איפה זה יושב · קונסולת Firebase</div>
     <div class="cards">
       <div class="card">
         <h3>לחבר את האפליקציה (config)</h3>
-        <div class="path"><span class="seg">הפרויקט</span><span class="arrow">›</span><span class="seg">&lt;/&gt;</span><span class="arrow">›</span><span class="seg">Register app</span></div>
-        <p class="hint">משם מעתיקים את ה־<code class="inl">firebaseConfig</code>.</p>
+        <div class="path"><span class="seg">Project settings</span><span class="arrow">›</span><span class="seg">Your apps</span></div>
+        <p class="hint">גלגל השיניים. משם מעתיקים את ה־<code class="inl">firebaseConfig</code>.</p>
       </div>
       <div class="card">
-        <h3>בסיס הנתונים</h3>
-        <div class="path"><span class="seg">Build</span><span class="arrow">›</span><span class="seg">Firestore Database</span></div>
-        <p class="hint">אוספים (collections) ובתוכם מסמכים (documents).</p>
-      </div>
-      <div class="card">
-        <h3>זהות משתמשים</h3>
+        <h3>שיטת התחברות</h3>
         <div class="path"><span class="seg">Build</span><span class="arrow">›</span><span class="seg">Authentication</span><span class="arrow">›</span><span class="seg">Sign-in method</span></div>
-        <p class="hint">שם בוחרים ומפעילים שיטת התחברות.</p>
+        <p class="hint">שם מפעילים את Google (או שיטה אחרת).</p>
+      </div>
+      <div class="card">
+        <h3>דומיינים מורשים</h3>
+        <div class="path"><span class="seg">Authentication</span><span class="arrow">›</span><span class="seg">Settings</span><span class="arrow">›</span><span class="seg">Authorized domains</span></div>
+        <p class="hint">מוסיפים רק את שם האתר: <code class="inl">username.github.io</code></p>
+      </div>
+      <div class="card">
+        <h3>לראות מה הסטודנטים עשו</h3>
+        <div class="path"><span class="seg">Build</span><span class="arrow">›</span><span class="seg">Firestore Database</span><span class="arrow">›</span><span class="seg">Data</span></div>
+        <p class="hint">האוסף <code class="inl">responses</code>: מסמך אחד לכל סטודנט.</p>
       </div>
       <div class="card">
         <h3>הגנות (Rules)</h3>
@@ -272,22 +278,19 @@
       </div>
     </div>
 
-    <div class="block-label">כללי אבטחה — נקודת פתיחה להעתקה</div>
+    <div class="block-label">כללי אבטחה — כל משתמש והמסמך שלו</div>
     <div class="rules">
       <div class="rules-head">
         <strong>Firestore · Security Rules</strong>
         <button class="copy" type="button">העתקת הכללים</button>
       </div>
-      <pre id="rules-src"><span class="tok-c">// כל אחד ניגש רק למסמכים שה־uid שלו מופיע בהם.</span>
-<span class="tok-c">// עוזר ה־AI יתאים את השדות למבנה של הכלי שלך.</span>
-rules_version = <span class="tok-k">'2'</span>;
+      <pre id="rules-src">rules_version = <span class="tok-k">'2'</span>;
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{collection}/{docId} {
+
+    match /responses/{uid} {
       allow read, write: <span class="tok-k">if</span> request.auth != null
-        &amp;&amp; request.auth.uid == resource.data.uid;
-      allow create: <span class="tok-k">if</span> request.auth != null
-        &amp;&amp; request.auth.uid == request.resource.data.uid;
+                         &amp;&amp; request.auth.uid == uid;
     }
   }
 }</pre>
@@ -295,10 +298,11 @@ service cloud.firestore {
 
     <div class="block-label">לזכור</div>
     <ul class="reminders">
-      <li><b>"מצב בדיקה" פתוח לכולם — וזמני.</b> ההגנה האמיתית היא בכללי האבטחה.</li>
-      <li>ה־<code class="inl">firebaseConfig</code> אינו סוד. אין טעם להסתיר אותו; להשקיע בכללים.</li>
-      <li>כל נתון נשמר תחת ה־<code class="inl">uid</code> של המשתמש — כך הוא "שייך" רק לו.</li>
-      <li>בודקים שההגנה עובדת: להיכנס כמשתמש אחר (חלון פרטי) ולוודא שלא רואים נתונים של אחר.</li>
+      <li><b>"מצב בדיקה" פתוח לכולם, ופג אחרי 30 יום.</b> מחליפים אותו בכללים שלמעלה כבר ביום הראשון.</li>
+      <li>שם האוסף בכללים (<code class="inl">responses</code>) חייב להיות זהה לשם שבקוד. שיניתם אחד? בקשו מעוזר ה־AI להתאים את השני.</li>
+      <li>ה־<code class="inl">firebaseConfig</code> אינו סוד, ואין טעם להסתיר אותו. ההגנה היא בכללים.</li>
+      <li>העברתם את האתר לכתובת חדשה וההתחברות נשברה (<code class="inl">auth/unauthorized-domain</code>)? הוסיפו את הכתובת לדומיינים המורשים.</li>
+      <li>שומרים רק מה שהכלי צריך, מספרים לסטודנטים מה נשמר, ובסוף הסמסטר מוחקים.</li>
     </ul>
   </section>
 
