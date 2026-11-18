@@ -240,6 +240,9 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .slide-body p + p { margin-top: .7em; }
 .slide-body ul { margin: .5em 0; padding-inline-start: 1.3em; display: flex; flex-direction: column; gap: .4em; }
 .slide-body b { color: #fff; }
+.slide-body a { color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.slide-body a:hover { text-decoration-thickness: 2px; }
+.slide-links li { line-height: 1.45; }
 .slide-body u { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .slide-body code { background: rgba(255,255,255,.18); color: #fff; padding: 1px 7px; border-radius: 5px; direction: ltr; display: inline-block; }
 .workflow { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; margin-top: 6px; }
