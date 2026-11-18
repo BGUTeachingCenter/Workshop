@@ -6,6 +6,7 @@ const K = {
   user: "wk:currentUser",
   users: "wk:users",
   config: "wk:config",
+  groups: "wk:groups",
   progress: (uid) => `wk:progress:${uid}`,
 };
 
@@ -33,9 +34,14 @@ export const auth = {
       // אדמין ראשון: מי שנרשם עם מייל שמסתיים ב-+admin נכנס כמנהל (נוחות לפיתוח בלבד).
       const role = email.includes("+admin") ? "admin" : "participant";
       user = { uid: uid(), email, name: name || email.split("@")[0], role, createdAt: Date.now() };
-      users[user.uid] = user;
-      write(K.users, users);
     }
+    // כמו ב-Firebase: כניסה אחרונה + צירוף לקבוצה הפעילה.
+    const active = read(K.config, {})?.activeGroup;
+    user.lastSeen = Date.now();
+    user.groups = user.groups || [];
+    if (active && !user.groups.includes(active)) user.groups.push(active);
+    users[user.uid] = user;
+    write(K.users, users);
     write(K.user, user);
     notify(user);
     return { immediate: true };
@@ -62,6 +68,20 @@ export const data = {
     write(K.config, cfg);
   },
   async listUsers() { return Object.values(read(K.users, {})); },
+  async listGroups() { return Object.values(read(K.groups, {})).sort((a, b) => b.createdAt - a.createdAt); },
+  async createGroup(name) {
+    const groups = read(K.groups, {});
+    const id = "g" + Date.now().toString(36);
+    groups[id] = { id, name, createdAt: Date.now() };
+    write(K.groups, groups);
+    await this.setActiveGroup(id);
+    return id;
+  },
+  async setActiveGroup(id) {
+    const cfg = await this.getConfig();
+    cfg.activeGroup = id || null;
+    write(K.config, cfg);
+  },
 
   async getProgress(uid) { return read(K.progress(uid), { answers: {}, checks: {} }); },
   async saveAnswer(uid, key, value) {

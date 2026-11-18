@@ -22,6 +22,40 @@ export const allUnits = meetings.flatMap((m, mi) =>
   m.units.map((u) => ({ ...u, meetingId: m.id, meetingIndex: mi, meetingTitle: m.subtitle }))
 );
 
+// קטלוג ה"בדיקה העצמית" של כל יחידה - ללוח המנחה (מה כל משתתף סימן).
+// כל יחידה מחזיקה "משבצות": בלוק בדיקה רגיל = רשימת מפתחות שכולם צריכים להיות מסומנים;
+// טאבים (למשל Claude / Codex / Copilot) = חלופות, ומספיק שאחת מהן הושלמה.
+// המפתחות זהים לאלה ש-render/blocks.js שומר: `${b.id}-${i}`.
+const plainText = (html) => String(html).replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+const checksIn = (blocks) => (blocks || []).flatMap((b) => b.kind === "selfcheck"
+  ? b.items.map((it, i) => ({ key: `${b.id}-${i}`, text: plainText(it) })) : []);
+
+export const checkCatalog = allUnits.map((u, i) => {
+  const slots = [];
+  (u.blocks || []).forEach((b) => {
+    if (b.kind === "selfcheck") slots.push({ all: checksIn([b]) });
+    if (b.kind === "tabs") {
+      const alts = (b.tabs || []).map((t) => ({ label: t.label, items: checksIn(t.blocks) })).filter((a) => a.items.length);
+      if (alts.length) slots.push({ any: alts });
+    }
+  });
+  return { unitId: u.id, number: i + 1, title: u.title, meetingIndex: u.meetingIndex, slots };
+}).filter((c) => c.slots.length);
+
+// מצב יחידה אחת אצל משתתף: done = כל המשבצות הושלמו; checked = פריטים מסומנים (טקסטים).
+export function unitCheckStatus(entry, checks) {
+  const on = (it) => !!checks?.[it.key];
+  let done = true; const checked = [];
+  entry.slots.forEach((s) => {
+    if (s.all) { s.all.filter(on).forEach((it) => checked.push(it.text)); if (!s.all.every(on)) done = false; }
+    else {
+      s.any.forEach((a) => a.items.filter(on).forEach((it) => checked.push(`${a.label}: ${it.text}`)));
+      if (!s.any.some((a) => a.items.every(on))) done = false;
+    }
+  });
+  return { done, checked };
+}
+
 export function findUnit(unitId) {
   return allUnits.find((u) => u.id === unitId) || null;
 }

@@ -32,9 +32,15 @@ service cloud.firestore {
       allow create, update: if isSignedIn() && request.auth.uid == uid;
     }
 
-    // התקדמות (תשובות + צ'קליסטים): רק הבעלים.
+    // התקדמות (תשובות + צ'קליסטים): הבעלים קורא וכותב; מנחה קורא (מעקב קבוצה בלוח הניהול).
     match /progress/{uid} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // קבוצות (מחזורי סדנה): רק מנחה. משתתפים מצטרפים דרך activeGroup שב-workshop/config.
+    match /groups/{gid} {
+      allow read, write: if isAdmin();
     }
 
     // הגדרות הסדנה (אילו יחידות פתוחות): כולם קוראים, רק מנחה כותב.

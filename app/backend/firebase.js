@@ -11,9 +11,13 @@
 // מושך שום דבר מהרשת.
 //
 // מבנה Firestore:
-//   users/{uid}      { name, email, role, createdAt }
-//   workshop/config  { openUnits: { <unitId>: bool } }
-//   progress/{uid}   { answers: {}, checks: {} }
+//   users/{uid}      { name, email, role, createdAt, lastSeen, groups: [<groupId>] }
+//   workshop/config  { openUnits: { <unitId>: bool }, activeGroup: <groupId> }
+//   groups/{gid}     { name, createdAt }              ← רק מנחה קורא וכותב
+//   progress/{uid}   { answers: {}, checks: {} }      ← הבעלים כותב; מנחה קורא
+//
+// קבוצות: המנחה פותח קבוצה והיא הופכת ל"פעילה". כל מי שנכנס לאתר בזמן שהקבוצה פעילה
+// מצורף אליה (groups הוא מערך, כך שמי שחוזר בזמן קבוצה אחרת נשאר גם בקבוצה הקודמת).
 
 import { firebaseConfig, WORKSHOP_PASSWORD, ADMIN_EMAILS } from "../config.js";
 
@@ -43,21 +47,30 @@ async function isVerifiedAdmin(fbUser) {
   return t.signInProvider === "google.com" && t.claims.email_verified === true;
 }
 
-// מוודא שמסמך users/{uid} קיים ומעודכן, ומחזיר את אובייקט המשתמש לאפליקציה.
+async function activeGroupId() {
+  try { const c = await getDoc(doc(db, "workshop", "config")); return c.exists() ? c.data().activeGroup || null : null; }
+  catch { return null; }
+}
+
+// מוודא שמסמך users/{uid} קיים ומעודכן (תפקיד, כניסה אחרונה, קבוצה פעילה), ומחזיר את המשתמש לאפליקציה.
 async function resolveUser(fbUser) {
   const ref = doc(db, "users", fbUser.uid);
-  const snap = await getDoc(ref);
+  const [snap, group] = await Promise.all([getDoc(ref), activeGroupId()]);
   const role = (await isVerifiedAdmin(fbUser)) ? "admin" : "participant";
   if (!snap.exists()) {
     const rec = {
       name: pendingName || fbUser.displayName || fbUser.email.split("@")[0],
-      email: fbUser.email, role, createdAt: Date.now(),
+      email: fbUser.email, role, createdAt: Date.now(), lastSeen: Date.now(), groups: group ? [group] : [],
     };
     await setDoc(ref, rec);
     return { uid: fbUser.uid, ...rec };
   }
   const data = snap.data();
-  if (data.role !== role) { await setDoc(ref, { role }, { merge: true }); data.role = role; }
+  const groups = Array.isArray(data.groups) ? data.groups : [];
+  const patch = { lastSeen: Date.now() };
+  if (data.role !== role) patch.role = data.role = role;
+  if (group && !groups.includes(group)) patch.groups = [...groups, group];
+  await setDoc(ref, patch, { merge: true });
   return { uid: fbUser.uid, name: data.name, email: fbUser.email, role: data.role };
 }
 
@@ -175,6 +188,20 @@ export const data = {
   async setAllUnitsOpen(unitIds, open) {
     const openUnits = Object.fromEntries(unitIds.map((id) => [id, !!open]));
     await setDoc(doc(db, "workshop", "config"), { openUnits }, { merge: true });
+  },
+  async listGroups() {
+    const qs = await getDocs(collection(db, "groups"));
+    return qs.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  },
+  // קבוצה חדשה הופכת מיד לפעילה. מחזיר את המזהה שלה.
+  async createGroup(name) {
+    const id = "g" + Date.now().toString(36);
+    await setDoc(doc(db, "groups", id), { name, createdAt: Date.now() });
+    await setDoc(doc(db, "workshop", "config"), { activeGroup: id }, { merge: true });
+    return id;
+  },
+  async setActiveGroup(id) {
+    await setDoc(doc(db, "workshop", "config"), { activeGroup: id || null }, { merge: true });
   },
   async listUsers() {
     const qs = await getDocs(collection(db, "users"));
