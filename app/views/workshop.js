@@ -24,7 +24,7 @@ export async function workshopView() {
   head.innerHTML = `
     <span class="eyebrow">שלום ${user.name} 👋</span>
     <h1>מסע הסדנה</h1>
-    <p class="wk-sub">בכל שלב ייפתח לך החלק הבא. כרגע פתוחות ${openCount} מתוך ${totalCount} יחידות.</p>`;
+    <p class="wk-sub">בכל שלב ייפתח לכם החלק הבא. כרגע פתוחות ${openCount} מתוך ${totalCount} יחידות.</p>`;
   wrap.append(head);
 
   meetings.forEach((m, mi) => {
