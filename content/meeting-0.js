@@ -3,7 +3,7 @@
 
 // הסיפור שלי: חמש מדרגות, מכלי קטן בבית ועד כלי שמשתמשים בו ביום־יום.
 // כל שקף הוא פרק בסיפור (בגוף ראשון, בקול המנחה), עם קישור לדוגמה החיה.
-// short = תיאור קצר לרשימה שהמשתתפים רואים (הם לא רואים שקפים).
+// short = תיאור קצר לרשימה שהמשתתפים רואים (הם לא רואים שקפים). credit = מי בנה, כשזה לא המנחה.
 const LADDER = [
   { title: "הכול התחיל בבית", name: "מסדרים את המילים במילון", href: "https://inbaltsa.github.io/My-school-apps/apps/hebrew/milim.html",
     story: "הבת שלי הסתבכה עם סידור מילים לפי סדר האלפבית, אז בניתי לה אפליקציה קטנה לתרגל את זה.<br>קובץ HTML אחד, בלי שרת ובלי התקנה.",
@@ -12,8 +12,8 @@ const LADDER = [
     story: "בקורס שלי היה נושא טכני מאוד, שבזבז לי זמן יקר בשיעור.<br>החלטתי להפוך אותו ללומדה, שהסטודנטים עוברים בעצמם בתוך Moodle.",
     short: "נושא טכני מהשיעור, שהפך ללומדה ב-Moodle.", tag: "מפגש 2" },
   { title: "ואז זה עבר הלאה", name: "מאגר תרגילים במתמטיקה", href: "https://teachingcenter.bgu.ac.il/foundations/exams/9711/",
-    story: "לימדתי את העמית שלי, מוטקה, איך עובדים בוייב קודינג.<br>הוא בנה בעצמו מאגר של תרגילים מבחינות, שהסטודנטים מתרגלים לבד.",
-    short: "מאגר תרגילים מבחינות לתרגול עצמי." },
+    story: "לימדתי את ד\"ר מוטקה פורת מהיחידה להוראת קורסי יסוד איך עובדים בוייב קודינג.<br>הוא בנה בעצמו מאגר של תרגילים מבחינות, שהסטודנטים מתרגלים לבד.",
+    short: "מאגר תרגילים מבחינות לתרגול עצמי.", credit: "ד\"ר מוטקה פורת, היחידה להוראת קורסי יסוד" },
   { title: "בונים יחד", name: "ספר הקורס בחדו\"א", href: "https://teachingcenter.bgu.ac.il/books/calculus/",
     story: "היום אנחנו עובדים יחד על פרויקט מורכב יותר: ספר קורס שלם בחדו\"א,<br>עם שאלות לבדיקה עצמית וסימולציות.",
     short: "ספר קורס עם שאלות לבדיקה עצמית וסימולציות." },
@@ -28,7 +28,8 @@ const ladderSlides = LADDER.map((s, i) => ({
     LADDER.map((_, j) => `<span class='${j < i ? "done" : j === i ? "on" : ""}'></span>`).join("") +
     `</div>` +
     `<p class='ladder-story'>${s.story}</p>` +
-    `<p class='ladder-name'><a href='${s.href}' target='_blank' rel='noopener'>${s.name} ↗</a>${s.tag ? `<span class='ladder-tag'>${s.tag}</span>` : ""}</p>`,
+    `<p class='ladder-name'><a href='${s.href}' target='_blank' rel='noopener'>${s.name} ↗</a>${s.tag ? `<span class='ladder-tag'>${s.tag}</span>` : ""}</p>` +
+    (s.credit ? `<p class='ladder-credit'>נבנה על ידי ${s.credit}</p>` : ""),
 }));
 
 export default {
@@ -53,7 +54,7 @@ export default {
         {
           kind: "text",
           html: "<b>מהקטן ועד היום־יום:</b> הדוגמאות מהפתיחה, לפתוח ולשחק בהן.<ol class='ladder-list'>" +
-            LADDER.map((s) => `<li><a href='${s.href}' target='_blank' rel='noopener'>${s.name}</a> - ${s.short}</li>`).join("") +
+            LADDER.map((s) => `<li><a href='${s.href}' target='_blank' rel='noopener'>${s.name}</a> - ${s.short}${s.credit ? ` <span class='ladder-list-credit'>(נבנה על ידי ${s.credit})</span>` : ""}</li>`).join("") +
             "</ol>"
         },
         { kind: "text", html: "וייב קודינג = מתארים בשפה רגילה מה רוצים, וה-AI כותב את הקוד. לא צריך לדעת לתכנת - צריך לדעת לתאר, לבדוק ולבקש שינויים." }
