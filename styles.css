@@ -372,3 +372,6 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .track .t-cell.done { background: var(--accent); color: #fff; }
 .track .t-cell.part { background: var(--accent-tint); color: var(--accent-ink); }
 .track .t-cell.none { background: var(--surface-2); }
+.move-bar { margin: 0 0 10px; align-items: center; font-size: .9rem; color: var(--muted); }
+.track .t-pick { width: 28px; padding-inline: 2px; }
+.track .t-pick input { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; }

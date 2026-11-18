@@ -30,6 +30,7 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
       allow create, update: if isSignedIn() && request.auth.uid == uid;
+      allow update: if isAdmin(); // העברת משתתפים בין קבוצות בלוח הניהול
     }
 
     // התקדמות (תשובות + צ'קליסטים): הבעלים קורא וכותב; מנחה קורא (מעקב קבוצה בלוח הניהול).

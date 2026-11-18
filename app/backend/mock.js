@@ -39,7 +39,7 @@ export const auth = {
     const active = read(K.config, {})?.activeGroup;
     user.lastSeen = Date.now();
     user.groups = user.groups || [];
-    if (active && !user.groups.includes(active)) user.groups.push(active);
+    if (active && user.groups.length === 0) user.groups = [active];
     users[user.uid] = user;
     write(K.users, users);
     write(K.user, user);
@@ -69,13 +69,18 @@ export const data = {
   },
   async listUsers() { return Object.values(read(K.users, {})); },
   async listGroups() { return Object.values(read(K.groups, {})).sort((a, b) => b.createdAt - a.createdAt); },
-  async createGroup(name) {
+  async createGroup(name, { activate = true } = {}) {
     const groups = read(K.groups, {});
     const id = "g" + Date.now().toString(36);
     groups[id] = { id, name, createdAt: Date.now() };
     write(K.groups, groups);
-    await this.setActiveGroup(id);
+    if (activate) await this.setActiveGroup(id);
     return id;
+  },
+  async moveUsersToGroup(uids, gid) {
+    const users = read(K.users, {});
+    uids.forEach((u) => { if (users[u]) users[u].groups = [gid]; });
+    write(K.users, users);
   },
   async setActiveGroup(id) {
     const cfg = await this.getConfig();

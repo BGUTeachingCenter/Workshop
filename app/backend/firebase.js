@@ -16,8 +16,9 @@
 //   groups/{gid}     { name, createdAt }              ← רק מנחה קורא וכותב
 //   progress/{uid}   { answers: {}, checks: {} }      ← הבעלים כותב; מנחה קורא
 //
-// קבוצות: המנחה פותח קבוצה והיא הופכת ל"פעילה". כל מי שנכנס לאתר בזמן שהקבוצה פעילה
-// מצורף אליה (groups הוא מערך, כך שמי שחוזר בזמן קבוצה אחרת נשאר גם בקבוצה הקודמת).
+// קבוצות: המנחה פותח קבוצה והיא הופכת ל"פעילה". מי שעדיין לא משויך לאף קבוצה ונכנס
+// בזמן שהיא פעילה - מצורף אליה. מי שכבר משויך נשאר בקבוצה שלו (גם אם חוזר לאתר מאוחר יותר);
+// העברה בין קבוצות נעשית ידנית בלוח הניהול.
 
 import { firebaseConfig, WORKSHOP_PASSWORD, ADMIN_EMAILS } from "../config.js";
 
@@ -69,7 +70,7 @@ async function resolveUser(fbUser) {
   const groups = Array.isArray(data.groups) ? data.groups : [];
   const patch = { lastSeen: Date.now() };
   if (data.role !== role) patch.role = data.role = role;
-  if (group && !groups.includes(group)) patch.groups = [...groups, group];
+  if (group && groups.length === 0) patch.groups = [group]; // שיוך פעם אחת: לקבוצה שפעילה בכניסה הראשונה
   await setDoc(ref, patch, { merge: true });
   return { uid: fbUser.uid, name: data.name, email: fbUser.email, role: data.role };
 }
@@ -193,12 +194,16 @@ export const data = {
     const qs = await getDocs(collection(db, "groups"));
     return qs.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   },
-  // קבוצה חדשה הופכת מיד לפעילה. מחזיר את המזהה שלה.
-  async createGroup(name) {
+  // קבוצה חדשה הופכת לפעילה (אלא אם activate:false). מחזיר את המזהה שלה.
+  async createGroup(name, { activate = true } = {}) {
     const id = "g" + Date.now().toString(36);
     await setDoc(doc(db, "groups", id), { name, createdAt: Date.now() });
-    await setDoc(doc(db, "workshop", "config"), { activeGroup: id }, { merge: true });
+    if (activate) await setDoc(doc(db, "workshop", "config"), { activeGroup: id }, { merge: true });
     return id;
+  },
+  // העברה ידנית של משתתפים לקבוצה אחת (מחליפה כל שיוך קודם). דורש הרשאת מנחה לעדכן users.
+  async moveUsersToGroup(uids, gid) {
+    await Promise.all(uids.map((uid) => setDoc(doc(db, "users", uid), { groups: [gid] }, { merge: true })));
   },
   async setActiveGroup(id) {
     await setDoc(doc(db, "workshop", "config"), { activeGroup: id || null }, { merge: true });

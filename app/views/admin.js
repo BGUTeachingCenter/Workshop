@@ -112,12 +112,53 @@ export async function adminView() {
       <p class="muted track-legend">✓ = כל הבדיקה העצמית ביחידה סומנה · מספר = כמה פריטים סומנו · ריחוף או לחיצה על משבצת מציגים מה סומן.</p>`;
     if (denied) trackSec.innerHTML += `<p class="track-warn">אין הרשאה לקרוא את הסימונים. צריך לפרסם את כללי האבטחה המעודכנים (firestore.rules) בקונסולת Firebase.</p>`;
 
+    // --- העברת משתתפים מסומנים לקבוצה ---
+    const chosen = new Set();
+    const bar = document.createElement("div");
+    bar.className = "admin-bulk move-bar";
+    const moveLbl = document.createElement("span");
+    const target = document.createElement("select");
+    target.className = "group-pick";
+    target.setAttribute("aria-label", "קבוצת היעד");
+    [...groups.map((g) => [g.id, g.name]), ["__new", "קבוצה חדשה…"]].forEach(([v, label]) => {
+      const o = document.createElement("option"); o.value = v; o.textContent = label; target.append(o);
+    });
+    const moveBtn = document.createElement("button");
+    moveBtn.type = "button"; moveBtn.textContent = "העברה";
+    const syncBar = () => {
+      moveLbl.textContent = chosen.size ? `סומנו ${chosen.size} · העברה לקבוצה:` : "סימון שורות כדי להעביר אותן לקבוצה אחרת";
+      target.hidden = moveBtn.hidden = !chosen.size;
+    };
+    moveBtn.addEventListener("click", async () => {
+      let gid = target.value, gname = target.selectedOptions[0]?.textContent;
+      if (gid === "__new") {
+        gname = (prompt("שם לקבוצה החדשה (היא לא תהפוך לפעילה)") || "").trim();
+        if (!gname) return;
+      }
+      if (!confirm(`להעביר ${chosen.size} לקבוצה "${gname}"?\nההעברה מבטלת את השיוך לכל קבוצה אחרת.`)) return;
+      moveBtn.disabled = true;
+      try {
+        if (gid === "__new") {
+          gid = await data.createGroup(gname, { activate: false });
+          groups.unshift({ id: gid, name: gname, createdAt: Date.now() });
+        }
+        const uids = [...chosen];
+        await data.moveUsersToGroup(uids, gid);
+        users.forEach((u) => { if (chosen.has(u.uid)) u.groups = [gid]; });
+        selected = gid;
+        renderGroups(); renderTracking();
+      } catch (err) { alert("ההעברה נכשלה: " + (err.message || err)); moveBtn.disabled = false; }
+    });
+    bar.append(moveLbl, target, moveBtn);
+    syncBar();
+    trackSec.append(bar);
+
     const scroller = document.createElement("div");
     scroller.className = "track-scroll";
     const table = document.createElement("table");
     table.className = "track";
     const head = document.createElement("tr");
-    head.innerHTML = `<th class="t-name" scope="col">שם</th><th scope="col">כניסה אחרונה</th><th scope="col">הושלמו</th>`;
+    head.innerHTML = `<th class="t-pick" scope="col"><input type="checkbox" aria-label="סימון כל השורות"></th><th class="t-name" scope="col">שם</th><th scope="col">כניסה אחרונה</th><th scope="col">הושלמו</th>`;
     checkCatalog.forEach((c) => {
       const th = document.createElement("th");
       th.className = "t-unit"; th.scope = "col";
@@ -132,7 +173,7 @@ export async function adminView() {
       const checks = progress[i]?.checks || {};
       const st = checkCatalog.map((c) => unitCheckStatus(c, checks));
       const tr = document.createElement("tr");
-      tr.innerHTML = `<th class="t-name" scope="row"><strong>${esc(u.name)}</strong><small>${esc(u.email)}</small></th>
+      tr.innerHTML = `<td class="t-pick"><input type="checkbox" aria-label="סימון ${esc(u.name)}"></td><th class="t-name" scope="row"><strong>${esc(u.name)}</strong><small>${esc(u.email)}</small></th>
         <td class="t-seen">${when(u.lastSeen || u.createdAt)}</td>
         <td class="t-sum">${progress[i] ? `${st.filter((s) => s.done).length}/${checkCatalog.length}` : "—"}</td>`;
       st.forEach((s, k) => {
@@ -145,9 +186,16 @@ export async function adminView() {
         td.addEventListener("click", () => alert(`${u.name}\n${td.title}`)); // במובייל אין ריחוף
         tr.append(td);
       });
+      const box = tr.querySelector(".t-pick input");
+      box.addEventListener("change", () => { box.checked ? chosen.add(u.uid) : chosen.delete(u.uid); syncBar(); });
       tbody.append(tr);
     });
     table.append(tbody);
+    const all = head.querySelector(".t-pick input");
+    all.addEventListener("change", () => {
+      tbody.querySelectorAll(".t-pick input").forEach((b, i) => { b.checked = all.checked; all.checked ? chosen.add(people[i].uid) : chosen.delete(people[i].uid); });
+      syncBar();
+    });
     scroller.append(table);
     trackSec.append(scroller);
   }
