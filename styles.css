@@ -248,7 +248,8 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .ladder span:nth-child(4) { height: 80%; } .ladder span:nth-child(5) { height: 100%; }
 .ladder span.done { background: rgba(255,255,255,.5); }
 .ladder span.on { background: #fff; }
-.ladder-name { font-weight: 800; font-size: 1.15em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ladder-story { font-size: 1.08em; line-height: 1.6; margin-bottom: .9em; }
+.ladder-name { font-weight: 800; font-size: 1.05em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ladder-name a { text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.6); }
 .ladder-name a:hover { border-bottom-width: 2px; }
 .ladder-tag { font-size: .62em; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.2); white-space: nowrap; }
