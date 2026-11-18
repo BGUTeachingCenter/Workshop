@@ -23,7 +23,7 @@ export function loginView() {
     </div>
     <form class="login-card" novalidate>
       <h2>כניסה לסדנה</h2>
-      <label>שם
+      <label>השם שלך
         <input name="name" type="text" autocomplete="name" placeholder="שם פרטי" required />
       </label>
       <label>אימייל
@@ -54,7 +54,7 @@ export function loginView() {
     try {
       const res = await auth.requestLink(email, name, password);
       if (res?.immediate) navigate("/workshop");
-      else { note.classList.remove("err"); note.textContent = "שלחנו לכם קישור כניסה למייל. פתחו אותו כדי להיכנס."; btn.textContent = "נשלח ✓"; }
+      else { note.classList.remove("err"); note.textContent = "שלחנו לך קישור כניסה למייל. פתחו אותו כדי להיכנס."; btn.textContent = "נשלח ✓"; }
     } catch (err) {
       note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
       btn.disabled = false; btn.textContent = "כניסה";
