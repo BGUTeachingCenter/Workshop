@@ -125,8 +125,13 @@ export default {
                 ] },
                 { kind: "code", code: "npm install -g @openai/codex" },
                 { kind: "steps", start: 3, items: [
-                  "כתבו <code>codex</code> והריצו.",
-                  "התחברו עם חשבון ChatGPT."
+                  "התחברו לחשבון ChatGPT עם הפקודה הזו (ולא עם <code>codex</code> הרגיל - ההתחברות הרגילה נתקעת ב־Codespace):"
+                ] },
+                { kind: "code", code: "codex login --device-auth" },
+                { kind: "steps", start: 4, items: [
+                  "בטרמינל יופיעו קישור וקוד. פתחו את הקישור בלשונית חדשה, התחברו לחשבון ChatGPT והקלידו את הקוד.",
+                  "אם ChatGPT מבקש לאפשר התחברות עם קוד (device code) - אשרו, וחזרו לטרמינל.",
+                  "כשמופיעה הודעה שההתחברות הצליחה, כתבו <code>codex</code> והריצו."
                 ] },
                 { kind: "selfcheck", id: "chk-codex", label: "בדקו את עצמכם", items: ["Codex רץ בטרמינל ומחכה להוראות."] }
               ]
@@ -220,7 +225,7 @@ export default {
         { title: "מילון קטן: Commit ו־Push", body: "<b>Commit</b> הוא נקודת שמירה מתועדת בתוך הפרויקט.<br><b>Push</b> שולח אותה מה־Codespace אל GitHub.<br><br>רק אחרי commit ו־push נראה את השינוי גם באתר GitHub." },
         { title: "מילון קטן: Branch", body: "<b>Branch</b> הוא מסלול עבודה נפרד. אפשר לנסות בו שינוי בלי לגעת מיד בגרסה הראשית, שנקראת בדרך כלל <b>main</b>.<br><br>כך יש מקום בטוח לבדוק לפני שמחברים את השינוי לפרויקט." },
         { title: "מילון קטן: Pull Request ו־Merge", body: "<b>Pull Request</b> (PR) הוא בקשה לחבר שינוי מה־branch אל main - שם רואים מה השתנה ובודקים.<br><b>Merge</b> הוא החיבור עצמו, אחרי שבדקנו.<br><br>הרצף: branch → שינוי → PR → merge." },
-        { title: "תלוי בכלי", body: "<ul><li><b>Codex</b> - עובד דרך branch ו־PR כברירת מחדל, אז נכיר ונדגים את הזרימה</li><li><b>Claude</b> - אפשר פשוט לבקש ממנו לשמור, ואם רוצים - גם לפתוח branch ו־PR</li><li><b>Copilot</b> - אפשר לבקש ממנו לשמור, או לשמור דרך כפתורי ה־Source Control בעורך</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
+        { title: "תלוי בכלי", body: "<ul><li><b>Claude / Codex</b> - אפשר פשוט לבקש מהם לשמור, ואם רוצים - גם לפתוח branch ו־PR</li><li><b>Copilot</b> - אפשר לבקש ממנו לשמור, או לשמור דרך כפתורי ה־Source Control בעורך</li></ul>בחרו את הטאב של הכלי שלכם למטה." }
       ],
       blocks: [
         { kind: "text", html: "יש לכם גרסה שעובדת - עכשיו נשמור אותה. הדרך תלויה בכלי שבחרתם; בחרו את הטאב שלכם." },
@@ -242,13 +247,12 @@ export default {
             {
               label: "מנוי ChatGPT",
               blocks: [
-                { kind: "text", html: "ב־Codex העבודה עוברת דרך branch ו־Pull Request כברירת מחדל - אז נכיר את הזרימה המלאה." },
                 { kind: "steps", items: [
-                  "בקשו מ־Codex לבצע את השינוי; הוא יעבוד ב־branch נפרד.",
-                  "בסיום, Codex פותח (או מבקש לפתוח) <b>Pull Request</b> עם סיכום השינוי.",
-                  "היכנסו ל־GitHub, קראו את ה־PR, ולחצו <b>Merge</b> כדי לחבר ל־main."
+                  "בקשו מ־Codex לשמור: ‘שמור את השינוי (commit) ושלח ל־GitHub (push)’.",
+                  "Codex עשוי לבקש אישור לפני שהוא מריץ פקודה או שולח ל־GitHub. קראו מה הוא מבקש ואשרו.",
+                  "רוצים מסלול בטוח? בקשו: ‘פתח branch, שמור שם, ופתח לי Pull Request’, ואז ב־GitHub לחצו <b>Merge</b>."
                 ] },
-                { kind: "selfcheck", id: "chk-save-codex", label: "בדקו את עצמכם", items: ["נפתח PR ב־GitHub.", "אחרי Merge השינוי נמצא ב־main."] }
+                { kind: "selfcheck", id: "chk-save-codex", label: "בדקו את עצמכם", items: ["השינוי מופיע ב־GitHub (ואם פתחתם PR - הוא מחובר ל־main)."] }
               ]
             },
             {
