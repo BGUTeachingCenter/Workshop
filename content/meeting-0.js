@@ -12,8 +12,8 @@ const LADDER = [
     story: "בקורס שלי היה נושא טכני מאוד, שבזבז לי זמן יקר בשיעור.<br>החלטתי להפוך אותו ללומדה, שהסטודנטים עוברים בעצמם בתוך Moodle.",
     short: "נושא טכני מהשיעור, שהפך ללומדה ב-Moodle.", tag: "מפגש 2" },
   { title: "ואז זה עבר הלאה", name: "מאגר תרגילים במתמטיקה", href: "https://teachingcenter.bgu.ac.il/foundations/exams/9711/",
-    story: "לימדתי את ד\"ר מוטקה פורת מהיחידה להוראת קורסי יסוד איך עובדים בוייב קודינג.<br>הוא בנה בעצמו מאגר של תרגילים מבחינות, שהסטודנטים מתרגלים לבד.",
-    short: "מאגר תרגילים מבחינות לתרגול עצמי.", credit: "ד\"ר מוטקה פורת, היחידה להוראת קורסי יסוד" },
+    story: "לימדתי את מוטקה* איך עובדים בוייב קודינג.<br>הוא בנה בעצמו מאגר של תרגילים מבחינות, שהסטודנטים מתרגלים לבד.",
+    short: "מאגר תרגילים מבחינות לתרגול עצמי.", credit: "ד\"ר מוטקה פורת מהיחידה להוראת קורסי יסוד" },
   { title: "בונים יחד", name: "ספר הקורס בחדו\"א", href: "https://teachingcenter.bgu.ac.il/books/calculus/",
     story: "היום אנחנו עובדים יחד על פרויקט מורכב יותר: ספר קורס שלם בחדו\"א,<br>עם שאלות לבדיקה עצמית וסימולציות.",
     short: "ספר קורס עם שאלות לבדיקה עצמית וסימולציות." },
@@ -29,7 +29,7 @@ const ladderSlides = LADDER.map((s, i) => ({
     `</div>` +
     `<p class='ladder-story'>${s.story}</p>` +
     `<p class='ladder-name'><a href='${s.href}' target='_blank' rel='noopener'>${s.name} ↗</a>${s.tag ? `<span class='ladder-tag'>${s.tag}</span>` : ""}</p>` +
-    (s.credit ? `<p class='ladder-credit'>נבנה על ידי ${s.credit}</p>` : ""),
+    (s.credit ? `<p class='ladder-credit'>* ${s.credit}</p>` : ""),
 }));
 
 export default {
