@@ -375,3 +375,11 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .move-bar { margin: 0 0 10px; align-items: center; font-size: .9rem; color: var(--muted); }
 .track .t-pick { width: 28px; padding-inline: 2px; }
 .track .t-pick input { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; }
+
+/* ---------- welcome slide (chapter 0) ---------- */
+.welcome-lead { font-size: 1.08em; margin-bottom: 1em; }
+.welcome-keys { display: grid; gap: 12px; margin: .4em 0 1em; }
+.welcome-keys > div { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
+.welcome-keys span { font-size: .8em; opacity: .85; }
+.welcome-keys b { font-size: clamp(1.25rem, 3.6vw, 1.9rem); font-weight: 800; letter-spacing: .01em; text-align: end; overflow-wrap: anywhere; }
+.welcome-note { font-size: .92em; opacity: .9; }
