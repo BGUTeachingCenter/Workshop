@@ -1,9 +1,10 @@
 // רישום המפגשים של הסדנה. הוספת מפגש = import + הוספה למערך (לפי order).
+import meeting0 from "./meeting-0.js";
 import meeting1 from "./meeting-1.js";
 import meeting2 from "./meeting-2.js";
 import meeting3 from "./meeting-3.js";
 
-export const meetings = [meeting1, meeting2, meeting3].sort((a, b) => a.order - b.order);
+export const meetings = [meeting0, meeting1, meeting2, meeting3].sort((a, b) => a.order - b.order);
 
 // כל בלוק "בדקו את עצמכם" בלי id מקבל מזהה ייחודי לפי היחידה (גם בתוך טאבים).
 // בלי זה כל הבלוקים חולקים מפתח שמירה אחד, וסימון ביחידה אחת מופיע בכל האחרות.

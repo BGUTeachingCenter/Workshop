@@ -252,6 +252,8 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .ladder-name a { text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.6); }
 .ladder-name a:hover { border-bottom-width: 2px; }
 .ladder-tag { font-size: .62em; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.2); white-space: nowrap; }
+.ladder-list { margin: .6em 0 0; padding-inline-start: 1.4em; display: flex; flex-direction: column; gap: .35em; }
+.ladder-list a { color: var(--accent-ink); font-weight: 700; }
 .ladder-added { margin-top: .9em; padding-top: .8em; border-top: 1px solid rgba(255,255,255,.25); }
 .slide-body u { text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .slide-body code { background: rgba(255,255,255,.18); color: #fff; padding: 1px 7px; border-radius: 5px; direction: ltr; display: inline-block; }

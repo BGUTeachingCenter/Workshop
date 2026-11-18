@@ -43,6 +43,7 @@ app/
   views/              login · workshop · unit · admin · layout
 content/
   index.js            רישום מפגשים + עזרי ניווט/נעילה
+  meeting-0.js        פרק 0: הקדמה (מה זה וייב קודינג + סולם הדוגמאות)
   meeting-1.js        תוכן מפגש 1 (יחידות block-based)
 ```
 
