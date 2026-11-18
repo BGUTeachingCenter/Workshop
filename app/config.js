@@ -20,7 +20,7 @@ export const firebaseConfig = {
 // למלא לפני הפעלת Firebase.
 export const WORKSHOP_PASSWORD = "VibeCodingBGU2026";
 
-// אימיילים של מנחים (אדמינים). מנחה נכנס עם Google בלבד (״כניסת מנחים עם Google״),
+// אימיילים של מנחים (אדמינים). מנחה נכנס עם Google בלבד (״כניסת מנחה עם Google״),
 // והאימייל חייב להיות מאומת - הסיסמה המשותפת לא מקנה הרשאת מנחה.
 // חשוב: הרשימה הזו חייבת להיות זהה לרשימה שב-firestore.rules (שם היא נאכפת).
 export const ADMIN_EMAILS = [

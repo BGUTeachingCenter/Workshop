@@ -10,7 +10,7 @@ export function loginView() {
   const needsPassword = BACKEND === "firebase";
   const passwordField = needsPassword ? `
       <label>סיסמת הסדנה
-        <input name="password" type="password" autocomplete="current-password" placeholder="הסיסמה שקיבלתם מהמנחה" required />
+        <input name="password" type="password" autocomplete="current-password" placeholder="הסיסמה שקיבלת מהמנחה" required />
       </label>` : "";
 
   wrap.innerHTML = `
@@ -18,7 +18,7 @@ export function loginView() {
       <img class="login-logo" src="assets/logo-unit.jpg" alt="היחידה לקידום איכות ההוראה והלמידה · אוניברסיטת בן-גוריון בנגב" />
       <span class="eyebrow">סדנת סגל · Vibe Coding בהוראה</span>
       <h1>מהצורך לכלי</h1>
-      <p class="login-invite">חשבו על דבר אחד שהסטודנטים שלכם מפספסים שוב ושוב.<br>משם נתחיל.</p>
+      <p class="login-invite">נחשוב על דבר אחד שהסטודנטים שלך מפספסים שוב ושוב.<br>משם נתחיל.</p>
       <p class="login-credit">פותח על ידי ד"ר ענבל צרפתי-ברעד</p>
     </div>
     <form class="login-card" novalidate>
@@ -31,13 +31,13 @@ export function loginView() {
       </label>${passwordField}
       <button class="primary" type="submit">כניסה</button>
       <p class="login-note"></p>${needsPassword ? `
-      <button class="text-btn login-google" type="button">כניסת מנחים עם Google</button>` : ""}
+      <button class="text-btn login-google" type="button">כניסת מנחה עם Google</button>` : ""}
     </form>`;
 
   const form = wrap.querySelector("form");
   const note = wrap.querySelector(".login-note");
   note.textContent = needsPassword
-    ? "מכניסים שם, אימייל וסיסמת הסדנה שקיבלתם מהמנחה."
+    ? "מכניסים שם, אימייל וסיסמת הסדנה שקיבלת מהמנחה."
     : "מצב הדגמה: הכניסה מיידית (בלי סיסמה).";
 
   form.addEventListener("submit", async (e) => {
@@ -54,9 +54,9 @@ export function loginView() {
     try {
       const res = await auth.requestLink(email, name, password);
       if (res?.immediate) navigate("/workshop");
-      else { note.classList.remove("err"); note.textContent = "שלחנו לך קישור כניסה למייל. פתחו אותו כדי להיכנס."; btn.textContent = "נשלח ✓"; }
+      else { note.classList.remove("err"); note.textContent = "שלחנו לך קישור כניסה למייל. אפשר להיכנס דרכו."; btn.textContent = "נשלח ✓"; }
     } catch (err) {
-      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
+      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. אפשר לנסות שוב.";
       btn.disabled = false; btn.textContent = "כניסה";
     }
   });
@@ -68,7 +68,7 @@ export function loginView() {
       await auth.signInWithGoogle();
       navigate("/workshop");
     } catch (err) {
-      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. נסו שוב.";
+      note.classList.add("err"); note.textContent = err.message || "משהו השתבש. אפשר לנסות שוב.";
       googleBtn.disabled = false;
     }
   });

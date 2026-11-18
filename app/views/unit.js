@@ -66,7 +66,7 @@ export async function unitView(unitId) {
     const paint = () => {
       toggle.classList.toggle("on", open);
       toggle.innerHTML = `<span class="rt-dot"></span>` + (open ? "פתוח" : "סגור");
-      toggle.title = open ? "לחצו כדי להסתיר מהמשתתפים" : "לחצו כדי לחשוף למשתתפים";
+      toggle.title = open ? "לחיצה להסתרה מהמשתתפים" : "לחיצה לחשיפה למשתתפים";
     };
     paint();
     toggle.addEventListener("click", async () => {

@@ -65,8 +65,8 @@ function friendly(err) {
   const code = err?.code || "";
   if (code === "auth/invalid-email") return new Error("כתובת אימייל לא תקינה.");
   if (code === "auth/email-already-in-use")
-    return new Error("האימייל הזה כבר רשום בדרך כניסה אחרת. נכנסתם פעם עם Google? היכנסו שוב עם Google. אחרת פנו למנחה.");
-  if (code === "auth/popup-blocked") return new Error("הדפדפן חסם את חלון ההתחברות. אשרו חלונות קופצים לאתר ונסו שוב.");
+    return new Error("האימייל הזה כבר רשום בדרך כניסה אחרת. נכנסת פעם עם Google? אפשר להיכנס שוב עם Google. אחרת, כדאי לפנות למנחה.");
+  if (code === "auth/popup-blocked") return new Error("הדפדפן חסם את חלון ההתחברות. יש לאשר חלונות קופצים לאתר ולנסות שוב.");
   if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request")
     return new Error("חלון ההתחברות נסגר לפני שהכניסה הושלמה.");
   if (code === "auth/unauthorized-domain")
@@ -76,9 +76,9 @@ function friendly(err) {
   if (code === "auth/account-exists-with-different-credential")
     return new Error("כבר קיים חשבון עם האימייל הזה בכניסת סיסמה, ו-Google לא הצליח להתחבר אליו.");
   if (code === "auth/wrong-password" || code === "auth/invalid-credential")
-    return new Error("סיסמה שגויה. ודאו שהקלדתם את סיסמת הסדנה.");
-  if (code === "auth/network-request-failed") return new Error("אין חיבור לרשת. נסו שוב.");
-  return new Error(err?.message || "משהו השתבש. נסו שוב.");
+    return new Error("סיסמה שגויה. כדאי לוודא שהקלדת את סיסמת הסדנה.");
+  if (code === "auth/network-request-failed") return new Error("אין חיבור לרשת. אפשר לנסות שוב.");
+  return new Error(err?.message || "משהו השתבש. אפשר לנסות שוב.");
 }
 
 export const auth = {
@@ -120,8 +120,8 @@ export const auth = {
 
   // שם ההפעלה נשמר תואם ל-mock (requestLink), אבל כאן הוא מתחבר/יוצר חשבון בסיסמה.
   async requestLink(email, name, password) {
-    if (isAdminEmail(email)) throw new Error("מנחים נכנסים עם הכפתור ״כניסת מנחים עם Google״ שמתחת לטופס.");
-    if (password !== WORKSHOP_PASSWORD) throw new Error("סיסמה שגויה. ודאו שהקלדתם את סיסמת הסדנה.");
+    if (isAdminEmail(email)) throw new Error("לכניסת מנחה יש להשתמש בכפתור ״כניסת מנחה עם Google״ שמתחת לטופס.");
+    if (password !== WORKSHOP_PASSWORD) throw new Error("סיסמה שגויה. כדאי לוודא שהקלדת את סיסמת הסדנה.");
     pendingName = name;
     try {
       await signInWithEmailAndPassword(fbAuth, email, password);
@@ -152,7 +152,7 @@ export const auth = {
         }
         if (getAdditionalUserInfo(res)?.isNewUser) {
           try { await fbUser.delete(); } catch { await fbSignOut(fbAuth); }
-          throw new Error("הכניסה עם Google מיועדת למנחים. משתתפים נכנסים עם סיסמת הסדנה.");
+          throw new Error("הכניסה עם Google מיועדת לצוות ההנחיה. לכניסה לסדנה יש להשתמש בסיסמת הסדנה.");
         }
       }
       currentUser = await resolveUser(fbUser);

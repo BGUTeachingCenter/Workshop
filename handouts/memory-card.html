@@ -184,7 +184,7 @@
   <header class="top">
     <span class="eyebrow"><span class="chip-skew"></span>כרטיס זיכרון · סדנת Vibe Coding בהוראה</span>
     <h1>מה כדאי לזכור מהסדנה</h1>
-    <p>את הכול ראיתם בלייב. כאן שמורים העוגנים שקל לשכוח — המיקומים הקבורים בתפריטים, הפקודות להעתקה וכללי ההגנה — כדי שתוכלו לחזור ולעשות את זה לבד.</p>
+    <p>את הכול ראית בלייב. כאן שמורים העוגנים שקל לשכוח — המיקומים הקבורים בתפריטים, הפקודות להעתקה וכללי ההגנה — כדי שאפשר יהיה לחזור ולעשות את זה לבד.</p>
   </header>
 
   <!-- ============ MEETING 2 ============ -->
@@ -218,7 +218,7 @@
       </div>
     </div>
 
-    <div class="block-label">פקודות התקנה — לפי הכלי שלכם</div>
+    <div class="block-label">פקודות התקנה — לפי הכלי שלך</div>
     <div class="cmd"><span class="who">מנוי Claude</span><code>npm install -g @anthropic-ai/claude-code</code><button class="copy" type="button">העתקה</button></div>
     <div class="cmd"><span class="who">מנוי ChatGPT</span><code>npm install -g @openai/codex</code><button class="copy" type="button">העתקה</button></div>
     <div class="cmd"><span class="who">התחברות Codex</span><code>codex login --device-auth</code><button class="copy" type="button">העתקה</button></div>
@@ -240,7 +240,7 @@
         <div><span class="os">Windows</span><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></div>
         <div><span class="os">Mac</span><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></div>
       </div>
-      <p class="hint">עובד לאתר ב־GitHub Pages, לאפליקציה עם Firebase, וגם לקובץ מקומי. חלופה: <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>F5</kbd>. עדיין ישן? נסו חלון פרטי.</p>
+      <p class="hint">עובד לאתר ב־GitHub Pages, לאפליקציה עם Firebase, וגם לקובץ מקומי. חלופה: <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>F5</kbd>. עדיין ישן? אפשר לנסות חלון פרטי.</p>
     </div>
   </section>
 
@@ -280,7 +280,7 @@
       </div>
     </div>
 
-    <div class="block-label">כללי אבטחה — כל משתמש והמסמך שלו</div>
+    <div class="block-label">כללי אבטחה — כל חשבון והמסמך שלו</div>
     <div class="rules">
       <div class="rules-head">
         <strong>Firestore · Security Rules</strong>
@@ -301,9 +301,9 @@ service cloud.firestore {
     <div class="block-label">לזכור</div>
     <ul class="reminders">
       <li><b>"מצב בדיקה" פתוח לכולם, ופג אחרי 30 יום.</b> מחליפים אותו בכללים שלמעלה כבר ביום הראשון.</li>
-      <li>שם האוסף בכללים (<code class="inl">responses</code>) חייב להיות זהה לשם שבקוד. שיניתם אחד? בקשו מעוזר ה־AI להתאים את השני.</li>
+      <li>שם האוסף בכללים (<code class="inl">responses</code>) חייב להיות זהה לשם שבקוד. שינית אחד? אפשר לבקש מעוזר ה־AI להתאים את השני.</li>
       <li>ה־<code class="inl">firebaseConfig</code> אינו סוד, ואין טעם להסתיר אותו. ההגנה היא בכללים.</li>
-      <li>העברתם את האתר לכתובת חדשה וההתחברות נשברה (<code class="inl">auth/unauthorized-domain</code>)? הוסיפו את הכתובת לדומיינים המורשים.</li>
+      <li>העברת את האתר לכתובת חדשה וההתחברות נשברה (<code class="inl">auth/unauthorized-domain</code>)? יש להוסיף את הכתובת לדומיינים המורשים.</li>
       <li>שומרים רק מה שהכלי צריך, מספרים לסטודנטים מה נשמר, ובסוף הסמסטר מוחקים.</li>
     </ul>
   </section>
@@ -314,12 +314,12 @@ service cloud.firestore {
     <div class="safety">
       <div class="safety-head"><span class="chip-skew"></span>אם עוזר ה־AI קלקל משהו — אף פעם לא נתקעים. חוזרים לגרסה שעבדה.</div>
       <ol>
-        <li><b>הכי פשוט וללא סיכון:</b> בקשו מעוזר ה־AI — "בטל את השינוי האחרון" או "חזור לגרסה הקודמת שעבדה".</li>
-        <li>כל <b>commit</b> ששמרתם הוא נקודת חזרה — ב־GitHub אפשר לחזור לכל גרסה קודמת בכל רגע.</li>
+        <li><b>הכי פשוט וללא סיכון:</b> לבקש מעוזר ה־AI — "לבטל את השינוי האחרון" או "לחזור לגרסה הקודמת שעבדה".</li>
+        <li>כל <b>commit</b> ששמרת הוא נקודת חזרה — ב־GitHub אפשר לחזור לכל גרסה קודמת בכל רגע.</li>
         <li><b>לזרוק הכול ולחזור לשמירה האחרונה</b> (בטרמינל):</li>
       </ol>
       <div class="cmd"><span class="who">Hard reset</span><code>git reset --hard</code><button class="copy" type="button">העתקה</button></div>
-      <p class="warn-note">⚠️ <b>מוחק כל שינוי שלא שמרתם ב־commit מאז.</b> משתמשים בזה רק כשבאמת רוצים לוותר על מה שהשתנה מאז השמירה האחרונה. כל מה ששמרתם ודחפתם (push) ל־GitHub — בטוח ולא נמחק.</p>
+      <p class="warn-note">⚠️ <b>מוחק כל שינוי שלא נשמר ב־commit מאז.</b> משתמשים בזה רק כשבאמת רוצים לוותר על מה שהשתנה מאז השמירה האחרונה. כל מה שנשמר ונדחף (push) ל־GitHub — בטוח ולא נמחק.</p>
     </div>
   </section>
 
@@ -346,7 +346,7 @@ service cloud.firestore {
       catch(e){
         const r=document.createRange(); const t=cmd?cmd.querySelector("code"):document.getElementById("rules-src");
         r.selectNodeContents(t); const s=getSelection(); s.removeAllRanges(); s.addRange(r);
-        try{ document.execCommand("copy"); flash(btn); }catch(_){ btn.textContent="בחרו והעתיקו"; }
+        try{ document.execCommand("copy"); flash(btn); }catch(_){ btn.textContent="אפשר לבחור ולהעתיק"; }
       }
     });
   });

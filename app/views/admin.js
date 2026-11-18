@@ -14,7 +14,7 @@ export async function adminView() {
   const usersSec = document.createElement("section");
   usersSec.className = "admin-block";
   usersSec.innerHTML = `<h2>נרשמו (${users.length})</h2>`;
-  if (users.length === 0) usersSec.innerHTML += `<p class="muted">עדיין אין נרשמים.</p>`;
+  if (users.length === 0) usersSec.innerHTML += `<p class="muted">עדיין אין הרשמות.</p>`;
   else {
     const ul = document.createElement("ul");
     ul.className = "user-list";

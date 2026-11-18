@@ -20,7 +20,7 @@ const copyable = (text) => {
       await navigator.clipboard.writeText(text);
       btn.textContent = "הועתק!";
       setTimeout(() => (btn.textContent = "העתקה"), 1600);
-    } catch { btn.textContent = "בחרו והעתיקו ידנית"; }
+    } catch { btn.textContent = "אפשר לבחור ולהעתיק ידנית"; }
   });
   box.append(btn, pre);
   return box;
@@ -103,7 +103,7 @@ const renderers = {
 
   selfcheck: (b, ctx) => {
     const n = el("div", "b-selfcheck");
-    n.append(el("span", "b-label", b.label || "בדקו את עצמכם"));
+    n.append(el("span", "b-label", b.label || "בדיקה עצמית"));
     const ul = el("ul");
     b.items.forEach((it, i) => {
       const key = `${b.id || "check"}-${i}`;
