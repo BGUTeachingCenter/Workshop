@@ -13,6 +13,7 @@
    - `GEMINI_API_KEY` = המפתח מסעיף 1
    - (רשות) `DAILY_LIMIT` = 100
    - (רשות) `GEMINI_MODEL` = שם מודל אחר, אם המודל ברירת המחדל לא זמין
+   - (רשות) `GEMINI_FALLBACK_MODEL` = מודל גיבוי (ברירת מחדל: `gemini-2.5-flash-lite`). משמש כשהראשי עמוס, הגיע למכסה או לא קיים.
 4. **Deploy → New deployment** → בגלגל השיניים בוחרים **Web app**:
    - Execute as: **Me**
    - Who has access: **Anyone**

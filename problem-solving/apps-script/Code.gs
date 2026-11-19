@@ -6,6 +6,7 @@
  *   Project Settings → Script Properties:
  *     GEMINI_API_KEY = המפתח מ-Google AI Studio
  *     GEMINI_MODEL   = שם המודל (ברירת מחדל: gemini-2.5-flash)
+ *     GEMINI_FALLBACK_MODEL = מודל גיבוי, אם הראשי עמוס או לא זמין (ברירת מחדל: gemini-2.5-flash-lite)
  *     DAILY_LIMIT    = מקסימום בקשות ביום (ברירת מחדל: 100)
  *   Deploy → New deployment → Web app → Execute as: Me · Who has access: Anyone
  */
@@ -33,7 +34,8 @@ function askGemini_(x) {
   var props = PropertiesService.getScriptProperties();
   var key = props.getProperty("GEMINI_API_KEY");
   if (!key) throw new Error("החלונית עוד לא הוגדרה (חסר מפתח).");
-  var model = props.getProperty("GEMINI_MODEL") || "gemini-2.5-flash";
+  var models = [props.getProperty("GEMINI_MODEL") || "gemini-2.5-flash",
+                props.getProperty("GEMINI_FALLBACK_MODEL") || "gemini-2.5-flash-lite"];
 
   var prompt =
     "את/ה יועץ/ת פדגוגי/ת למרצים באקדמיה. הצע/י רעיון אחד, קונקרטי ומעשי, לפיתוח מיומנות פתרון בעיות אצל סטודנטים.\n" +
@@ -50,23 +52,32 @@ function askGemini_(x) {
     "title (כותרת קצרה), lecturer (מה המרצה עושה, 2–3 משפטים), students (מה הסטודנטים עושים, 2–3 משפטים), " +
     "feedback (היגד משוב אחד לסטודנטים על המיומנות ולא על התוצר), time (משך משוער).";
 
-  var url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent";
-  var res = UrlFetchApp.fetch(url, {
-    method: "post", contentType: "application/json", muteHttpExceptions: true,
-    headers: { "x-goog-api-key": key },
-    payload: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.9, maxOutputTokens: 1200, responseMimeType: "application/json" }
-    })
+  var payload = JSON.stringify({
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.9, maxOutputTokens: 1200, responseMimeType: "application/json" }
   });
-  var code = res.getResponseCode();
-  if (code === 429) throw new Error("הגענו למגבלת השימוש החינמית לרגע זה. נסו שוב בעוד דקה.");
-  if (code !== 200) throw new Error("שגיאה מהשירות (" + code + ").");
-  var data = JSON.parse(res.getContentText());
-  var text = (((data.candidates || [])[0] || {}).content || {}).parts;
-  text = text && text[0] && text[0].text;
-  if (!text) throw new Error("לא התקבלה תשובה. נסו שוב.");
-  try { return JSON.parse(text); } catch (e) { return { title: "רעיון", lecturer: text }; }
+  var lastCode = 0;
+  for (var i = 0; i < models.length; i++) {
+    var url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(models[i]) + ":generateContent";
+    var res = UrlFetchApp.fetch(url, {
+      method: "post", contentType: "application/json", muteHttpExceptions: true,
+      headers: { "x-goog-api-key": key }, payload: payload
+    });
+    lastCode = res.getResponseCode();
+    /* עומס, מכסה, מודל לא קיים או תקלה זמנית → עוברים למודל הגיבוי */
+    if (lastCode === 429 || lastCode === 404 || lastCode >= 500) continue;
+    if (lastCode !== 200) throw new Error("שגיאה מהשירות (" + lastCode + ").");
+    var data = JSON.parse(res.getContentText());
+    var parts = (((data.candidates || [])[0] || {}).content || {}).parts;
+    var text = parts && parts[0] && parts[0].text;
+    if (!text) continue;
+    var idea;
+    try { idea = JSON.parse(text); } catch (e) { idea = { title: "רעיון", lecturer: text }; }
+    idea.model = models[i];
+    return idea;
+  }
+  if (lastCode === 429) throw new Error("הגענו למגבלת השימוש החינמית לרגע זה. נסו שוב בעוד דקה.");
+  throw new Error("השירות לא זמין כרגע (" + lastCode + "). נסו שוב בעוד רגע.");
 }
 
 /* מגבלות: לא יותר מ-10 בקשות בדקה, ותקרה יומית. */
