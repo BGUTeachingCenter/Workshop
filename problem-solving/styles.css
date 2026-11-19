@@ -1,3 +1,4 @@
+[hidden] { display: none !important; }
 /* Layout: sticky top nav with four hash-routed views (map, theory, examples, template);
    one centered reading column; the map keeps the team's tree (root -> six stages -> leaves). */
 :root {
