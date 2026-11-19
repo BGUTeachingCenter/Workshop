@@ -403,7 +403,12 @@ if (document.getElementById("idea-form")) {
     if (!IDEA_API) { iStatus.textContent = "החלונית עוד לא מחוברת לשירות ה-AI. בקרוב."; return; }
     go.disabled = true; iStatus.textContent = "חושב על רעיון…";
     var qs = Object.keys(x).map(function (k) { return k + "=" + encodeURIComponent(x[k]); }).join("&");
-    fetch(IDEA_API + "?" + qs).then(function (r) { return r.json(); }).then(function (d) {
+    fetch(IDEA_API + "?" + qs).then(function (r) { return r.text(); }).then(function (t) {
+      var d; try { d = JSON.parse(t); } catch (e) {
+        /* תשובה שאינה JSON: לרוב דף שגיאה או בקשת הרשאה של Google */
+        var plain = t.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
+        d = { error: "השירות החזיר תשובה לא צפויה: " + plain };
+      }
       if (d.error) { iStatus.textContent = d.error; return; }
       iStatus.textContent = ""; showIdea(x, d.idea || {});
       card.scrollIntoView({ block: "nearest" });
