@@ -14,16 +14,24 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // מנחה = כניסה עם Google + אימייל מאומת + אימייל מהרשימה.
+    // מנחה = כניסה עם Google + אימייל מאומת + אימייל מורשה.
     // הסיסמה המשותפת של הסדנה גלויה לכל דפדפן, ולכן כניסה בסיסמה לעולם לא מקנה הרשאת מנחה.
-    // רשימת המנחים - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js (אותיות קטנות).
+    // אימייל מורשה: בעלים (הרשימה כאן - לשמור זהה ל-ADMIN_EMAILS ב-app/config.js, אותיות קטנות),
+    // או מסמך admins/{email} שמנחה הוסיף בלוח הניהול.
     function isAdmin() {
       return isSignedIn()
         && request.auth.token.firebase.sign_in_provider == 'google.com'
         && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in [
-          'inbaltsa@post.bgu.ac.il'
-        ];
+        && (request.auth.token.email.lower() in [
+              'inbaltsa@post.bgu.ac.il'
+            ]
+            || exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower())));
+    }
+
+    // מנחים שנוספו בלחיצת כפתור. מנחה מנהל את הרשימה; כל אחד יכול רק לבדוק אם הוא עצמו ברשימה.
+    match /admins/{email} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.token.email.lower() == email);
+      allow write: if isAdmin();
     }
 
     // פרופיל משתמש: כל אחד קורא/כותב את שלו; מנחה קורא את כולם (ללוח הניהול).

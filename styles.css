@@ -383,3 +383,6 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .welcome-keys span { font-size: .8em; opacity: .85; }
 .welcome-keys b { font-size: clamp(1.25rem, 3.6vw, 1.9rem); font-weight: 800; letter-spacing: .01em; text-align: end; overflow-wrap: anywhere; }
 .welcome-note { font-size: .92em; opacity: .9; }
+.staff-add { margin-top: 16px; }
+.staff-add input { font: inherit; font-size: .9rem; padding: 8px 14px; border: 1px solid var(--border-strong); border-radius: 999px; min-width: 0; flex: 1 1 220px; direction: ltr; text-align: right; }
+.user-list .text-btn { font-size: .85rem; }

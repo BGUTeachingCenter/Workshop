@@ -4,8 +4,10 @@
 // משתתפים: שם + אימייל + סיסמת הסדנה המשותפת (WORKSHOP_PASSWORD). כניסה ראשונה
 // יוצרת חשבון; אחר כך מתחברים לאותו חשבון.
 // מנחים: כניסה עם Google בלבד. הסיסמה המשותפת גלויה לכל דפדפן, ולכן היא לא יכולה
-// להוכיח שמישהו הוא מנחה. מנחה = אימייל מ-ADMIN_EMAILS + אימייל מאומת + כניסת Google,
-// ואותם שלושה תנאים נאכפים ב-firestore.rules.
+// להוכיח שמישהו הוא מנחה. מנחה = כניסת Google + אימייל מאומת + אימייל מורשה,
+// ואותם תנאים נאכפים ב-firestore.rules. אימייל מורשה = אחד משניים:
+//   - ADMIN_EMAILS (בעלים, קבוע בקוד ובכללים - אי אפשר להסיר מהממשק, כדי שאף פעם לא יינעלו בחוץ);
+//   - מסמך admins/{email} - מנחים שנוספו בלחיצת כפתור בלוח הניהול (רק מנחה יכול להוסיף/להסיר).
 //
 // ה-SDK נטען דינמית בתוך init() בלבד - כך שסתם ייבוא הקובץ (גם במצב mock) לא
 // מושך שום דבר מהרשת.
@@ -28,7 +30,7 @@ const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 let initializeApp, getAuth, onAuthStateChanged, signInWithEmailAndPassword,
     createUserWithEmailAndPassword, fbSignOut,
     GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo,
-    getFirestore, doc, getDoc, setDoc, collection, getDocs;
+    getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs;
 
 let app, fbAuth, db;
 let currentUser = null;          // { uid, name, email, role }
@@ -43,9 +45,11 @@ const isAdminEmail = (email) => adminList().includes((email || "").trim().toLowe
 // מנחה רק אם שלושת התנאים מתקיימים בסשן הנוכחי (כמו isAdmin ב-firestore.rules).
 // כניסה בסיסמה עם אימייל של מנחה נשארת משתתף רגיל.
 async function isVerifiedAdmin(fbUser) {
-  if (!isAdminEmail(fbUser.email)) return false;
   const t = await fbUser.getIdTokenResult();
-  return t.signInProvider === "google.com" && t.claims.email_verified === true;
+  if (t.signInProvider !== "google.com" || t.claims.email_verified !== true) return false;
+  if (isAdminEmail(fbUser.email)) return true;
+  try { return (await getDoc(doc(db, "admins", fbUser.email.trim().toLowerCase()))).exists(); }
+  catch { return false; }
 }
 
 async function activeGroupId() {
@@ -102,7 +106,7 @@ export const auth = {
     ({ getAuth, onAuthStateChanged, signInWithEmailAndPassword,
        createUserWithEmailAndPassword, signOut: fbSignOut,
        GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } = await import(`${SDK}/firebase-auth.js`));
-    ({ getFirestore, doc, getDoc, setDoc, collection, getDocs } = await import(`${SDK}/firebase-firestore.js`));
+    ({ getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } = await import(`${SDK}/firebase-firestore.js`));
 
     app = initializeApp(firebaseConfig);
     fbAuth = getAuth(app);
@@ -207,6 +211,21 @@ export const data = {
   },
   async setActiveGroup(id) {
     await setDoc(doc(db, "workshop", "config"), { activeGroup: id || null }, { merge: true });
+  },
+  // מנחים: הבעלים מ-ADMIN_EMAILS (root, לא ניתנים להסרה) + מי שנוסף בלוח הניהול.
+  async listAdmins() {
+    const qs = await getDocs(collection(db, "admins"));
+    const added = qs.docs.map((d) => ({ email: d.id, ...d.data() }));
+    return [...adminList().map((email) => ({ email, root: true })), ...added.filter((a) => !isAdminEmail(a.email))];
+  },
+  async addAdmin(email, name) {
+    const id = (email || "").trim().toLowerCase();
+    if (!id || !id.includes("@")) throw new Error("כתובת אימייל לא תקינה.");
+    await setDoc(doc(db, "admins", id), { name: name || "", addedAt: Date.now(), addedBy: currentUser?.email || "" });
+  },
+  async removeAdmin(email) {
+    if (isAdminEmail(email)) throw new Error("אי אפשר להסיר בעלים של הסדנה מהממשק.");
+    await deleteDoc(doc(db, "admins", email.trim().toLowerCase()));
   },
   async listUsers() {
     const qs = await getDocs(collection(db, "users"));

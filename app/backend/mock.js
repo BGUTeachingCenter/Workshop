@@ -7,6 +7,7 @@ const K = {
   users: "wk:users",
   config: "wk:config",
   groups: "wk:groups",
+  admins: "wk:admins",
   progress: (uid) => `wk:progress:${uid}`,
 };
 
@@ -35,6 +36,7 @@ export const auth = {
       const role = email.includes("+admin") ? "admin" : "participant";
       user = { uid: uid(), email, name: name || email.split("@")[0], role, createdAt: Date.now() };
     }
+    if (read(K.admins, {})[email.toLowerCase()]) user.role = "admin";
     // כמו ב-Firebase: כניסה אחרונה + צירוף לקבוצה הפעילה.
     const active = read(K.config, {})?.activeGroup;
     user.lastSeen = Date.now();
@@ -68,6 +70,16 @@ export const data = {
     write(K.config, cfg);
   },
   async listUsers() { return Object.values(read(K.users, {})); },
+  async listAdmins() {
+    const root = Object.values(read(K.users, {})).filter((u) => u.email.includes("+admin")).map((u) => ({ email: u.email, root: true }));
+    return [...root, ...Object.entries(read(K.admins, {})).map(([email, a]) => ({ email, ...a }))];
+  },
+  async addAdmin(email, name) {
+    const a = read(K.admins, {}); a[email.trim().toLowerCase()] = { name: name || "", addedAt: Date.now() }; write(K.admins, a);
+  },
+  async removeAdmin(email) {
+    const a = read(K.admins, {}); delete a[email.trim().toLowerCase()]; write(K.admins, a);
+  },
   async listGroups() { return Object.values(read(K.groups, {})).sort((a, b) => b.createdAt - a.createdAt); },
   async createGroup(name, { activate = true } = {}) {
     const groups = read(K.groups, {});

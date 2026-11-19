@@ -10,20 +10,80 @@ const ALL = "__all", NONE = "__none";
 export async function adminView() {
   // listGroups נכשל כשכללי האבטחה עוד לא עודכנו - הלוח ממשיך לעבוד, עם הודעה.
   let rulesOld = false;
-  const [users, config, groups] = await Promise.all([data.listUsers(), data.getConfig(),
-    data.listGroups().catch(() => { rulesOld = true; return []; })]);
+  const [users, config, groups, admins] = await Promise.all([data.listUsers(), data.getConfig(),
+    data.listGroups().catch(() => { rulesOld = true; return []; }),
+    data.listAdmins().catch(() => null)]);
   const wrap = document.createElement("main");
   wrap.className = "admin";
 
   wrap.innerHTML = `<div class="wk-head"><span class="eyebrow">לוח מנחה</span><h1>ניהול הסדנה</h1>
-    <p class="wk-sub">קבוצות, מעקב אחרי המשתתפים, ופתיחה וסגירה של יחידות. הכול נשמר מיד.</p></div>`;
+    <p class="wk-sub">קבוצות, מעקב אחרי המשתתפים, צוות ההנחיה, ופתיחה וסגירה של יחידות. הכול נשמר מיד.</p></div>`;
 
   // --- קבוצות + מעקב ---
   const groupSec = document.createElement("section");
   groupSec.className = "admin-block";
   const trackSec = document.createElement("section");
   trackSec.className = "admin-block";
-  wrap.append(groupSec, trackSec);
+  const staffSec = document.createElement("section");
+  staffSec.className = "admin-block";
+  wrap.append(groupSec, trackSec, staffSec);
+
+  // --- צוות ההנחיה ---
+  const nameOf = (email) => users.find((u) => (u.email || "").toLowerCase() === email)?.name || "";
+  async function makeAdmins(list) { // list: [{email, name}]
+    const who = list.map((x) => x.name || x.email).join(", ");
+    if (!confirm(`לתת הרשאת מנחה ל: ${who}?\nהכניסה כמנחה היא רק בכפתור "כניסת מנחה עם Google", עם חשבון Google של אותו אימייל.`)) return false;
+    try {
+      for (const x of list) {
+        await data.addAdmin(x.email, x.name);
+        const e = x.email.trim().toLowerCase();
+        if (!admins.some((a) => a.email === e)) admins.push({ email: e, name: x.name || "" });
+      }
+      renderStaff();
+      return true;
+    } catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); return false; }
+  }
+
+  function renderStaff() {
+    staffSec.innerHTML = `<h2>צוות ההנחיה</h2>`;
+    if (!admins) {
+      staffSec.innerHTML += `<p class="track-warn">כדי לנהל את צוות ההנחיה צריך לפרסם את כללי האבטחה המעודכנים (firestore.rules) בקונסולת Firebase.</p>`;
+      return;
+    }
+    staffSec.innerHTML += `<p class="muted track-legend">הרשאת מנחה: שקפים, לוח הניהול וכל היחידות. הכניסה כמנחה היא רק בכפתור "כניסת מנחה עם Google".</p>`;
+    const ul = document.createElement("ul");
+    ul.className = "user-list";
+    admins.forEach((a) => {
+      const li = document.createElement("li");
+      const name = a.name || nameOf(a.email);
+      li.innerHTML = `<span class="avatar" aria-hidden="true">${esc((name || a.email).charAt(0))}</span>
+        <span class="u-main"><strong>${esc(name || a.email)}</strong><small>${esc(a.email)}</small></span>`;
+      if (a.root) li.insertAdjacentHTML("beforeend", `<span class="u-role admin">בעלים</span>`);
+      else {
+        const rm = document.createElement("button");
+        rm.type = "button"; rm.className = "text-btn"; rm.textContent = "הסרה";
+        rm.addEventListener("click", async () => {
+          if (!confirm(`להסיר את הרשאת המנחה של ${name || a.email}?`)) return;
+          try { await data.removeAdmin(a.email); admins.splice(admins.indexOf(a), 1); renderStaff(); }
+          catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
+        });
+        li.append(rm);
+      }
+      ul.append(li);
+    });
+    staffSec.append(ul);
+
+    const form = document.createElement("form");
+    form.className = "admin-bulk staff-add";
+    form.innerHTML = `<input type="email" name="email" placeholder="אימייל של מנחה נוסף" aria-label="אימייל של מנחה נוסף" required>
+      <button type="submit">הוספת מנחה</button>`;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = form.email.value.trim();
+      if (await makeAdmins([{ email, name: nameOf(email.toLowerCase()) }])) form.reset();
+    });
+    staffSec.append(form);
+  }
 
   let selected = config.activeGroup || ALL;
 
@@ -125,9 +185,18 @@ export async function adminView() {
     });
     const moveBtn = document.createElement("button");
     moveBtn.type = "button"; moveBtn.textContent = "העברה";
+    const adminBtn = document.createElement("button");
+    adminBtn.type = "button"; adminBtn.textContent = "הפיכה למנחה";
+    adminBtn.addEventListener("click", async () => {
+      const list = users.filter((u) => chosen.has(u.uid)).map((u) => ({ email: u.email, name: u.name }));
+      adminBtn.disabled = true;
+      await makeAdmins(list);
+      adminBtn.disabled = false;
+    });
     const syncBar = () => {
-      moveLbl.textContent = chosen.size ? `סומנו ${chosen.size} · העברה לקבוצה:` : "סימון שורות כדי להעביר אותן לקבוצה אחרת";
+      moveLbl.textContent = chosen.size ? `סומנו ${chosen.size} · העברה לקבוצה:` : "סימון שורות כדי להעביר אותן לקבוצה אחרת או לתת הרשאת מנחה";
       target.hidden = moveBtn.hidden = !chosen.size;
+      adminBtn.hidden = !chosen.size || !admins;
     };
     moveBtn.addEventListener("click", async () => {
       let gid = target.value, gname = target.selectedOptions[0]?.textContent;
@@ -149,7 +218,7 @@ export async function adminView() {
         renderGroups(); renderTracking();
       } catch (err) { alert("ההעברה נכשלה: " + (err.message || err)); moveBtn.disabled = false; }
     });
-    bar.append(moveLbl, target, moveBtn);
+    bar.append(moveLbl, target, moveBtn, adminBtn);
     syncBar();
     trackSec.append(bar);
 
@@ -202,6 +271,7 @@ export async function adminView() {
 
   renderGroups();
   renderTracking();
+  renderStaff();
 
   // --- פתיחה/סגירה של כל היחידות בבת אחת ---
   const allIds = meetings.flatMap((m) => m.units.map((u) => u.id));
