@@ -5,8 +5,8 @@
  * הגדרה חד-פעמית (ראו SETUP.md):
  *   Project Settings → Script Properties:
  *     GEMINI_API_KEY = המפתח מ-Google AI Studio
- *     GEMINI_MODEL   = שם המודל (ברירת מחדל: gemini-2.5-flash)
- *     GEMINI_FALLBACK_MODEL = מודל גיבוי, אם הראשי עמוס או לא זמין (ברירת מחדל: gemini-2.5-flash-lite)
+ *     GEMINI_MODEL   = שם המודל (ברירת מחדל: gemini-3.8-flash)
+ *     GEMINI_FALLBACK_MODEL = מודל גיבוי, אם הראשי עמוס או לא זמין (ברירת מחדל: gemini-3.5-flash-lite)
  *     DAILY_LIMIT    = מקסימום בקשות ביום (ברירת מחדל: 100)
  *   Deploy → New deployment → Web app → Execute as: Me · Who has access: Anyone
  */
@@ -35,8 +35,8 @@ function askGemini_(x) {
   var key = props.getProperty("GEMINI_API_KEY") || props.getProperty("Gemini API key");
   if (key) key = key.trim();
   if (!key) throw new Error("החלונית עוד לא הוגדרה (חסר מפתח).");
-  var models = [props.getProperty("GEMINI_MODEL") || "gemini-2.5-flash",
-                props.getProperty("GEMINI_FALLBACK_MODEL") || "gemini-2.5-flash-lite"];
+  var models = [props.getProperty("GEMINI_MODEL") || "gemini-3.8-flash",
+                props.getProperty("GEMINI_FALLBACK_MODEL") || "gemini-3.5-flash-lite"];
 
   var prompt =
     "את/ה יועץ/ת פדגוגי/ת למרצים באקדמיה. הצע/י רעיון אחד, קונקרטי ומעשי, לפיתוח מיומנות פתרון בעיות אצל סטודנטים.\n" +
