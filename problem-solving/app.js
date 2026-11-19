@@ -307,6 +307,7 @@ function renderExamples() {
     c.appendChild(el("span", "meta", x.course));
     var chips = el("span", "chips");
     if (x.proposal) chips.appendChild(el("span", "chip proposal", "הצעה של Claude"));
+    if (x.lecturerSubmitted) chips.appendChild(el("span", "chip lect", "נשלח מהאתר"));
     chips.appendChild(el("span", "chip", FIELD_NAMES[x.field]));
     chips.appendChild(el("span", "chip", PTYPE_NAMES[x.ptype]));
     x.stages.forEach(function (n) { chips.appendChild(el("span", "chip st-chip", n + ". " + STAGES[n - 1].name)); });
@@ -433,6 +434,58 @@ if (document.getElementById("idea-form")) {
   });
 }
 
+/* ---------- מאגר הדוגמאות המשותף (גיליון Google דרך Apps Script) ---------- */
+function codeOf(map, label) { for (var k in map) if (map[k] === label) return k; return ""; }
+function linesOf(t) { return String(t || "").split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean); }
+function loadRemoteExamples() {
+  if (!IDEA_API) return;
+  var cnt = document.getElementById("ex-count");
+  fetch(IDEA_API + "?action=examples").then(function (r) { return r.json(); }).then(function (d) {
+    (d.examples || []).forEach(function (r) {
+      var lect = linesOf(r.lecturer), stud = linesOf(r.students);
+      EXAMPLES.push({
+        title: r.title, by: r.by, course: r.course,
+        field: codeOf(FIELD_NAMES, r.field) || "other", ptype: codeOf(PTYPE_NAMES, r.ptype) || "open",
+        scope: codeOf(SCOPE_NAMES, r.scope) || "part",
+        stages: (String(r.stages).match(/[1-6]/g) || []).map(Number),
+        duration: r.duration, lecturer: lect.length > 1 ? lect : r.lecturer, students: stud.length > 1 ? stud : r.students,
+        feedback: r.feedback, worked: r.worked, adapt: r.adapt, materials: r.materials, lecturerSubmitted: true
+      });
+    });
+    renderExamples();
+  }).catch(function () { if (cnt) cnt.textContent += " · דוגמאות שנשלחו מהאתר לא נטענו כרגע."; });
+}
+
+/* ---------- טופס הוספת דוגמה ---------- */
+if (document.getElementById("ex-form")) {
+  function fill(id, map) { var s = document.getElementById(id); Object.keys(map).forEach(function (k) { var o = el("option", null, map[k]); o.value = map[k]; s.appendChild(o); }); }
+  fill("x-field", FIELD_NAMES); fill("x-ptype", PTYPE_NAMES); fill("x-scope", SCOPE_NAMES);
+  var box = document.getElementById("x-stages");
+  STAGES.forEach(function (s, i) {
+    var l = el("label"), c = el("input"); c.type = "checkbox"; c.value = String(i + 1); c.id = "x-st-" + (i + 1);
+    l.htmlFor = c.id; l.appendChild(c); l.appendChild(document.createTextNode((i + 1) + ". " + s.name)); box.appendChild(l);
+  });
+  var xf = document.getElementById("ex-form"), xs = document.getElementById("x-status"), xg = document.getElementById("x-go");
+  function v(id) { return document.getElementById(id).value.trim(); }
+  xf.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!v("x-title") || !v("x-by")) { xs.textContent = "צריך למלא לפחות שם הדוגמה ושם הממלא/ת."; (v("x-title") ? document.getElementById("x-by") : document.getElementById("x-title")).focus(); return; }
+    var stages = Array.prototype.map.call(box.querySelectorAll("input:checked"), function (c) { return c.value; });
+    if (!stages.length) { xs.textContent = "צריך לסמן לפחות שלב אחד."; return; }
+    var data = { title: v("x-title"), by: v("x-by"), course: v("x-course"), field: v("x-field"), ptype: v("x-ptype"),
+      stages: stages.join(", "), scope: v("x-scope"), duration: v("x-duration"), lecturer: v("x-lecturer"),
+      students: v("x-students"), feedback: v("x-feedback"), worked: v("x-worked"), adapt: v("x-adapt"),
+      materials: v("x-materials"), website: v("x-website") };
+    xg.disabled = true; xs.textContent = "שולח…";
+    fetch(IDEA_API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+      .then(function (r) { return r.json(); }).then(function (d) {
+        if (d.error) { xs.textContent = d.error; return; }
+        xf.reset(); xs.textContent = "תודה! הדוגמה התקבלה ותופיע במאגר אחרי אישור של הצוות.";
+      }).catch(function () { xs.textContent = "השליחה לא הצליחה. נסו שוב בעוד רגע."; })
+      .then(function () { xg.disabled = false; });
+  });
+}
+
 /* ---------- page init ---------- */
 document.getElementById("fb-general").href = fbHref("כללי");
 if (document.getElementById("tree")) renderTree();
@@ -440,6 +493,7 @@ if (document.getElementById("ex-cards")) {
   var m = /^#stage-([1-6])$/.exec(location.hash);
   if (m) document.getElementById("f-stage").value = m[1];
   renderExamples();
+  loadRemoteExamples();
 }
 if (document.getElementById("theory-summary")) {
   var t = document.getElementById("theory-summary");

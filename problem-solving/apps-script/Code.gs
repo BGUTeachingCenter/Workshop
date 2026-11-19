@@ -8,7 +8,8 @@
  *     GEMINI_MODEL   = שם המודל (ברירת מחדל: gemini-3.8-flash)
  *     GEMINI_FALLBACK_MODEL = מודל גיבוי, אם הראשי עמוס או לא זמין (ברירת מחדל: gemini-3.5-flash-lite)
  *     DAILY_LIMIT    = מקסימום בקשות ביום (ברירת מחדל: 100)
- *     SHEET_ID       = (רשות) מזהה גיליון Google לרישום כל רעיון שנוצר
+ *     SHEET_ID       = מזהה גיליון Google: לשונית ראשונה = רישום הרעיונות, לשונית "דוגמאות" = מאגר הדוגמאות
+ *                      (הלשונית נוצרת לבד; מסמנים ✓ בעמודה "מאושר" כדי שהדוגמה תופיע באתר)
  *   Deploy → New deployment → Web app → Execute as: Me · Who has access: Anyone
  */
 
@@ -16,6 +17,10 @@ var STAGE_NAMES = ["זיהוי הבעיה", "איסוף נתונים וחקר", 
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
+  if (p.action === "examples") {
+    try { return json_({ examples: listExamples_() }); }
+    catch (err) { return json_({ error: String(err.message || err) }); }
+  }
   try {
     checkLimits_();
     var stage = parseInt(p.stage, 10);
@@ -142,6 +147,63 @@ function authorize() {
   UrlFetchApp.fetch("https://www.google.com", { muteHttpExceptions: true });
   var id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
   if (id) SpreadsheetApp.openById(id.trim()).getName();
+}
+
+/* ===== מאגר הדוגמאות: האתר שולח (POST), ענבל מאשרת בגיליון, האתר מציג רק מאושרות ===== */
+var EX_TAB = "דוגמאות";
+var EX_HEAD = ["תאריך", "מאושר", "שם הדוגמה", "ממלא/ת ומוסד", "קורס וקהל יעד", "תחום", "סוג הבעיה", "שלבים",
+               "היקף", "משך זמן", "מה המרצה עושה", "מה הסטודנטים עושים", "משוב על המיומנות", "מה עבד ומה פחות",
+               "התאמה לקורס אחר", "חומרים מצורפים"];
+var EX_KEYS = ["title", "by", "course", "field", "ptype", "stages", "scope", "duration", "lecturer", "students",
+               "feedback", "worked", "adapt", "materials"];
+
+function exSheet_() {
+  var id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+  if (!id) throw new Error("המאגר עוד לא הוגדר (חסר SHEET_ID).");
+  var ss = SpreadsheetApp.openById(id.trim());
+  var sh = ss.getSheetByName(EX_TAB);
+  if (!sh) {
+    sh = ss.insertSheet(EX_TAB);
+    sh.appendRow(EX_HEAD); sh.setFrozenRows(1);
+    sh.getRange("B2:B1000").insertCheckboxes();
+  }
+  return sh;
+}
+
+function doPost(e) {
+  try {
+    var d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
+    if (d.website) return json_({ ok: true });                 /* מלכודת לבוטים: שדה נסתר שבני אדם לא ממלאים */
+    if (!clip_(d.title, 200) || !clip_(d.by, 200)) return json_({ error: "חסרים שם הדוגמה או שם הממלא/ת." });
+    checkSubmitLimit_();
+    var row = [new Date(), false].concat(EX_KEYS.map(function (k) { return clip_(d[k], 3000); }));
+    exSheet_().appendRow(row);
+    return json_({ ok: true });
+  } catch (err) {
+    return json_({ error: String(err.message || err) });
+  }
+}
+
+function listExamples_() {
+  var cache = CacheService.getScriptCache(), hit = cache.get("examples");
+  if (hit) return JSON.parse(hit);
+  var rows = exSheet_().getDataRange().getValues().slice(1);
+  var out = rows.filter(function (r) { return r[1] === true || /^(v|✓|כן|yes|true)$/i.test(String(r[1]).trim()); })
+    .map(function (r) {
+      var o = {}; EX_KEYS.forEach(function (k, i) { o[k] = String(r[i + 2] || ""); });
+      o.date = r[0] instanceof Date ? Utilities.formatDate(r[0], "Asia/Jerusalem", "yyyy-MM-dd") : "";
+      return o;
+    });
+  cache.put("examples", JSON.stringify(out), 120);
+  return out;
+}
+
+function checkSubmitLimit_() {
+  var props = PropertiesService.getScriptProperties();
+  var today = Utilities.formatDate(new Date(), "Asia/Jerusalem", "yyyy-MM-dd");
+  var n = parseInt(props.getProperty("SUBMIT_" + today) || "0", 10);
+  if (n >= 50) throw new Error("התקבלו היום הרבה דוגמאות. נסו שוב מחר.");
+  props.setProperty("SUBMIT_" + today, String(n + 1));
 }
 
 function clip_(s, n) { return String(s || "").trim().slice(0, n); }
