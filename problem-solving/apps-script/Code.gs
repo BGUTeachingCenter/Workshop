@@ -64,7 +64,7 @@ function askGemini_(x) {
     function (m) { return { url: "https://aiplatform.googleapis.com/v1/publishers/google/models/" + encodeURIComponent(m) + ":generateContent?key=" + encodeURIComponent(key),
                             headers: {} }; }
   ];
-  var lastCode = 0, lastMsg = "";
+  var lastCode = 0, lastMsg = "", errs = [];
   for (var e = 0; e < endpoints.length; e++) {
     for (var i = 0; i < models.length; i++) {
       var ep = endpoints[e](models[i]);
@@ -75,6 +75,7 @@ function askGemini_(x) {
       lastCode = res.getResponseCode();
       if (lastCode !== 200) {
         try { lastMsg = (JSON.parse(res.getContentText()).error || {}).message || ""; } catch (x) { lastMsg = ""; }
+        errs.push((e === 0 ? "Gemini API" : "Vertex") + " " + lastCode + ": " + lastMsg.slice(0, 160));
         if (lastCode === 401 || lastCode === 403) break;   /* המפתח לא מתאים לשירות הזה → השירות הבא */
         continue;                                           /* עומס / מודל לא קיים / תקלה → מודל הגיבוי */
       }
@@ -89,7 +90,7 @@ function askGemini_(x) {
     }
   }
   if (lastCode === 429) throw new Error("הגענו למגבלת השימוש החינמית לרגע זה. נסו שוב בעוד דקה.");
-  throw new Error("השירות לא זמין (" + lastCode + ")" + (lastMsg ? ": " + lastMsg.slice(0, 200) : "."));
+  throw new Error("השירות לא זמין. " + errs.join(" | "));
 }
 
 /* מגבלות: לא יותר מ-10 בקשות בדקה, ותקרה יומית. */
