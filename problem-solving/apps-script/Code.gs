@@ -8,6 +8,7 @@
  *     GEMINI_MODEL   = שם המודל (ברירת מחדל: gemini-3.8-flash)
  *     GEMINI_FALLBACK_MODEL = מודל גיבוי, אם הראשי עמוס או לא זמין (ברירת מחדל: gemini-3.5-flash-lite)
  *     DAILY_LIMIT    = מקסימום בקשות ביום (ברירת מחדל: 100)
+ *     SHEET_ID       = (רשות) מזהה גיליון Google לרישום כל רעיון שנוצר
  *   Deploy → New deployment → Web app → Execute as: Me · Who has access: Anyone
  */
 
@@ -24,7 +25,9 @@ function doGet(e) {
       when: clip_(p.when, 40), tool: clip_(p.tool, 40), stage: stage
     };
     if (!input.course) return json_({ error: "חסר שם קורס" });
-    return json_({ idea: askGemini_(input) });
+    var idea = askGemini_(input);
+    logIdea_(input, idea);
+    return json_({ idea: idea });
   } catch (err) {
     return json_({ error: String(err.message || err) });
   }
@@ -68,11 +71,14 @@ function askGemini_(x) {
   for (var e = 0; e < endpoints.length; e++) {
     for (var i = 0; i < models.length; i++) {
       var ep = endpoints[e](models[i]);
-      var res = UrlFetchApp.fetch(ep.url, {
-        method: "post", contentType: "application/json", muteHttpExceptions: true,
-        headers: ep.headers, payload: payload
-      });
+      var opts = { method: "post", contentType: "application/json", muteHttpExceptions: true, headers: ep.headers, payload: payload };
+      var res = UrlFetchApp.fetch(ep.url, opts);
       lastCode = res.getResponseCode();
+      if (lastCode === 503 || lastCode === 429) {   /* עומס רגעי: ניסיון חוזר אחד אחרי 2 שניות */
+        Utilities.sleep(2000);
+        res = UrlFetchApp.fetch(ep.url, opts);
+        lastCode = res.getResponseCode();
+      }
       if (lastCode !== 200) {
         try { lastMsg = (JSON.parse(res.getContentText()).error || {}).message || ""; } catch (x) { lastMsg = ""; }
         errs.push((e === 0 ? "Gemini API" : "Vertex") + " " + lastCode + ": " + lastMsg.slice(0, 160));
@@ -89,8 +95,10 @@ function askGemini_(x) {
       return idea;
     }
   }
-  if (lastCode === 429) throw new Error("הגענו למגבלת השימוש החינמית לרגע זה. נסו שוב בעוד דקה.");
-  throw new Error("השירות לא זמין. " + errs.join(" | "));
+  Logger.log(errs.join(" | "));
+  if (errs.some(function (x) { return / (503|429): /.test(x); }))
+    throw new Error("יש כרגע עומס על שירות ה-AI. נסו שוב בעוד דקה.");
+  throw new Error("השירות לא זמין כרגע. " + errs.join(" | "));
 }
 
 /* מגבלות: לא יותר מ-10 בקשות בדקה, ותקרה יומית. */
@@ -111,6 +119,29 @@ function checkLimits_() {
     if (used >= limit) throw new Error("הגענו למכסה היומית של הדגמה. נסו שוב מחר.");
     props.setProperty("USED_" + today, String(used + 1));
   } finally { lock.releaseLock(); }
+}
+
+/* רישום כל רעיון בגיליון (אם הוגדר SHEET_ID). תקלה ברישום לא עוצרת את התשובה למרצה. */
+function logIdea_(x, idea) {
+  var id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+  if (!id) return;
+  try {
+    var sh = SpreadsheetApp.openById(id.trim()).getSheets()[0];
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(["תאריך ושעה", "קורס", "תחום", "שנה", "שלב", "מתי בסמסטר", "כלי",
+                    "כותרת", "מה המרצה עושה", "מה הסטודנטים עושים", "היגד משוב", "משך", "מודל"]);
+      sh.setFrozenRows(1);
+    }
+    sh.appendRow([new Date(), x.course, x.field, x.year, x.stage + ". " + STAGE_NAMES[x.stage - 1], x.when, x.tool,
+                  idea.title || "", idea.lecturer || "", idea.students || "", idea.feedback || "", idea.time || "", idea.model || ""]);
+  } catch (err) { Logger.log("logIdea_: " + err); }
+}
+
+/* להרצה ידנית פעם אחת מהעורך, כדי לאשר הרשאות (Gemini + גיליון). */
+function authorize() {
+  UrlFetchApp.fetch("https://www.google.com", { muteHttpExceptions: true });
+  var id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+  if (id) SpreadsheetApp.openById(id.trim()).getName();
 }
 
 function clip_(s, n) { return String(s || "").trim().slice(0, n); }
