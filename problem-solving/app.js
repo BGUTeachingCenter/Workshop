@@ -234,6 +234,7 @@ function renderTree() {
     var a2 = el("a", null, n ? "דוגמאות מקורסים לשלב (" + n + ") ←" : "עוד אין דוגמאות לשלב הזה. להוסיף ←");
     a2.href = n ? "examples.html#stage-" + (i + 1) : "template.html";
     links.appendChild(a2);
+    var a3 = el("a", null, "רעיון לשיעור לשלב הזה ←"); a3.href = "idea.html#stage-" + (i + 1); links.appendChild(a3);
     links.appendChild(fbLink("עץ · שלב " + (i + 1) + ": " + s.name, "הערה על השלב"));
     box.appendChild(links);
     li.appendChild(box); tree.appendChild(li);
@@ -365,6 +366,57 @@ if (document.getElementById("tpl")) {
 })();
 }
 
+
+/* ---------- idea (רעיון לשיעור) ----------
+   IDEA_API: כתובת ה-Web app של Apps Script (apps-script/SETUP.md). כל עוד ריקה, החלונית מציגה הודעה. */
+var IDEA_API = "";
+if (document.getElementById("idea-form")) {
+  var iStage = document.getElementById("i-stage");
+  STAGES.forEach(function (s, i) { var o = el("option", null, (i + 1) + ". " + s.name); o.value = String(i + 1); iStage.appendChild(o); });
+  var m2 = /^#stage-([1-6])$/.exec(location.hash); if (m2) iStage.value = m2[1];
+  var iForm = document.getElementById("idea-form"), go = document.getElementById("i-go"), iStatus = document.getElementById("i-status"), card = document.getElementById("idea-card");
+  var lastInput = null;
+  function ideaParams() {
+    return { course: document.getElementById("i-course").value.trim(), field: document.getElementById("i-field").value,
+             year: document.getElementById("i-year").value, stage: iStage.value,
+             when: document.getElementById("i-when").value, tool: document.getElementById("i-tool").value };
+  }
+  function showIdea(x, idea) {
+    card.textContent = "";
+    card.appendChild(el("span", "draft", "הצעה של AI. כדאי לעבור עליה לפני שימוש"));
+    card.appendChild(el("h2", null, idea.title || "רעיון"));
+    var dl = el("dl", "fields");
+    [["קורס", x.course + " · " + x.field + " · " + x.year], ["שלב", x.stage + ". " + STAGES[x.stage - 1].name], ["כלי ועיתוי", x.tool + " · " + x.when],
+     ["מה המרצה עושה", idea.lecturer], ["מה הסטודנטים עושים", idea.students], ["היגד משוב", idea.feedback], ["משך", idea.time]]
+      .forEach(function (r) { if (!r[1]) return; dl.appendChild(el("dt", null, r[0])); dl.appendChild(el("dd", null, String(r[1]))); });
+    card.appendChild(dl);
+    var bar = el("div", "fb-bar");
+    var again = el("button", "btn", "רעיון אחר"); again.type = "button";
+    again.addEventListener("click", function () { request(lastInput); });
+    bar.appendChild(again);
+    bar.appendChild(fbLink("רעיון לשיעור · " + (idea.title || "") + " (" + x.course + ", שלב " + x.stage + ")", "הערה על הרעיון"));
+    card.appendChild(bar);
+    card.hidden = false;
+  }
+  function request(x) {
+    lastInput = x;
+    if (!IDEA_API) { iStatus.textContent = "החלונית עוד לא מחוברת לשירות ה-AI. בקרוב."; return; }
+    go.disabled = true; iStatus.textContent = "חושב על רעיון…";
+    var qs = Object.keys(x).map(function (k) { return k + "=" + encodeURIComponent(x[k]); }).join("&");
+    fetch(IDEA_API + "?" + qs).then(function (r) { return r.json(); }).then(function (d) {
+      if (d.error) { iStatus.textContent = d.error; return; }
+      iStatus.textContent = ""; showIdea(x, d.idea || {});
+      card.scrollIntoView({ block: "nearest" });
+    }).catch(function () { iStatus.textContent = "לא הצלחנו להתחבר לשירות. נסו שוב בעוד רגע."; })
+      .then(function () { go.disabled = false; });
+  }
+  iForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var x = ideaParams();
+    if (!x.course) { iStatus.textContent = "צריך למלא שם קורס."; document.getElementById("i-course").focus(); return; }
+    request(x);
+  });
+}
 
 /* ---------- page init ---------- */
 document.getElementById("fb-general").href = fbHref("כללי");

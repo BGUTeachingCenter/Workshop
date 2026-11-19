@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>רעיון לשיעור · פתרון בעיות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar" dir="rtl" lang="he">
+  <div class="topbar-in">
+    <a class="brand" href="index.html">מיומנות פתרון בעיות</a>
+    <nav class="nav" aria-label="ניווט באתר">
+      <a href="index.html">מיפוי התהליך</a>
+      <a href="theory.html">ביסוס תיאורטי</a>
+      <a href="examples.html">דוגמאות מקורסים</a>
+      <a href="idea.html" aria-current="page">רעיון לשיעור</a>
+      <a href="template.html">להוסיף דוגמה</a>
+    </nav>
+    <a class="fb-link" id="fb-general" target="_blank" rel="noopener">✎ הערה כללית</a>
+  </div>
+</header>
+
+<main class="page" dir="rtl" lang="he">
+  <section class="view" id="view-idea">
+    <header>
+      <h1>רעיון לשיעור</h1>
+      <p class="lede">ממלאים כמה פרטים על הקורס ובוחרים שלב במיומנות, ומקבלים רעיון אחד לפעילות שאפשר לנסות כבר בשבוע הבא. הרעיון נוצר ב-AI, ולכן כדאי לעבור עליו לפני שמשתמשים בו.</p>
+    </header>
+    <form class="idea-form" id="idea-form" novalidate>
+      <label for="i-course" class="wide">שם הקורס<input id="i-course" type="text" maxlength="120" required placeholder="למשל: מבוא להנדסת תהליכים"></label>
+      <label for="i-field">תחום<select id="i-field">
+        <option>הנדסה</option><option>מדעים מדויקים</option><option>מדעי החיים</option><option>עיצוב ואמנויות</option>
+        <option>חינוך</option><option>מדעי החברה</option><option>מדעי הרוח</option><option>אחר</option></select></label>
+      <label for="i-year">שנת לימוד<select id="i-year"><option>שנה א'</option><option>שנה ב'</option><option>שנה ג'</option><option>שנה ד'</option><option>תואר שני</option></select></label>
+      <label for="i-stage" class="wide">שלב במיומנות<select id="i-stage"></select></label>
+      <label for="i-when">מתי בסמסטר<select id="i-when"><option>תחילת הסמסטר</option><option>אמצע הסמסטר</option><option>סוף הסמסטר</option><option>לקראת בחינה</option></select></label>
+      <label for="i-tool">כלי<select id="i-tool"><option>שיעור</option><option>תרגול</option><option>עבודה או מטלה</option><option>בחינה או בוחן</option><option>פרויקט</option><option>מעבדה</option></select></label>
+      <div class="wide idea-actions"><button type="submit" class="btn-primary" id="i-go">תנו לי רעיון</button><span class="idea-status" id="i-status" role="status" aria-live="polite"></span></div>
+    </form>
+    <article class="idea-card" id="idea-card" hidden></article>
+  </section>
+
+
+  <p class="note">יש הערה, הצעה לניסוח או תיקון? ליד כל שלב, מודל ודוגמה יש כפתור ✎. הוא פותח טופס קצר עם שם הקטע כבר ממולא.</p>
+  <footer class="foot">צוות "פתרון בעיות" · צוות עבודה בין-מוסדי בתכנית "מארג ידע" של קרן רוטשילד · טיוטה לעבודת הצוות</footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
