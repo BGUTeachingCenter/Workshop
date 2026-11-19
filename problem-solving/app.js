@@ -402,18 +402,28 @@ if (document.getElementById("idea-form")) {
     lastInput = x;
     if (!IDEA_API) { iStatus.textContent = "החלונית עוד לא מחוברת לשירות ה-AI. בקרוב."; return; }
     go.disabled = true; iStatus.textContent = "חושב על רעיון…";
+    var t0 = Date.now(), tick = setInterval(function () {
+      var sec = Math.round((Date.now() - t0) / 1000);
+      iStatus.textContent = "חושב על רעיון… (" + sec + " שניות" + (sec > 20 ? ", לפעמים זה לוקח עד דקה" : "") + ")";
+    }, 1000);
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 90000);
     var qs = Object.keys(x).map(function (k) { return k + "=" + encodeURIComponent(x[k]); }).join("&");
-    fetch(IDEA_API + "?" + qs).then(function (r) { return r.text(); }).then(function (t) {
+    fetch(IDEA_API + "?" + qs, ctrl ? { signal: ctrl.signal } : {}).then(function (r) { return r.text(); }).then(function (t) {
       var d; try { d = JSON.parse(t); } catch (e) {
         /* תשובה שאינה JSON: לרוב דף שגיאה או בקשת הרשאה של Google */
         var plain = t.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
         d = { error: "השירות החזיר תשובה לא צפויה: " + plain };
       }
+      clearInterval(tick);
       if (d.error) { iStatus.textContent = d.error; return; }
       iStatus.textContent = ""; showIdea(x, d.idea || {});
       card.scrollIntoView({ block: "nearest" });
-    }).catch(function () { iStatus.textContent = "לא הצלחנו להתחבר לשירות. נסו שוב בעוד רגע."; })
-      .then(function () { go.disabled = false; });
+    }).catch(function (err) {
+      iStatus.textContent = err && err.name === "AbortError"
+        ? "לקח יותר מדי זמן. נסו שוב בעוד רגע."
+        : "לא הצלחנו להתחבר לשירות. נסו שוב בעוד רגע.";
+    }).then(function () { clearInterval(tick); clearTimeout(timer); go.disabled = false; });
   }
   iForm.addEventListener("submit", function (e) {
     e.preventDefault();
