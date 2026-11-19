@@ -32,7 +32,8 @@ function doGet(e) {
 
 function askGemini_(x) {
   var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty("GEMINI_API_KEY");
+  var key = props.getProperty("GEMINI_API_KEY") || props.getProperty("Gemini API key");
+  if (key) key = key.trim();
   if (!key) throw new Error("החלונית עוד לא הוגדרה (חסר מפתח).");
   var models = [props.getProperty("GEMINI_MODEL") || "gemini-2.5-flash",
                 props.getProperty("GEMINI_FALLBACK_MODEL") || "gemini-2.5-flash-lite"];
@@ -58,10 +59,13 @@ function askGemini_(x) {
   });
   var lastCode = 0;
   for (var i = 0; i < models.length; i++) {
-    var url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(models[i]) + ":generateContent";
+    /* מפתח של Google AI Studio מתחיל ב-AIza; מפתח של Vertex AI (express mode) מתחיל ב-AQ. */
+    var url = key.indexOf("AQ.") === 0
+      ? "https://aiplatform.googleapis.com/v1/publishers/google/models/" + encodeURIComponent(models[i]) + ":generateContent?key=" + encodeURIComponent(key)
+      : "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(models[i]) + ":generateContent";
     var res = UrlFetchApp.fetch(url, {
       method: "post", contentType: "application/json", muteHttpExceptions: true,
-      headers: { "x-goog-api-key": key }, payload: payload
+      headers: key.indexOf("AQ.") === 0 ? {} : { "x-goog-api-key": key }, payload: payload
     });
     lastCode = res.getResponseCode();
     /* עומס, מכסה, מודל לא קיים או תקלה זמנית → עוברים למודל הגיבוי */

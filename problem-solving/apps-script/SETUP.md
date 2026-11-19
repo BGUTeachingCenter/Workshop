@@ -6,6 +6,8 @@
 1. נכנסים ל-[aistudio.google.com](https://aistudio.google.com) עם חשבון Google של הפרויקט.
 2. **Get API key → Create API key**. מעתיקים.
 
+> הקוד מזהה לבד את סוג המפתח: מפתח של AI Studio (מתחיל ב-`AIza`) או מפתח של Vertex AI במצב express (מתחיל ב-`AQ.`).
+
 ## 2. פרויקט Apps Script
 1. נכנסים ל-[script.google.com](https://script.google.com) → **New project**. נותנים שם: "רעיון לשיעור — פתרון בעיות".
 2. מוחקים את מה שיש בקובץ `Code.gs` ומדביקים את התוכן של `Code.gs` מהתיקייה הזו.
