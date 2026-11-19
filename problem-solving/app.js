@@ -369,7 +369,7 @@ if (document.getElementById("tpl")) {
 
 /* ---------- idea (רעיון לשיעור) ----------
    IDEA_API: כתובת ה-Web app של Apps Script (apps-script/SETUP.md). כל עוד ריקה, החלונית מציגה הודעה. */
-var IDEA_API = "https://script.google.com/macros/s/AKfycbxEk566uHdTjYnWKGI8cy1BWYBmzZukOYc8sZUoggbUdcx617nA0ni-8JVIeNTC_H54CQ/exec";
+var IDEA_API = "https://script.google.com/macros/s/AKfycbzyTQLii3f9Y7Q_fkXkSW4Hn4qkqHEFLbnrQG2i4ha1ZEhNTsEKKOkapDxFgmhUWREz0g/exec";
 if (document.getElementById("idea-form")) {
   var iStage = document.getElementById("i-stage");
   STAGES.forEach(function (s, i) { var o = el("option", null, (i + 1) + ". " + s.name); o.value = String(i + 1); iStage.appendChild(o); });
