@@ -57,31 +57,39 @@ function askGemini_(x) {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     generationConfig: { temperature: 0.9, maxOutputTokens: 1200, responseMimeType: "application/json" }
   });
-  var lastCode = 0;
-  for (var i = 0; i < models.length; i++) {
-    /* מפתח של Google AI Studio מתחיל ב-AIza; מפתח של Vertex AI (express mode) מתחיל ב-AQ. */
-    var url = key.indexOf("AQ.") === 0
-      ? "https://aiplatform.googleapis.com/v1/publishers/google/models/" + encodeURIComponent(models[i]) + ":generateContent?key=" + encodeURIComponent(key)
-      : "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(models[i]) + ":generateContent";
-    var res = UrlFetchApp.fetch(url, {
-      method: "post", contentType: "application/json", muteHttpExceptions: true,
-      headers: key.indexOf("AQ.") === 0 ? {} : { "x-goog-api-key": key }, payload: payload
-    });
-    lastCode = res.getResponseCode();
-    /* עומס, מכסה, מודל לא קיים או תקלה זמנית → עוברים למודל הגיבוי */
-    if (lastCode === 429 || lastCode === 404 || lastCode >= 500) continue;
-    if (lastCode !== 200) throw new Error("שגיאה מהשירות (" + lastCode + ").");
-    var data = JSON.parse(res.getContentText());
-    var parts = (((data.candidates || [])[0] || {}).content || {}).parts;
-    var text = parts && parts[0] && parts[0].text;
-    if (!text) continue;
-    var idea;
-    try { idea = JSON.parse(text); } catch (e) { idea = { title: "רעיון", lecturer: text }; }
-    idea.model = models[i];
-    return idea;
+  /* קודם Gemini API (מפתחות של AI Studio — AIza או AQ.), ואם נדחה — Vertex AI (express mode). */
+  var endpoints = [
+    function (m) { return { url: "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(m) + ":generateContent",
+                            headers: { "x-goog-api-key": key } }; },
+    function (m) { return { url: "https://aiplatform.googleapis.com/v1/publishers/google/models/" + encodeURIComponent(m) + ":generateContent?key=" + encodeURIComponent(key),
+                            headers: {} }; }
+  ];
+  var lastCode = 0, lastMsg = "";
+  for (var e = 0; e < endpoints.length; e++) {
+    for (var i = 0; i < models.length; i++) {
+      var ep = endpoints[e](models[i]);
+      var res = UrlFetchApp.fetch(ep.url, {
+        method: "post", contentType: "application/json", muteHttpExceptions: true,
+        headers: ep.headers, payload: payload
+      });
+      lastCode = res.getResponseCode();
+      if (lastCode !== 200) {
+        try { lastMsg = (JSON.parse(res.getContentText()).error || {}).message || ""; } catch (x) { lastMsg = ""; }
+        if (lastCode === 401 || lastCode === 403) break;   /* המפתח לא מתאים לשירות הזה → השירות הבא */
+        continue;                                           /* עומס / מודל לא קיים / תקלה → מודל הגיבוי */
+      }
+      var data = JSON.parse(res.getContentText());
+      var parts = (((data.candidates || [])[0] || {}).content || {}).parts;
+      var text = parts && parts[0] && parts[0].text;
+      if (!text) continue;
+      var idea;
+      try { idea = JSON.parse(text); } catch (x2) { idea = { title: "רעיון", lecturer: text }; }
+      idea.model = models[i];
+      return idea;
+    }
   }
   if (lastCode === 429) throw new Error("הגענו למגבלת השימוש החינמית לרגע זה. נסו שוב בעוד דקה.");
-  throw new Error("השירות לא זמין כרגע (" + lastCode + "). נסו שוב בעוד רגע.");
+  throw new Error("השירות לא זמין (" + lastCode + ")" + (lastMsg ? ": " + lastMsg.slice(0, 200) : "."));
 }
 
 /* מגבלות: לא יותר מ-10 בקשות בדקה, ותקרה יומית. */
