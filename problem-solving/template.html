@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>להוסיף דוגמה · פתרון בעיות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar" dir="rtl" lang="he">
+  <div class="topbar-in">
+    <a class="brand" href="index.html">מיומנות פתרון בעיות</a>
+    <nav class="nav" aria-label="ניווט באתר">
+      <a href="index.html">מיפוי התהליך</a>
+      <a href="theory.html">ביסוס תיאורטי</a>
+      <a href="examples.html">דוגמאות מקורסים</a>
+      <a href="idea.html">רעיון לשיעור</a>
+      <a href="template.html" aria-current="page">להוסיף דוגמה</a>
+    </nav>
+    <a class="fb-link" id="fb-general" target="_blank" rel="noopener">✎ הערה כללית</a>
+  </div>
+</header>
+
+<main class="page" dir="rtl" lang="he">
+  <section class="view" id="view-template">
+    <header>
+      <h1>להוסיף דוגמה</h1>
+      <p class="lede">יש לך פעילות מהקורס שמפתחת שלב במיומנות? מלאו את הטופס. דוגמה אחת לכל פעילות, עד חצי עמוד, כך שמרצה אחר יוכל להשתמש בה מחר בבוקר. הדוגמה תופיע במאגר אחרי אישור של הצוות.</p>
+    </header>
+    <form class="idea-form ex-form" id="ex-form" novalidate>
+      <label for="x-title" class="wide">שם הדוגמה *<input id="x-title" maxlength="200" required placeholder="כותרת קצרה"></label>
+      <label for="x-by" class="wide">ממלא/ת ומוסד *<input id="x-by" maxlength="200" required placeholder="שם ומוסד"></label>
+      <label for="x-course" class="wide">קורס וקהל יעד<input id="x-course" maxlength="200" placeholder="תחום, שנה, מספר סטודנטים"></label>
+      <label for="x-field">תחום<select id="x-field"></select></label>
+      <label for="x-ptype">סוג הבעיה<select id="x-ptype"></select></label>
+      <fieldset class="wide x-stages"><legend>השלב במיומנות (אפשר יותר מאחד)</legend><div id="x-stages"></div></fieldset>
+      <label for="x-scope">היקף<select id="x-scope"></select></label>
+      <label for="x-duration">משך זמן<input id="x-duration" maxlength="200" placeholder="בכיתה ומחוץ לה"></label>
+      <label for="x-lecturer" class="wide">מה המרצה עושה<textarea id="x-lecturer" rows="4" maxlength="3000" placeholder="צעדים קונקרטיים, שורה לכל צעד. כולל איך משיימים את השלב לסטודנטים"></textarea></label>
+      <label for="x-students" class="wide">מה הסטודנטים עושים<textarea id="x-students" rows="3" maxlength="3000" placeholder="שורה לכל צעד"></textarea></label>
+      <label for="x-feedback" class="wide">איך ניתן משוב על המיומנות<textarea id="x-feedback" rows="2" maxlength="3000" placeholder="ולא רק על התוצר. אפשר לצרף היגד משוב לדוגמה"></textarea></label>
+      <label for="x-worked" class="wide">מה עבד ומה פחות<textarea id="x-worked" rows="2" maxlength="3000" placeholder="תובנה אחת או שתיים מהניסיון"></textarea></label>
+      <label for="x-adapt" class="wide">התאמה לקורס אחר<textarea id="x-adapt" rows="2" maxlength="3000" placeholder="מה צריך לשנות כדי להשתמש בזה בתחום אחר"></textarea></label>
+      <label for="x-materials" class="wide">חומרים מצורפים<input id="x-materials" maxlength="500" placeholder="קישור לשקף, דף עבודה וכו'"></label>
+      <label class="hp" aria-hidden="true">אל תמלאו<input id="x-website" tabindex="-1" autocomplete="off"></label>
+      <div class="wide idea-actions"><button type="submit" class="btn-primary" id="x-go">שליחה למאגר</button><span class="idea-status" id="x-status" role="status" aria-live="polite"></span></div>
+    </form>
+  </section>
+
+
+  <p class="note">יש הערה, הצעה לניסוח או תיקון? ליד כל שלב, מודל ודוגמה יש כפתור ✎. הוא פותח טופס קצר עם שם הקטע כבר ממולא.</p>
+  <footer class="foot">צוות "פתרון בעיות" · צוות עבודה בין-מוסדי בתכנית "מארג ידע" של קרן רוטשילד · טיוטה לעבודת הצוות</footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

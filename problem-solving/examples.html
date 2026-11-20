@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>דוגמאות מקורסים · פתרון בעיות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar" dir="rtl" lang="he">
+  <div class="topbar-in">
+    <a class="brand" href="index.html">מיומנות פתרון בעיות</a>
+    <nav class="nav" aria-label="ניווט באתר">
+      <a href="index.html">מיפוי התהליך</a>
+      <a href="theory.html">ביסוס תיאורטי</a>
+      <a href="examples.html" aria-current="page">דוגמאות מקורסים</a>
+      <a href="idea.html">רעיון לשיעור</a>
+      <a href="template.html">להוסיף דוגמה</a>
+    </nav>
+    <a class="fb-link" id="fb-general" target="_blank" rel="noopener">✎ הערה כללית</a>
+  </div>
+</header>
+
+<main class="page" dir="rtl" lang="he">
+  <section class="view" id="view-examples">
+    <header>
+      <h1>דוגמאות מקורסים</h1>
+      <p class="lede">כל דוגמה היא פעילות אמיתית מקורס, כתובה כך שמרצה אחר יוכל להשתמש בה מחר בבוקר. מסננים לפי תחום, שלב וסוג בעיה.</p>
+    </header>
+    <div class="filters">
+      <label for="f-field">תחום<select id="f-field"></select></label>
+      <label for="f-stage">שלב<select id="f-stage"></select></label>
+      <label for="f-ptype">סוג בעיה<select id="f-ptype"></select></label>
+      <label for="f-scope">היקף<select id="f-scope"></select></label>
+    </div>
+    <p class="count" id="ex-count" aria-live="polite"></p>
+    <div class="detail" id="ex-detail" hidden></div>
+    <div class="cards" id="ex-cards"></div>
+  </section>
+
+
+  <p class="note">יש הערה, הצעה לניסוח או תיקון? ליד כל שלב, מודל ודוגמה יש כפתור ✎. הוא פותח טופס קצר עם שם הקטע כבר ממולא.</p>
+  <footer class="foot">צוות "פתרון בעיות" · צוות עבודה בין-מוסדי בתכנית "מארג ידע" של קרן רוטשילד · טיוטה לעבודת הצוות</footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
