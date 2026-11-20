@@ -21,7 +21,7 @@ const LADDER = [
   { title: "הכול התחיל בבית", name: "מסדרים את המילים במילון", href: "https://inbaltsa.github.io/My-school-apps/apps/hebrew/milim.html",
     story: "הבת שלי הסתבכה עם סידור מילים לפי סדר האלפבית, אז בניתי לה אפליקציה קטנה לתרגל את זה.<br>קובץ HTML אחד, בלי שרת ובלי התקנה.",
     short: "אפליקציה קטנה לתרגול סדר אלפביתי.", tag: "כזה נבנה היום" },
-  { title: "ואז - בכיתה", name: "לומדה לניתוח נתונים", href: "https://moodle.bgu.ac.il/moodle/mod/scorm/view.php?id=3454424",
+  { title: "ואז - בכיתה", name: "לומדה לניתוח נתונים", href: "examples/data-analysis/",
     story: "בקורס שלי היה נושא טכני מאוד, שבזבז לי זמן יקר בשיעור.<br>החלטתי להפוך אותו ללומדה, שהסטודנטים עוברים בעצמם בתוך Moodle.",
     short: "נושא טכני מהשיעור, שהפך ללומדה ב-Moodle.", tag: "מפגש 2" },
   { title: "ואז זה עבר הלאה", name: "מאגר תרגילים במתמטיקה", href: "https://teachingcenter.bgu.ac.il/foundations/exams/9711/",
