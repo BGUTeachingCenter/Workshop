@@ -22,7 +22,7 @@ export const glossary = [
   { term: "עוזר AI (סוכן)", unit: "m2-u3", def: "AI שעובד בתוך הפרויקט: קורא קבצים, עורך אותם ומריץ - לא רק מדבר." },
   { term: "Copilot", unit: "m2-u3b", def: "עוזר ה-AI של GitHub, עם שכבה חינמית לכל חשבון GitHub." },
   { term: "מצב Agent", unit: "m2-u3b", def: "מצב שבו Copilot פועל כסוכן - קורא, עורך ובודק קבצים בלולאה." },
-  { term: "Push", unit: "m2-u4b", def: "שליחת ה-commit מה-Codespace אל GitHub, כדי שהשינוי יופיע שם." },
+  { term: "Push", unit: "m2-u4b", def: "שליחת ה-commit אל GitHub, כדי שהשינוי יופיע שם." },
   { term: "Branch", unit: "m2-u4b", def: "מסלול עבודה נפרד - אפשר לנסות בו שינוי בלי לגעת בגרסה הראשית." },
   { term: "main", unit: "m2-u4b", def: "הגרסה הראשית של הפרויקט." },
   { term: "Pull Request (PR)", unit: "m2-u4b", def: "בקשה לחבר שינוי מ-branch אל main - שם רואים מה השתנה ובודקים." },
