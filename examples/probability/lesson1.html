@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דוכן Ω: כל מה שיכול לקרות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf5ea; --card:#fffdf8; --ink:#2a221c; --muted:#6e6255; --line:#e7dcc8;
+  --olive:#56732a; --olive-l:#eaf0dc; --chili:#c4351b; --chili-l:#fbe4dd;
+  --tahini:#f3e7cc; --pita:#b98443; --night:#26305a; --night-l:#e3e6f3;
+  --math:#6a3d9a; --math-l:#f1ebfa; --good:#2f7d3a; --good-l:#e3f3e5; --bad:#b3261e; --bad-l:#fbe6e4;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Rubik,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.7;direction:rtl;min-height:100vh;display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer;color:inherit}
+button:disabled{cursor:default}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:var(--night);color:#fff;padding:10px 16px;display:flex;gap:12px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;gap:10px;align-items:center;font-weight:500}
+.badge{background:var(--pita);color:#fff;border-radius:999px;padding:1px 12px;font-size:.85em;white-space:nowrap}
+.prog{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;max-width:380px}
+.bar{flex:1;height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#f2b84b;transition:width .35s}
+.pc{font-size:.85em;opacity:.85;white-space:nowrap}
+.restart{background:none;border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:0 10px;font-size:.8em;color:#fff}
+
+main{flex:1;width:100%;max-width:880px;margin:0 auto;padding:22px 16px 120px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 30px;box-shadow:0 3px 0 var(--line);animation:fade .35s}
+.kicker{font-size:.85em;color:var(--muted);font-weight:500;letter-spacing:.02em}
+h2{margin:.1em 0 .5em;font-size:1.65em;line-height:1.3}
+h3{margin:1.2em 0 .3em;font-size:1.15em}
+p{margin:.5em 0}
+ul,ol{padding-inline-start:1.4em;margin:.4em 0}
+li{margin:.2em 0}
+
+/* nav */
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:5;background:rgba(250,245,234,.97);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;gap:10px}
+.navbar .hint{font-size:.85em;color:var(--muted);text-align:center;flex:1}
+.btn{background:var(--olive);color:#fff;border:0;border-radius:12px;padding:10px 22px;font-weight:500;white-space:nowrap}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:disabled{opacity:.35}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:6px 16px;font-size:.95em}
+
+/* math */
+.m{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Times New Roman",serif;color:var(--math);white-space:nowrap;font-size:1.1em;line-height:1.3}
+.m sub,.m sup{font-size:.7em}
+.mblock{text-align:center;margin:14px 0;font-size:1.3em;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.ov{text-decoration:overline}
+.big{font-size:1.4em;vertical-align:-.15em}
+
+/* characters */
+.say{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+.say .av{font-size:1.9em;line-height:1;flex:none;width:54px;height:54px;border-radius:50%;background:var(--tahini);display:grid;place-items:center}
+.say .bub{background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:8px 14px;flex:1}
+.say .who{font-weight:700;font-size:.8em;color:var(--muted);margin-bottom:2px}
+.say.noa .av{background:var(--olive-l)} .say.noa .bub{background:#fbfdf6}
+.say.kobi .av{background:#dfe9f7} .say.kobi .bub{background:#f7faff}
+.say.sigma .av{background:#efe3f7}
+
+/* boxes */
+.box{border-radius:12px;padding:12px 16px;margin:14px 0;border-inline-start:5px solid var(--line);background:#fff}
+.box-t{font-weight:700;margin-bottom:4px}
+.box.def{background:var(--math-l);border-color:var(--math)}
+.box.tip{background:var(--olive-l);border-color:var(--olive)}
+.box.warn{background:var(--chili-l);border-color:var(--chili)}
+.box.note{background:var(--tahini);border-color:var(--pita)}
+.goals{list-style:none;padding:0}
+.goals li{padding:4px 0 4px 0}
+.goals li::before{content:"✔";color:var(--olive);font-weight:700;margin-inline-end:8px}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;font-size:.95em;color:var(--muted);margin:6px 0}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:.97em}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
+.tbl th{background:var(--tahini);font-weight:500}
+.tbl td.c,.tbl th.c{text-align:center}
+.tblwrap{overflow-x:auto}
+.nest{display:flex;flex-direction:column;gap:6px;max-width:520px;margin:14px auto}
+.nest div{border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:#fff}
+.formula-card{border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:10px 0;background:#fff}
+.formula-card .mblock{margin:6px 0}
+
+/* activities */
+.activity{margin-top:20px;padding:18px;border:2px dashed #dccfb6;border-radius:14px;background:#fff}
+.activity .instr{font-weight:500;margin-bottom:8px}
+.q{font-weight:500;margin:6px 0}
+.opt{display:block;width:100%;text-align:start;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--olive)}
+.opt.right{background:var(--good-l);border-color:var(--good)}
+.opt.wrong{background:var(--bad-l);border-color:var(--bad)}
+.fb:empty{display:none}
+.fb{margin-top:10px;border-radius:10px;padding:10px 14px}
+.fb.good{background:var(--good-l)}
+.fb.bad{background:var(--bad-l)}
+.item-sep{border:0;border-top:1px solid var(--line);margin:18px 0}
+.row-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
+.chip{font-size:1.6em;min-width:80px;padding:8px 12px;border-radius:14px;border:2px solid var(--line);background:#fff;transition:transform .12s,background .12s}
+.chip.on{border-color:var(--olive);background:var(--olive-l);transform:translateY(-3px)}
+.setview{text-align:center;font-size:1.2em;margin:8px 0;min-height:1.6em}
+
+.cl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;background:#fff}
+.cl .txt{flex:1 1 260px}
+.cl .btns{display:flex;gap:6px;flex-wrap:wrap}
+.cl .btns button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:5px 14px}
+.cl .btns button:hover:not(:disabled){border-color:var(--olive)}
+.cl.ok{background:var(--good-l);border-color:var(--good)}
+.cl.ok .btns button.picked{background:var(--good);color:#fff;border-color:var(--good)}
+.cl .ex{flex-basis:100%;font-size:.94em}
+.cl .ex:empty{display:none}
+.cl.no{animation:shake .35s;border-color:var(--bad)}
+
+.tr{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0}
+.tr .txt{flex:1 1 280px}
+.tr select{font-size:1.05em;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);min-width:200px;direction:ltr;font-family:"Cambria Math","Times New Roman",serif;color:var(--math);background:#fff}
+.tr.ok{background:var(--good-l);border-color:var(--good)}
+.tr.no{background:var(--bad-l);border-color:var(--bad)}
+.tr .ex{flex-basis:100%;font-size:.93em}
+.tr .ex:empty{display:none}
+
+.num{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.num input{font:inherit;width:140px;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);direction:ltr;text-align:center}
+
+/* widgets */
+.seg{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 16px}
+.seg button.on{background:var(--night);color:#fff;border-color:var(--night)}
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:440px;margin:12px auto;direction:ltr}
+.cell{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;font-size:clamp(11px,3.2vw,19px);background:#fff3d9;border:1px solid #ecdcb9;transition:opacity .35s,filter .35s,transform .35s}
+.cell.night{background:var(--night);border-color:var(--night)}
+.cell.out{opacity:.1;filter:grayscale(1);transform:scale(.8)}
+.calc{background:var(--tahini);border-radius:12px;padding:12px 16px;text-align:center;margin-top:10px}
+.calc .mblock{font-size:1.15em;margin:6px 0}
+
+.sl{display:grid;grid-template-columns:minmax(150px,auto) 1fr 70px;gap:10px;align-items:center;margin:6px 0}
+.sl output{font-family:"Cambria Math","Times New Roman",serif;color:var(--math);text-align:center;direction:ltr;font-size:1.1em}
+input[type=range]{width:100%;accent-color:var(--olive)}
+.tree{width:100%;max-width:660px;display:block;margin:6px auto}
+.tree text{font-family:Rubik,Arial,sans-serif}
+
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.panel{border:1.5px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.panel.b{border-color:var(--night)}
+.panel .pt{font-weight:500;font-size:.92em;margin-bottom:6px}
+.dots{display:flex;flex-wrap:wrap;gap:3px;direction:ltr}
+.dot{width:15px;height:15px;border-radius:3px;background:#eadfc6}
+.dot.a{background:var(--chili)}
+.panel .pr{margin-top:8px;font-size:.95em}
+.status{text-align:center;font-weight:700;padding:10px;border-radius:10px;margin-top:12px}
+.status.yes{background:var(--good-l);color:var(--good)}
+.status.no{background:var(--bad-l);color:var(--bad)}
+
+.qhead{display:flex;justify-content:space-between;color:var(--muted);font-size:.9em}
+.score{font-size:2.2em;font-weight:700;text-align:center;color:var(--olive)}
+.reveal{display:none}
+.reveal.show{display:block;animation:fade .4s}
+
+.hub{display:grid;gap:14px}
+.hub a{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;box-shadow:0 3px 0 var(--line)}
+.hub a:hover{border-color:var(--olive)}
+.hub .n{color:var(--pita);font-weight:700;font-size:.9em}
+.hub h3{margin:.1em 0 .2em}
+
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+@media (max-width:620px){
+  body{font-size:16px}
+  .card{padding:18px 16px}
+  h2{font-size:1.35em}
+  .panels{grid-template-columns:1fr}
+  .sl{grid-template-columns:1fr 60px}
+  .sl label{grid-column:1/-1}
+  .mblock{font-size:1.1em}
+  .chip{min-width:64px;font-size:1.4em}
+  .say .av{width:44px;height:44px;font-size:1.5em}
+  .btn{padding:10px 16px}
+}
+.defs{display:flex;flex-wrap:wrap;gap:6px 28px;justify-content:center;margin:14px 0;font-size:1.05em}
+.m bdi{font-family:Rubik,Arial,sans-serif;font-size:.9em}
+.restart.admin.on{background:#f2b84b;color:#26305a;border-color:#f2b84b;font-weight:700}
+.tbl.rules tr.yes td,.tbl.rules tr.yes th{background:var(--good-l)}
+.tbl.rules tr.yes th{color:var(--good)}
+.tbl.rules tr.no td,.tbl.rules tr.no th{background:var(--bad-l)}
+.tbl.rules tr.no th{color:var(--bad)}
+.tbl.rules tr.no .m{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:2px}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="badge"></span><span class="ltitle"></span></div>
+  <div class="prog"><div class="bar"><i></i></div><span class="pc"></span><button class="restart admin" id="admin" title="מעבר חופשי בין מסכים בלי לענות על התרגולים"></button><button class="restart" id="restart" title="חזרה למסך הראשון">↺ מההתחלה</button></div>
+</header>
+<main id="stage" aria-live="polite"></main>
+<nav class="navbar">
+  <button class="btn ghost" id="prev">→ הקודם</button>
+  <span class="hint" id="gatehint"></span>
+  <button class="btn" id="next">הבא ←</button>
+</nav>
+<script>
+/* ===== Lomda engine: screens, activities, widgets, SCORM hook ===== */
+(function () {
+'use strict';
+
+/* ---------- content helpers (global, used by lesson files) ---------- */
+const CHARS = {
+  dani:  { name: 'דני, בעל הדוכן', emoji: '👨🏻‍🍳' },
+  noa:   { name: 'נועה, סטודנטית לחקר ביצועים', emoji: '👩🏽‍🎓' },
+  kobi:  { name: 'קובי, בן-דוד ויזם', emoji: '😎' },
+  sigma: { name: 'סיגמא, החתול של הדוכן', emoji: '🐈' }
+};
+/* Hebrew words inside a formula are isolated so the LTR formula keeps its order (e.g. Pr(A | B)) */
+const heb = s => String(s).replace(/[\u0590-\u05FF]+(?:[ \-][\u0590-\u05FF]+)*/g, w => '<bdi>' + w + '</bdi>');
+window.m   = s => '<span class="m">' + heb(s) + '</span>';
+window.mb  = s => '<div class="mblock"><span class="m">' + heb(s) + '</span></div>';
+window.defs = arr => '<div class="defs">' + arr.map(d => '<span>' + window.m(d[0] + ' =') + ' "' + d[1] + '"</span>').join('') + '</div>';
+window.ov  = s => '<span class="ov">' + s + '</span>';
+window.say = (who, t) => {
+  const c = CHARS[who];
+  return '<div class="say ' + who + '"><div class="av" aria-hidden="true">' + c.emoji +
+    '</div><div class="bub"><div class="who">' + c.name + '</div>' + t + '</div></div>';
+};
+window.box = (kind, title, html) =>
+  '<div class="box ' + kind + '">' + (title ? '<div class="box-t">' + title + '</div>' : '') + html + '</div>';
+
+/* ---------- utils ---------- */
+function h(tag, attrs, html) {
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (k === 'class') e.className = v;
+    else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+function shuffle(arr, seed) {
+  const a = arr.slice();
+  let s = seed || Math.floor(Math.random() * 1e9);
+  const rnd = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const fmt = (x, d) => String(+x.toFixed(d == null ? 3 : d));
+function parseNum(raw) {
+  let s = String(raw).trim().replace(/\s/g, '').replace(',', '.');
+  let pct = false;
+  if (s.endsWith('%')) { pct = true; s = s.slice(0, -1); }
+  let v;
+  if (s.includes('/')) { const p = s.split('/'); v = parseFloat(p[0]) / parseFloat(p[1]); }
+  else v = parseFloat(s);
+  if (!isFinite(v)) return NaN;
+  return pct ? v / 100 : v;
+}
+
+/* ---------- SCORM 1.2 / 2004 adapter (no-op outside an LMS) ---------- */
+const SCORM = {
+  api: null, v: null,
+  find() {
+    const scan = start => {
+      let w = start;
+      for (let n = 0; w && n < 12; n++) {
+        try {
+          if (w.API_1484_11) { this.api = w.API_1484_11; this.v = '2004'; return true; }
+          if (w.API) { this.api = w.API; this.v = '12'; return true; }
+        } catch (e) { /* cross-origin */ }
+        if (w.parent === w) break;
+        w = w.parent;
+      }
+      return false;
+    };
+    if (!scan(window)) { try { if (window.opener) scan(window.opener); } catch (e) {} }
+  },
+  init() {
+    this.find();
+    if (!this.api) return;
+    try { this.v === '2004' ? this.api.Initialize('') : this.api.LMSInitialize(''); } catch (e) { this.api = null; return; }
+    const st = this.v === '2004' ? this.get('', 'cmi.completion_status') : this.get('cmi.core.lesson_status', '');
+    if (st !== 'completed' && st !== 'passed') this.set('cmi.core.lesson_status', 'cmi.completion_status', 'incomplete');
+    this.set('cmi.core.exit', 'cmi.exit', 'suspend');
+  },
+  get(k12, k04) {
+    if (!this.api) return '';
+    try { return this.v === '2004' ? this.api.GetValue(k04) : this.api.LMSGetValue(k12); } catch (e) { return ''; }
+  },
+  set(k12, k04, val) {
+    if (!this.api) return;
+    try { this.v === '2004' ? this.api.SetValue(k04, String(val)) : this.api.LMSSetValue(k12, String(val)); } catch (e) {}
+  },
+  commit() { if (!this.api) return; try { this.v === '2004' ? this.api.Commit('') : this.api.LMSCommit(''); } catch (e) {} },
+  finish() {
+    if (!this.api) return;
+    try { this.commit(); this.v === '2004' ? this.api.Terminate('') : this.api.LMSFinish(''); } catch (e) {}
+    this.api = null;
+  },
+  location(i) { this.set('cmi.core.lesson_location', 'cmi.location', i); },
+  suspend(str) { this.set('cmi.suspend_data', 'cmi.suspend_data', str); this.commit(); },
+  score(pct) {
+    this.set('cmi.core.score.min', 'cmi.score.min', 0);
+    this.set('cmi.core.score.max', 'cmi.score.max', 100);
+    this.set('cmi.core.score.raw', 'cmi.score.raw', pct);
+    if (this.v === '2004') this.set('', 'cmi.score.scaled', (pct / 100).toFixed(2));
+    this.commit();
+  },
+  complete() {
+    this.set('cmi.core.lesson_status', 'cmi.completion_status', 'completed');
+    this.set('cmi.core.exit', 'cmi.exit', '');
+    this.commit();
+  }
+};
+
+/* ---------- activities ---------- */
+const ACT = {};
+
+/* Multiple choice. a = {q, options:[{t, ok, fb}]}  or  {items:[...]} */
+ACT.mcq = (box, a, done) => {
+  const items = a.items || [a];
+  let solved = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  items.forEach((it, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    box.append(h('div', { class: 'q' }, it.q));
+    const opts = h('div', { class: 'opts' });
+    const fb = h('div', { class: 'fb' });
+    (it.noShuffle ? it.options : shuffle(it.options)).forEach(o => {
+      const b = h('button', { class: 'opt' }, o.t);
+      b.onclick = () => {
+        fb.className = 'fb ' + (o.ok ? 'good' : 'bad');
+        fb.innerHTML = o.fb || (o.ok ? 'נכון! 🎉' : 'לא בדיוק — נסו שוב.');
+        if (o.ok) {
+          b.classList.add('right');
+          opts.querySelectorAll('.opt').forEach(x => x.disabled = true);
+          if (++solved === items.length) done();
+        } else b.classList.add('wrong');
+      };
+      opts.append(b);
+    });
+    box.append(opts, fb);
+  });
+};
+
+/* Build a subset of Ω by clicking outcomes. a = {omega:[{id,label}], tasks:[{prompt, answer:[ids], name, fb}]} */
+ACT.subset = (box, a, done) => {
+  let t = 0;
+  const sel = new Set();
+  const prompt = h('div', { class: 'q' });
+  const chips = h('div', { class: 'chips' });
+  const view = h('div', { class: 'setview' });
+  const fb = h('div', { class: 'fb' });
+  const btn = h('button', { class: 'btn' }, 'בדיקה');
+  const actions = h('div', { class: 'row-actions' }); actions.append(btn);
+  const chipEls = {};
+  a.omega.forEach(o => {
+    const c = h('button', { class: 'chip', 'aria-pressed': 'false' }, o.label);
+    c.onclick = () => {
+      if (btn.dataset.state === 'next') return;
+      sel.has(o.id) ? sel.delete(o.id) : sel.add(o.id);
+      c.classList.toggle('on'); c.setAttribute('aria-pressed', sel.has(o.id));
+      fb.className = 'fb'; fb.innerHTML = '';
+      showSet();
+    };
+    chipEls[o.id] = c; chips.append(c);
+  });
+  function showSet() {
+    const name = a.tasks[t].name || 'A';
+    const labels = a.omega.filter(o => sel.has(o.id)).map(o => o.label);
+    view.innerHTML = m(name + ' = ' + (labels.length ? '{' + labels.join(', ') + '}' : '∅'));
+  }
+  function load() {
+    sel.clear();
+    Object.values(chipEls).forEach(c => { c.classList.remove('on'); c.setAttribute('aria-pressed', 'false'); });
+    prompt.innerHTML = '<span style="color:var(--muted)">משימה ' + (t + 1) + ' מתוך ' + a.tasks.length + ':</span> ' + a.tasks[t].prompt;
+    fb.className = 'fb'; fb.innerHTML = '';
+    btn.textContent = 'בדיקה'; btn.dataset.state = 'check';
+    showSet();
+  }
+  btn.onclick = () => {
+    if (btn.dataset.state === 'next') { t++; load(); return; }
+    if (btn.dataset.state === 'done') return;
+    const ans = new Set(a.tasks[t].answer);
+    const extra = [...sel].filter(x => !ans.has(x)).length;
+    const missing = [...ans].filter(x => !sel.has(x)).length;
+    if (!extra && !missing) {
+      fb.className = 'fb good';
+      fb.innerHTML = '✔ מצוין! ' + (a.tasks[t].fb || '');
+      if (t < a.tasks.length - 1) { btn.textContent = 'למשימה הבאה'; btn.dataset.state = 'next'; }
+      else { btn.textContent = 'סיימתם את כל המשימות 🎉'; btn.dataset.state = 'done'; btn.disabled = true; done(); }
+    } else {
+      const parts = [];
+      if (extra) parts.push('יש ' + extra + ' תוצאות מיותרות');
+      if (missing) parts.push('חסרות ' + missing + ' תוצאות');
+      fb.className = 'fb bad';
+      fb.innerHTML = 'עוד לא. ' + parts.join(' ו') + '. שאלו את עצמכם לגבי כל תוצאה: "אם זה מה שהלקוח הזמין — האם התשובה היא כן?"';
+    }
+  };
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  box.append(prompt, chips, view, actions, fb);
+  load();
+};
+
+/* Classify statements. a = {labels:[..], items:[{t, ans (index), ex, hint}]} */
+ACT.classify = (box, a, done) => {
+  let ok = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  a.items.forEach(it => {
+    const row = h('div', { class: 'cl' });
+    const txt = h('div', { class: 'txt' }, it.t);
+    const btns = h('div', { class: 'btns' });
+    const ex = h('div', { class: 'ex' });
+    a.labels.forEach((lab, li) => {
+      const b = h('button', {}, lab);
+      b.onclick = () => {
+        if (li === it.ans) {
+          row.classList.remove('no'); row.classList.add('ok'); b.classList.add('picked');
+          btns.querySelectorAll('button').forEach(x => x.disabled = true);
+          ex.innerHTML = it.ex || '';
+          if (++ok === a.items.length) done();
+        } else {
+          row.classList.remove('no'); void row.offsetWidth; row.classList.add('no');
+          ex.innerHTML = '✗ ' + (it.hint || 'לא בדיוק — חשבו שוב.');
+        }
+      };
+      btns.append(b);
+    });
+    row.append(txt, btns, ex);
+    box.append(row);
+  });
+};
+
+/* Translate Hebrew to notation. a = {pool:[strings], items:[{t, ans, ex}]} */
+ACT.translate = (box, a, done) => {
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  const rows = a.items.map(it => {
+    const row = h('div', { class: 'tr' });
+    const sel = h('select', { 'aria-label': 'בחירת סימון' });
+    sel.append(h('option', { value: '' }, 'בחרו…'));
+    const pool = shuffle(a.pool.includes(it.ans) ? a.pool : a.pool.concat([it.ans]), 7);
+    pool.forEach(p => { const o = h('option', { value: p }); o.textContent = p; sel.append(o); });
+    const ex = h('div', { class: 'ex' });
+    sel.onchange = () => { row.classList.remove('ok', 'no'); ex.innerHTML = ''; };
+    row.append(h('div', { class: 'txt' }, it.t), sel, ex);
+    box.append(row);
+    return { row, sel, ex, it };
+  });
+  const fb = h('div', { class: 'fb' });
+  const btn = h('button', { class: 'btn' }, 'בדיקה');
+  const act = h('div', { class: 'row-actions' }); act.append(btn);
+  box.append(act, fb);
+  btn.onclick = () => {
+    let good = 0;
+    rows.forEach(r => {
+      const right = r.sel.value === r.it.ans;
+      r.row.classList.toggle('ok', right);
+      r.row.classList.toggle('no', !right);
+      r.ex.innerHTML = right ? (r.it.ex || '') : '';
+      if (right) { good++; r.sel.disabled = true; }
+    });
+    if (good === rows.length) { fb.className = 'fb good'; fb.innerHTML = '✔ כל התרגומים נכונים! ' + (a.fb || ''); btn.disabled = true; done(); }
+    else { fb.className = 'fb bad'; fb.innerHTML = good + ' מתוך ' + rows.length + ' נכונים. תקנו את השורות האדומות ובדקו שוב.'; }
+  };
+};
+
+/* Numeric answers. a = {items:[{q, answer, tol, hint, ex}]} */
+ACT.numeric = (box, a, done) => {
+  let solved = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  a.items.forEach((it, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    box.append(h('div', { class: 'q' }, it.q));
+    const wrap = h('div', { class: 'num' });
+    const inp = h('input', { type: 'text', inputmode: 'decimal', placeholder: 'למשל 0.25', 'aria-label': 'תשובה' });
+    const b = h('button', { class: 'btn small' }, 'בדיקה');
+    const fb = h('div', { class: 'fb' });
+    let tries = 0;
+    const check = () => {
+      const v = parseNum(inp.value);
+      if (isNaN(v)) { fb.className = 'fb bad'; fb.innerHTML = 'הקלידו מספר (אפשר גם שבר כמו 3/4 או אחוזים כמו 75%).'; return; }
+      if (Math.abs(v - it.answer) <= (it.tol || 0.005)) {
+        fb.className = 'fb good'; fb.innerHTML = '✔ נכון! ' + (it.ex || '');
+        inp.disabled = true; b.disabled = true;
+        if (++solved === a.items.length) done();
+      } else {
+        tries++;
+        fb.className = 'fb bad';
+        fb.innerHTML = 'לא בדיוק. ' + (tries >= 1 && it.hint ? '💡 ' + it.hint : '');
+        if (tries >= 3 && it.ex) {
+          fb.innerHTML += '<div style="margin-top:6px"><b>הפתרון:</b> ' + it.ex + '</div>';
+          inp.value = fmt(it.answer, 4);
+        }
+      }
+    };
+    b.onclick = check;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+    wrap.append(inp, b);
+    box.append(wrap, fb);
+  });
+};
+
+/* Final quiz: one attempt per question, scored. a = {items:[{q, options:[..], answer, ex}]} */
+ACT.quiz = (box, a, done, ctx) => {
+  let i = 0, score = 0;
+  const n = a.items.length;
+  const run = () => {
+    box.innerHTML = '';
+    if (i >= n) {
+      const pct = Math.round(100 * score / n);
+      box.append(h('div', { class: 'score' }, score + ' / ' + n));
+      const msg = pct === 100 ? 'מושלם! דני תולה את התמונה שלכם על הקיר של הדוכן 🏆'
+        : pct >= 70 ? 'יפה מאוד! אפשר לעבור לפרק הבא — ושווה להציץ שוב בשאלות שפספסתם.'
+        : 'שווה לחזור על המסכים הקודמים ולנסות שוב. גם נועה לא הבינה הכול בפעם הראשונה.';
+      box.append(h('p', { style: 'text-align:center' }, msg));
+      const again = h('button', { class: 'btn ghost' }, 'לנסות שוב את הבוחן');
+      again.onclick = () => { i = 0; score = 0; run(); };
+      const act = h('div', { class: 'row-actions' }); act.append(again); box.append(act);
+      ctx.reportScore(pct);
+      done();
+      return;
+    }
+    const it = a.items[i];
+    box.append(h('div', { class: 'qhead' }, '<span>שאלה ' + (i + 1) + ' מתוך ' + n + '</span><span>ניקוד: ' + score + '</span>'));
+    box.append(h('div', { class: 'q' }, it.q));
+    const opts = h('div');
+    const fb = h('div', { class: 'fb' });
+    const nextB = h('button', { class: 'btn', style: 'display:none' }, i < n - 1 ? 'לשאלה הבאה' : 'לתוצאות');
+    nextB.onclick = () => { i++; run(); };
+    const order = shuffle(it.options.map((t, k) => ({ t, k })));
+    order.forEach(o => {
+      const b = h('button', { class: 'opt' }, o.t);
+      b.onclick = () => {
+        const right = o.k === it.answer;
+        if (right) score++;
+        opts.querySelectorAll('.opt').forEach((x, xi) => {
+          x.disabled = true;
+          if (order[xi].k === it.answer) x.classList.add('right');
+        });
+        if (!right) b.classList.add('wrong');
+        fb.className = 'fb ' + (right ? 'good' : 'bad');
+        fb.innerHTML = (right ? '✔ נכון! ' : '✗ לא נכון. ') + (it.ex || '');
+        nextB.style.display = '';
+      };
+      opts.append(b);
+    });
+    const act = h('div', { class: 'row-actions' }); act.append(nextB);
+    box.append(opts, fb, act);
+  };
+  run();
+};
+
+/* Custom widgets */
+ACT.widget = (box, a, done) => WIDGETS[a.name](box, a, done);
+const WIDGETS = {};
+
+/* 100 customers: conditional probability by "shrinking the world" */
+WIDGETS.condGrid = (box, a, done) => {
+  const nAB = 30, nB = 40, nA = 42;
+  const types = [];
+  for (let i = 0; i < 100; i++) {
+    const inB = i < nB, inA = i < nAB || (i >= nB && i < nB + (nA - nAB));
+    types.push({ A: inA, B: inB });
+  }
+  const cells = shuffle(types, 20261106);
+  box.append(h('div', { class: 'instr' }, 'כל משבצת = לקוח אחד מאתמול. לחצו על הכפתורים וצפו מה קורה לעולם.'));
+  box.append(h('div', { class: 'legend' },
+    '<span><span style="display:inline-block;width:14px;height:14px;background:var(--night);border-radius:3px;vertical-align:-2px"></span> הגיע אחרי חצות (' + m('B') + ')</span>' +
+    '<span><span style="display:inline-block;width:14px;height:14px;background:#fff3d9;border:1px solid #ecdcb9;border-radius:3px;vertical-align:-2px"></span> הגיע לפני חצות</span>' +
+    '<span>🌶️ ביקש חריף כפול (' + m('A') + ')</span><span>🙂 לא ביקש</span>'));
+  const seg = h('div', { class: 'seg' });
+  const grid = h('div', { class: 'grid100', role: 'img', 'aria-label': '100 לקוחות' });
+  const els = cells.map(c => {
+    const e = h('div', { class: 'cell' + (c.B ? ' night' : '') }, c.A ? '🌶️' : '🙂');
+    grid.append(e); return e;
+  });
+  const calc = h('div', { class: 'calc' });
+  const seen = new Set();
+  const modes = {
+    all: { label: 'כל הלקוחות (' + 'Ω' + ')', keep: () => true,
+      html: () => 'בוחרים לקוח אקראי מבין 100 הלקוחות. כל לקוח באותו סיכוי.' +
+        mb('Pr(A) = |A| / |Ω| = 42 / 100 = 0.42') + mb('Pr(B) = 0.40 ,   Pr(A ∩ B) = 0.30') },
+    B: { label: 'בהינתן B: רק לקוחות לילה', keep: c => c.B,
+      html: () => 'יודעים שהלקוח הגיע אחרי חצות ⇐ <b>העולם הצטמצם ל-40 לקוחות</b>. מתוכם 30 ביקשו חריף כפול.' +
+        mb('Pr(A | B) = |A ∩ B| / |B| = 30 / 40 = 0.75') + mb('= Pr(A ∩ B) / Pr(B) = 0.30 / 0.40') },
+    A: { label: 'בהינתן A: רק מבקשי חריף כפול', keep: c => c.A,
+      html: () => 'עכשיו יודעים שהלקוח ביקש חריף כפול ⇐ העולם הוא 42 לקוחות. כמה מהם לילה?' +
+        mb('Pr(B | A) = |A ∩ B| / |A| = 30 / 42 ≈ 0.714') + '<div>שימו לב: זה <b>לא</b> אותו מספר כמו ' + m('Pr(A | B)') + '!</div>' }
+  };
+  const btns = {};
+  Object.keys(modes).forEach(k => {
+    const b = h('button', {}, modes[k].label);
+    b.onclick = () => set(k);
+    btns[k] = b; seg.append(b);
+  });
+  function set(k) {
+    Object.keys(btns).forEach(x => btns[x].classList.toggle('on', x === k));
+    els.forEach((e, i) => e.classList.toggle('out', !modes[k].keep(cells[i])));
+    calc.innerHTML = modes[k].html();
+    seen.add(k);
+    if (seen.has('A') && seen.has('B')) done();
+  }
+  box.append(seg, grid, calc);
+  set('all');
+};
+
+/* Probability tree for total probability */
+WIDGETS.tree = (box, a, done) => {
+  const st = { p: 0.7, q1: 0.10, q2: 0.02 };
+  box.append(h('div', { class: 'instr' }, 'הזיזו את המחוונים וצפו איך ' + m('Pr(A)') + ' מורכב משני ענפים.'));
+  const sliders = h('div');
+  const mk = (key, label, min, max, step) => {
+    const row = h('div', { class: 'sl' });
+    const id = 'sl-' + key;
+    const lab = h('label', { for: id }, label);
+    const inp = h('input', { type: 'range', id, min, max, step, value: st[key] });
+    const out = h('output', {}, fmt(st[key], 2));
+    inp.oninput = () => { st[key] = +inp.value; out.textContent = fmt(st[key], 2); draw(); };
+    row.append(lab, inp, out); sliders.append(row);
+  };
+  mk('p', 'פיתות מהדוד: ' + m('Pr(B)'), 0.05, 0.95, 0.05);
+  mk('q1', 'קרועות אצל הדוד: ' + m('Pr(A | B)'), 0, 0.5, 0.01);
+  mk('q2', 'קרועות בגורמה: ' + m('Pr(A | B̄)'), 0, 0.5, 0.01);
+  const svgWrap = h('div');
+  const calc = h('div', { class: 'calc' });
+  box.append(sliders, svgWrap, calc);
+  function draw() {
+    const { p, q1, q2 } = st;
+    const ink = '#2a221c', chili = '#c4351b', muted = '#6e6255', math = '#6a3d9a';
+    const node = (x, y, t, col) => '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="16" font-weight="500" fill="' + (col || ink) + '">' + t + '</text>';
+    const edge = (x1, y1, x2, y2, lab, w) => {
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#b9a989" stroke-width="' + (1.5 + 6 * w) + '" stroke-linecap="round"/>' +
+        '<rect x="' + (mx - 30) + '" y="' + (my - 13) + '" width="60" height="24" rx="8" fill="#fffdf8" stroke="#e7dcc8"/>' +
+        '<text x="' + mx + '" y="' + (my + 5) + '" text-anchor="middle" font-size="14" fill="' + math + '">' + fmt(lab, 2) + '</text>';
+    };
+    const leaf = (x, t, val, hot) => node(x, 262, t, hot ? chili : ink) +
+      '<text x="' + x + '" y="286" text-anchor="middle" font-size="15" fill="' + (hot ? chili : muted) + '" font-weight="' + (hot ? 700 : 400) + '">' + fmt(val, 3) + '</text>';
+    svgWrap.innerHTML = '<svg class="tree" viewBox="0 0 640 300" role="img" aria-label="עץ הסתברות">' +
+      node(320, 24, '🫓 פיתה אקראית') +
+      edge(320, 34, 165, 120, p, p) + edge(320, 34, 475, 120, 1 - p, 1 - p) +
+      node(165, 140, 'מאפיית הדוד (B)') + node(475, 140, 'מאפיית הגורמה (B̄)') +
+      edge(165, 150, 85, 240, q1, q1) + edge(165, 150, 245, 240, 1 - q1, 1 - q1) +
+      edge(475, 150, 395, 240, q2, q2) + edge(475, 150, 555, 240, 1 - q2, 1 - q2) +
+      leaf(85, 'קרועה (A)', p * q1, true) + leaf(245, 'שלמה', p * (1 - q1)) +
+      leaf(395, 'קרועה (A)', (1 - p) * q2, true) + leaf(555, 'שלמה', (1 - p) * (1 - q2)) +
+      '</svg>';
+    const tot = p * q1 + (1 - p) * q2;
+    calc.innerHTML = 'מכפילים לאורך כל ענף, ומחברים את הענפים שמסתיימים ב-A:' +
+      mb('Pr(A) = Pr(B)·Pr(A | B) + Pr(B̄)·Pr(A | B̄)') +
+      mb('= ' + fmt(p, 2) + '·' + fmt(q1, 2) + ' + ' + fmt(1 - p, 2) + '·' + fmt(q2, 2) + ' = <b>' + fmt(tot, 4) + '</b>');
+  }
+  draw();
+  done();
+};
+
+/* Independence from data: for each case the student decides whether A depends on B.
+   a = {aLabel, cases:[{icon, name, nB, kB, nA, ans:'indep'|'dep', fb}]}
+   nB = days with B (out of 100), kB = good days among them, nA = good days overall. */
+WIDGETS.indepCases = (box, a, done) => {
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  box.append(h('div', { class: 'legend' }, '<span>כל ריבוע = יום אחד מתוך 100</span><span><span class="dot a" style="display:inline-block;vertical-align:-2px"></span> ' + a.aLabel + '</span>'));
+  const dots = (n, red) => { let s = ''; for (let i = 0; i < n; i++) s += '<span class="dot' + (i < red ? ' a' : '') + '"></span>'; return s; };
+  let solved = 0;
+  a.cases.forEach((c, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    const nN = 100 - c.nB, kN = c.nA - c.kB;
+    box.append(h('div', { class: 'q' }, c.icon + ' <b>' + c.name + '</b>'));
+    const panels = h('div', { class: 'panels' });
+    panels.append(
+      h('div', { class: 'panel b' }, '<div class="pt">' + c.icon + ' ימים עם ' + c.short + ' (' + m('B') + '): ' + c.nB + ' ימים</div><div class="dots">' + dots(c.nB, c.kB) + '</div><div class="pr">' + c.kB + ' ימים טובים מתוך ' + c.nB + '</div>'),
+      h('div', { class: 'panel' }, '<div class="pt">ימים בלי ' + c.short + ' (' + m(ov('B')) + '): ' + nN + ' ימים</div><div class="dots">' + dots(nN, kN) + '</div><div class="pr">' + kN + ' ימים טובים מתוך ' + nN + '</div>'));
+    const row = h('div', { class: 'row-actions' });
+    const fb = h('div', { class: 'fb' });
+    const btns = [['indep', 'בלתי תלויים'], ['dep', 'תלויים']].map(([k, label]) => {
+      const b = h('button', { class: 'btn ghost small' }, label);
+      b.onclick = () => {
+        const prod = (c.nA / 100) * (c.nB / 100), inter = c.kB / 100;
+        const calc = mb('Pr(A)·Pr(B) = ' + fmt(c.nA / 100, 2) + '·' + fmt(c.nB / 100, 2) + ' = ' + fmt(prod, 4) +
+            (c.ans === 'indep' ? '  =  ' : '  ≠  ') + fmt(inter, 2) + ' = Pr(A ∩ B)') +
+          mb('Pr(A | B) = ' + c.kB + '/' + c.nB + ' = ' + fmt(c.kB / c.nB, 2)) +
+          mb('Pr(A | ' + ov('B') + ') = ' + kN + '/' + nN + ' = ' + fmt(kN / nN, 2));
+        if (k === c.ans) {
+          fb.className = 'fb good'; fb.innerHTML = '✔ ' + c.fb + calc;
+          btns.forEach(x => x.disabled = true); b.classList.remove('ghost');
+          if (++solved === a.cases.length) done();
+        } else {
+          fb.className = 'fb bad';
+          fb.innerHTML = 'לא בדיוק. השוו את <b>אחוז</b> הימים הטובים בשתי הקופסאות, ולא את המספר שלהם.';
+        }
+      };
+      row.append(b); return b;
+    });
+    box.append(panels, row, fb);
+  });
+};
+
+/* ---------- player ---------- */
+let L, cur = 0, doneSet = new Set(), review = false, stage, nextB, prevB, hint, barI, pc;
+
+function storeKey() { return 'lomda-' + L.id; }
+function save() {
+  const data = JSON.stringify({ cur, done: [...doneSet] });
+  SCORM.location(cur);
+  SCORM.suspend(data);
+  try { localStorage.setItem(storeKey(), data); } catch (e) {}
+}
+function load() {
+  let raw = SCORM.get('cmi.suspend_data', 'cmi.suspend_data');
+  if (!raw) { try { raw = localStorage.getItem(storeKey()); } catch (e) {} }
+  if (!raw) return;
+  try { const d = JSON.parse(raw); cur = Math.min(d.cur || 0, L.screens.length - 1); doneSet = new Set(d.done || []); } catch (e) {}
+}
+function canNext() {
+  const s = L.screens[cur];
+  return review || !s.activity || s.activity.optional || doneSet.has(cur);
+}
+function updateNav() {
+  const n = L.screens.length;
+  prevB.disabled = cur === 0;
+  const last = cur === n - 1;
+  nextB.textContent = last ? 'סיום ✓' : 'הבא ←';
+  nextB.disabled = !canNext() || (last && !L.nextHref);
+  if (last && L.nextHref) nextB.textContent = L.nextLabel || 'לפרק הבא ←';
+  hint.textContent = canNext() ? '' : 'השלימו את התרגול כדי להמשיך';
+  barI.style.width = (100 * (cur + 1) / n) + '%';
+  pc.textContent = 'מסך ' + (cur + 1) + ' מתוך ' + n;
+}
+function render(i) {
+  cur = i;
+  const s = L.screens[i];
+  stage.innerHTML = '';
+  const card = h('article', { class: 'card t-' + (s.type || 'concept') });
+  const kick = { story: '📖 סיפור', concept: '💡 מושג', activity: '🎯 תרגול', quiz: '🏁 בוחן סיום', summary: '📋 סיכום' }[s.type] || '';
+  card.append(h('div', { class: 'kicker' }, kick));
+  card.append(h('h2', {}, s.title));
+  if (s.html) card.append(h('div', { class: 'body' }, s.html));
+  let rev = null;
+  if (s.reveal) rev = h('div', { class: 'body reveal' + (doneSet.has(i) ? ' show' : '') }, s.reveal);
+  if (s.activity) {
+    const a = h('div', { class: 'activity' });
+    card.append(a);
+    ACT[s.activity.kind](a, s.activity, () => {
+      doneSet.add(i); if (rev) rev.classList.add('show'); updateNav(); save();
+    }, { reportScore: pct => SCORM.score(pct) });
+  }
+  if (s.after) card.append(h('div', { class: 'body' }, s.after));
+  if (rev) card.append(rev);
+  stage.append(card);
+  updateNav();
+  window.scrollTo(0, 0);
+  if (i === L.screens.length - 1) { doneSet.add(i); SCORM.complete(); }
+  save();
+}
+
+window.Lomda = {
+  start(lesson) {
+    L = lesson;
+    review = /[?&]review=1/.test(location.search);
+    try { if (localStorage.getItem('lomda-admin') === '1') review = true; } catch (e) {}
+    const adminB = document.getElementById('admin');
+    const paintAdmin = () => { adminB.classList.toggle('on', review); adminB.textContent = review ? '🔓 מצב מנהל: פעיל' : '🔑 מנהל'; };
+    adminB.onclick = () => {
+      review = !review;
+      try { localStorage.setItem('lomda-admin', review ? '1' : '0'); } catch (e) {}
+      paintAdmin(); updateNav();
+    };
+    paintAdmin();
+    document.title = L.title;
+    document.querySelector('.badge').textContent = L.badge;
+    document.querySelector('.ltitle').textContent = L.title;
+    stage = document.getElementById('stage');
+    nextB = document.getElementById('next');
+    prevB = document.getElementById('prev');
+    hint = document.getElementById('gatehint');
+    barI = document.querySelector('.bar i');
+    pc = document.querySelector('.pc');
+    SCORM.init();
+    load();
+    nextB.onclick = () => {
+      if (!canNext()) return;
+      if (cur < L.screens.length - 1) render(cur + 1);
+      else if (L.nextHref) location.href = L.nextHref;
+    };
+    prevB.onclick = () => { if (cur > 0) render(cur - 1); };
+    document.getElementById('restart').onclick = () => { doneSet = new Set(); render(0); };
+    window.addEventListener('beforeunload', () => SCORM.finish());
+    window.addEventListener('pagehide', () => SCORM.finish());
+    render(cur);
+  }
+};
+})();
+
+</script>
+<script>
+/* פרק 1: מרחב הסתברות, אקסיומות ותכונות בסיסיות */
+(function () {
+const P = '🥙', LF = '🌯', PL = '🍽️', H = '🌶️';
+const OMEGA = [
+  { id: 'P', label: P }, { id: 'PH', label: P + H },
+  { id: 'L', label: LF }, { id: 'LH', label: LF + H },
+  { id: 'C', label: PL }, { id: 'CH', label: PL + H }
+];
+const OM = '{' + OMEGA.map(o => o.label).join(', ') + '}';
+const legend = `<div class="legend"><span>${P} פיתה</span><span>${LF} לאפה</span><span>${PL} צלחת</span><span>${H} עם חריף</span></div>`;
+
+Lomda.start({
+  id: 'prob-1',
+  badge: 'פרק 1',
+  title: 'דוכן Ω: כל מה שיכול לקרות',
+  nextHref: 'lesson2.html',
+  screens: [
+
+  /* 1 */
+  { type: 'story', title: 'ברוכים הבאים לדוכן Ω',
+    html: `
+${say('dani', 'שלום! אני דני, ופתחתי דוכן פלאפל. קראתי לו <b>Ω</b> (אומגה), כי המורה שלי למתמטיקה אמר פעם ש-Ω זה "כל מה שיכול לקרות". ובדוכן שלי, תאמינו לי, הכול יכול לקרות.')}
+${say('noa', 'ואני נועה. אני לומדת חקר ביצועים ועובדת אצל דני במשמרות. כל היום הוא שואל אותי "מה הסיכוי ש...". הבעיה היא שלפני ששואלים "מה הסיכוי", צריך להסכים <b>על מה בכלל מדברים</b>.')}
+${say('dani', 'ומה הסיכוי שתסבירי את זה בלי לשעמם?')}
+${say('noa', 'זה תלוי במרחב ההסתברות. בוא נתחיל.')}
+${box('note', 'בסוף הפרק הזה תדעו:', `<ul class="goals">
+<li>מה זה <b>מרחב הסתברות</b> ${m('(Ω, ℱ, Pr)')}, ומה התפקיד של כל אחד משלושת הרכיבים</li>
+<li>להבדיל בין <b>תוצאה</b> לבין <b>מאורע</b>, ולכתוב נכון ${m('∈')} מול ${m('⊆')}</li>
+<li>את שלוש ה<b>אקסיומות</b> של פונקציית ההסתברות, ולזהות "הסתברות" שמפרה אותן</li>
+<li>ארבע תכונות בסיסיות, ולמה כל אחת מהן נכונה</li>
+<li>לתרגם משפט בעברית לכתיב מתמטי, ובחזרה</li></ul>`)}`
+  },
+
+  /* 2 */
+  { type: 'concept', title: 'ניסוי ומרחב המדגם Ω',
+    html: `
+<p>כל סיפור הסתברותי מתחיל ב<b>ניסוי</b>: משהו שהתוצאה שלו לא ידועה מראש. אצל דני הניסוי הוא <b>"הלקוח הבא מזמין"</b>.</p>
+<p>בתפריט יש שלוש צורות הגשה, וכל אחת מגיעה עם חריף או בלי:</p>
+${legend}
+${mb('Ω = ' + OM)}
+${box('def', 'הגדרות', `
+<p><b>תוצאה</b> (מסמנים ${m('ω')}, אומגה קטנה) היא תיאור <u>מלא ומדויק</u> של <b>אחת האפשרויות</b> שבהן הניסוי יכול להסתיים. למשל ${m(P + H)}: פיתה עם חריף. אחרי הניסוי, בדיוק תוצאה אחת מתממשת.</p>
+<p><b>מרחב המדגם</b> ${m('Ω')} הוא <b>קבוצת כל התוצאות האפשריות</b>.</p>
+<p>כל הרצה של הניסוי מסתיימת ב<b>בדיוק תוצאה אחת</b> מתוך ${m('Ω')}. לא אפס תוצאות, ולא שתיים.</p>`)}
+${say('dani', 'ומה עם לקוח שמזמין גם פיתה וגם לאפה?')}
+${say('noa', 'אז הוא לא קיים במודל שלנו. Ω זו <b>החלטה</b> שלנו: אנחנו בונים מודל של המציאות. אם היינו רוצים לכלול גם אותו, היינו צריכים Ω אחר.')}`
+  },
+
+  /* 3 */
+  { type: 'concept', title: 'מאורע = שאלת כן/לא על התוצאה',
+    html: `
+<p>לרוב לא מעניין אותנו מה <i>בדיוק</i> הלקוח הזמין, אלא שאלה כמו <b>"האם הוא לקח חריף?"</b>. התשובה תלויה בתוצאה. אם אוספים את כל התוצאות שבהן התשובה היא "כן", מקבלים <b>מאורע</b>:</p>
+${mb('A = {' + P + H + ', ' + LF + H + ', ' + PL + H + '} ⊆ Ω')}
+${box('def', 'מאורע', `<p><b>מאורע</b> הוא <b>טענה על התוצאה</b> ("הלקוח לקח חריף"), כלומר אוסף כל התוצאות האפשריות שבהן הטענה נכונה. מבחינה מתמטית זו <b>תת-קבוצה</b> של ${m('Ω')}.</p>
+<p>לפני הניסוי אנחנו שואלים מה הסיכוי שהמאורע יקרה. אחרי הניסוי, המאורע <b>קרה</b> אם התוצאה שהתממשה ${m('ω')} שייכת אליו, כלומר ${m('ω ∈ A')}.</p>`)}
+<div class="tblwrap"><table class="tbl">
+<tr><th>שם</th><th class="c">סימון</th><th>משמעות</th></tr>
+<tr><td>המאורע הוודאי</td><td class="c">${m('Ω')}</td><td>"הלקוח הזמין משהו מהתפריט". קורה תמיד.</td></tr>
+<tr><td>המאורע הריק</td><td class="c">${m('∅')}</td><td>"הלקוח הזמין סושי". אף פעם לא קורה.</td></tr>
+<tr><td>מאורע יסודי (סינגלטון)</td><td class="c">${m('{' + LF + '}')}</td><td>מאורע שיש בו תוצאה אחת בלבד.</td></tr>
+</table></div>
+${box('warn', 'שימו לב לסוגריים!', `<p>${m(LF)} היא <b>תוצאה</b>: אפשרות יחידה. בסוף הניסוי, מה שקורה הוא תמיד תוצאה אחת כזו.</p>
+<p>${m('{' + LF + '}')} הוא <b>מאורע</b>: אוסף של תוצאות אפשריות (כאן במקרה יש בו רק אחת). על מאורעות, ורק עליהם, שואלים <b>"מה הסיכוי שזה יקרה?"</b></p>`)}
+<p style="color:var(--muted);font-size:.93em">מוסכמה: מאורעות מסמנים באותיות גדולות (A, B, C), ותוצאות באות היוונית הקטנה ${m('ω')}.</p>`
+  },
+
+  /* 4 */
+  { type: 'activity', title: 'בנו את המאורע',
+    html: `<p>נועה מתארת מאורע במילים. לחצו על התוצאות ששייכות אליו, ותראו איך הוא נכתב כקבוצה.</p>${legend}`,
+    activity: { kind: 'subset', omega: OMEGA, tasks: [
+      { prompt: 'הלקוח לקח <b>חריף</b>', answer: ['PH', 'LH', 'CH'], fb: 'זה המאורע "חריף", ויש בו 3 תוצאות.' },
+      { prompt: 'הלקוח <b>לא</b> הזמין פיתה', answer: ['L', 'LH', 'C', 'CH'], fb: 'המילה "לא" נותנת את המשלים: כל מה שב-Ω ולא במאורע "פיתה".' },
+      { prompt: 'הלקוח הזמין לאפה <b>וגם</b> חריף', answer: ['LH'], fb: `"וגם" = חיתוך. יצא מאורע עם תוצאה אחת, ${m('{' + LF + H + '}')}, וזה עדיין מאורע (קבוצה!).` },
+      { prompt: 'הלקוח הזמין פיתה <b>או</b> לקח חריף (או את שניהם)', answer: ['P', 'PH', 'LH', 'CH'], fb: `"או" = איחוד. ${m(P + H)} נכנסת פעם אחת, למרות שהיא עונה על שני התנאים.` },
+      { prompt: 'הלקוח הזמין <b>סושי</b> 🍣', answer: [], fb: `לא בוחרים כלום, וזה ${m('∅')}, המאורע הריק. גם הוא מאורע לגיטימי לגמרי.` },
+      { prompt: 'הלקוח הזמין <b>משהו</b> מהתפריט', answer: ['P', 'PH', 'L', 'LH', 'C', 'CH'], fb: `כל התוצאות: זה ${m('Ω')}, המאורע הוודאי.` }
+    ] }
+  },
+
+  /* 5a */
+  { type: 'concept', title: 'ℱ: כל השאלות שמותר לשאול',
+    html: `
+<p>במסך הקודם בניתם מאורעות אחד אחרי השני. <b>${m('ℱ')}</b> הוא פשוט <b>האוסף של כל המאורעות</b>, כלומר כל השאלות שמותר לשאול עליהן "מה הסיכוי".</p>
+${say('noa', 'עם 6 תוצאות זה יוצא גדול מדי. בוא נחזור ליום הראשון של הדוכן, כשמכרת רק פיתה ולאפה, ובלי חריף.')}
+${mb('Ω = {' + P + ', ' + LF + '}')}
+<p>אילו שאלות כן/לא אפשר לשאול על ההזמנה של הלקוח? יש בדיוק ארבע:</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th class="c">המאורע</th><th>במילים</th></tr>
+<tr><td class="c">${m('∅')}</td><td>"הלקוח הזמין משהו שלא בתפריט" (אף פעם לא קורה)</td></tr>
+<tr><td class="c">${m('{' + P + '}')}</td><td>"הלקוח הזמין פיתה"</td></tr>
+<tr><td class="c">${m('{' + LF + '}')}</td><td>"הלקוח הזמין לאפה"</td></tr>
+<tr><td class="c">${m('{' + P + ', ' + LF + '} = Ω')}</td><td>"הלקוח הזמין משהו" (תמיד קורה)</td></tr>
+</table></div>
+<p>כל שאלה אחרת שתמציאו על ההזמנה ("הלקוח לא הזמין לאפה", "הלקוח הזמין פיתה או לאפה"…) תתברר כאחת מהארבע האלה. לכן:</p>
+${mb('ℱ = { ∅ ,  {' + P + '} ,  {' + LF + '} ,  {' + P + ', ' + LF + '} }')}
+${box('def', 'מה זה ℱ?', `<p>${m('ℱ')} היא <b>קבוצה שהאיברים שלה הם מאורעות</b>. מכיוון שכל מאורע הוא בעצמו קבוצה, ${m('ℱ')} היא <b>קבוצה של קבוצות</b>.</p>
+<p>📌 אם מאורע הוא ערימה של פתקי הזמנה ("כל ההזמנות עם חריף"), אז ${m('ℱ')} הוא <b>המדף שעליו מונחות כל הערימות האפשריות</b>.</p>`)}
+${box('tip', 'בקורס הזה', `נניח ש-${m('ℱ = 2<sup>Ω</sup>')}. הסימון ${m('2<sup>Ω</sup>')} פירושו <b>אוסף כל תתי-הקבוצות של Ω</b> (נקרא גם "קבוצת החזקה"). כלומר, <b>כל</b> תת-קבוצה של Ω היא מאורע, ומותר לשאול על כולן.`)}`
+  },
+
+  /* 5b */
+  { type: 'concept', title: 'כמה מאורעות יש? (ולמה כותבים ' + m('2<sup>Ω</sup>') + ')',
+    html: `
+<p>ביום השני דני הוסיף לתפריט <b>צלחת</b>: ${m('Ω = {' + P + ', ' + LF + ', ' + PL + '}')}. כמה מאורעות יש עכשיו?</p>
+<p>כדי לבנות מאורע, עוברים על כל תוצאה ומחליטים: <b>בפנים</b> ✔ או <b>בחוץ</b> —.</p>
+<div class="tblwrap"><table class="tbl" style="max-width:560px;margin:10px auto">
+<tr><th class="c">${P}</th><th class="c">${LF}</th><th class="c">${PL}</th><th class="c">המאורע</th></tr>
+${[[0,0,0],[1,0,0],[0,1,0],[0,0,1],[1,1,0],[1,0,1],[0,1,1],[1,1,1]].map(r => {
+  const items = [P, LF, PL].filter((_, i) => r[i]);
+  return '<tr>' + r.map(x => '<td class="c">' + (x ? '✔' : '—') + '</td>').join('') +
+    '<td class="c">' + m(items.length ? '{' + items.join(', ') + '}' : '∅') + '</td></tr>';
+}).join('')}
+</table></div>
+<p>שלוש החלטות, ולכל אחת שתי אפשרויות: ${m('2 · 2 · 2 = 2<sup>3</sup> = 8')} מאורעות. ומכאן השם: ל-Ω עם ${m('|Ω|')} תוצאות יש</p>
+${mb('|2<sup>Ω</sup>| = 2<sup>|Ω|</sup>')}
+<p>מאורעות. (${m('|Ω|')} פירושו מספר האיברים ב-Ω.)</p>`,
+    activity: { kind: 'mcq', q: 'בדוכן המלא של דני יש 6 תוצאות (3 מנות × עם/בלי חריף). כמה מאורעות יש ב-' + m('ℱ') + '?', options: [
+      { t: '6', fb: 'זה מספר ה<b>תוצאות</b>, ' + m('|Ω|') + '. מאורעות יש הרבה יותר.' },
+      { t: '12', fb: 'קרוב, אבל ההחלטות "בפנים/בחוץ" <b>מוכפלות</b>, לא מחוברות.' },
+      { t: '36', fb: m('6² = 36') + '. אבל לכל אחת מ-6 התוצאות יש 2 אפשרויות, ולכן זה ' + m('2<sup>6</sup>') + '.' },
+      { t: '64', ok: true, fb: m('2<sup>6</sup> = 64') + '. נכון!' }
+    ] },
+    reveal: `${say('dani', '64 שאלות על לקוח אחד? אני שואל רק שאלה אחת: "הוא משלם?"')}
+${say('noa', 'זה לא נמצא ב-Ω שלנו, דני. אם זה מעניין אותך, צריך לבנות מודל אחר.')}
+<p style="color:var(--muted);font-size:.93em">ולמה צריך בכלל להגדיר את ℱ, אם הוא "הכול"? כשמרחב המדגם אינסופי (למשל נקודה אקראית על קטע), לא תמיד אפשר לתת הסתברות לכל תת-קבוצה, ולכן ההגדרה הכללית כוללת אותו. בקורס שלנו זה לא יפריע.</p>`
+  },
+
+  /* 5c */
+  { type: 'concept', title: 'שלוש קומות: מי שייך למי?',
+    html: `
+<p>יש לנו עכשיו שלושה סוגים של אובייקטים, וכל אחד יושב "בקומה" אחרת:</p>
+<div class="nest">
+<div>🏢 <b>ℱ</b>: קבוצה של <b>מאורעות</b></div>
+<div style="margin-inline-start:24px">📦 <b>A</b>: מאורע, כלומר קבוצה של <b>תוצאות</b></div>
+<div style="margin-inline-start:48px">🥙 <b>ω</b>: תוצאה בודדת</div>
+</div>
+<p>בין הקומות עוברים בעזרת שני סימנים, שחשוב לא לבלבל ביניהם:</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th class="c">סימן</th><th>קוראים</th><th>פירוש</th></tr>
+<tr><td class="c">${m('x ∈ S')}</td><td>"x <b>שייך ל</b>-S"</td><td>x הוא <b>אחד האיברים</b> של S</td></tr>
+<tr><td class="c">${m('S ⊆ T')}</td><td>"S <b>מוכלת ב</b>-T"</td><td>S היא <b>תת-קבוצה</b> של T: כל איבר של S הוא גם איבר של T</td></tr>
+</table></div>
+<p>בדוגמה של היום הראשון (${m('Ω = {' + P + ', ' + LF + '}')}):</p>
+<div class="tblwrap"><table class="tbl">
+<tr><td class="c">${m(P + ' ∈ Ω')}</td><td>תוצאה היא <b>איבר</b> של Ω</td></tr>
+<tr><td class="c">${m('{' + P + '} ⊆ Ω')}</td><td>מאורע הוא <b>תת-קבוצה</b> של Ω</td></tr>
+<tr><td class="c">${m('{' + P + '} ∈ ℱ')}</td><td>מאורע הוא <b>איבר</b> של ℱ (הוא אחד מארבעת האיברים שראינו)</td></tr>
+<tr><td class="c">${m(P + ' ∈ {' + P + '}')}</td><td>אם הלקוח הזמין פיתה, המאורע "הזמין פיתה" <b>קרה</b></td></tr>
+</table></div>
+${box('tip', 'כלל אצבע', `<div class="tblwrap"><table class="tbl" style="background:#fff;margin:6px 0 10px">
+<tr><td class="c">${m('תוצאה ∈ Ω')}</td><td>תוצאה היא <b>אחד הפריטים</b> של Ω</td></tr>
+<tr><td class="c">${m('מאורע ⊆ Ω')}</td><td>מאורע הוא <b>חלק</b> מ-Ω</td></tr>
+<tr><td class="c">${m('מאורע ∈ ℱ')}</td><td>מאורע הוא <b>אחד הפריטים</b> של ℱ</td></tr>
+</table></div>
+<p style="margin:0">לא בטוחים איזה סימן לכתוב? שאלו: האם זה <b>פריט אחד</b> מתוך הקבוצה (${m('∈')}), או <b>קבוצה קטנה יותר</b> שכולה בתוכה (${m('⊆')})?</p>`)}`
+  },
+
+  /* 6 */
+  { type: 'activity', title: '∈ או ⊆? תקין או שגוי?',
+    html: `<p>קובי, בן-הדוד של דני, כתב כמה טענות על לוח המחיר. סמנו כל טענה כנכונה או כשגויה.</p>`,
+    activity: { kind: 'classify', labels: ['נכון', 'שגוי'], items: [
+      { t: m(P + ' ∈ Ω'), ans: 0, ex: 'נכון: ' + P + ' היא תוצאה, ו-Ω היא קבוצת התוצאות.' },
+      { t: m('{' + P + '} ⊆ Ω'), ans: 0, ex: 'נכון: הקבוצה {' + P + '} היא תת-קבוצה של Ω.' },
+      { t: m('{' + P + '} ∈ Ω'), ans: 1, ex: 'שגוי: האיברים של Ω הם תוצאות ולא קבוצות. הכתיב הנכון: ' + m('{' + P + '} ⊆ Ω') + ' או ' + m(P + ' ∈ Ω') + '.' },
+      { t: m(P + ' ∈ ℱ'), ans: 1, ex: 'שגוי: האיברים של ℱ הם מאורעות (קבוצות). הכתיב הנכון: ' + m('{' + P + '} ∈ ℱ') + '.' },
+      { t: m('Ω ∈ ℱ'), ans: 0, ex: 'נכון: Ω היא תת-קבוצה של עצמה, ולכן היא מאורע.' },
+      { t: m('∅ ∈ ℱ'), ans: 0, ex: 'נכון: הקבוצה הריקה היא תת-קבוצה של כל קבוצה, ולכן מאורע.' },
+      { t: m('|ℱ| = 6'), ans: 1, hint: 'כמה תת-קבוצות יש לקבוצה בגודל 6?', ex: 'שגוי: ב-Ω יש 6 תוצאות, אבל ב-ℱ יש ' + m('2<sup>6</sup> = 64') + ' מאורעות.' }
+    ] }
+  },
+
+  /* 7 */
+  { type: 'concept', title: 'Pr: הפונקציה שמחלקת סיכויים',
+    html: `
+<p>הרכיב השלישי הוא <b>פונקציית ההסתברות</b>:</p>
+${mb('Pr : ℱ → [0, 1]')}
+<p>קוראים את זה כך: "Pr היא פונקציה <b>מ-ℱ</b> <b>לקטע [0,1]</b>". היא <b>מקבלת מאורע</b>, כלומר קבוצה של תוצאות, ו<b>מחזירה מספר</b> בין 0 ל-1: הסיכוי שהמאורע יקרה.</p>
+${box('note', 'הכלל הכי חשוב בפרק', `<p><b>מאורעות</b> הם קבוצות, ועליהם עושים פעולות של קבוצות. <b>הסתברויות</b> הן מספרים, ועליהן עושים חשבון. לא מערבבים!</p>
+<div class="tblwrap"><table class="tbl rules" style="background:#fff">
+<tr><th></th><th class="c">בתוך ה-Pr (קבוצות)</th><th class="c">מחוץ ל-Pr (מספרים)</th></tr>
+<tr><th>הפעולות</th><td class="c">${m('A ∪ B ,  A ∩ B ,  Ω ∖ A ,  A ⊆ B ,  ∅')}</td><td class="c">${m('+  ,  −  ,  ·  ,  ≤  ,  0')}</td></tr>
+<tr class="yes"><th>מותר</th><td class="c">${m('Pr(A ∪ B)')}</td><td class="c">${m('Pr(A) + Pr(B)')}</td></tr>
+<tr class="no"><th>אסור</th><td class="c">${m('Pr(A + B)')}</td><td class="c">${m('Pr(A) ∪ Pr(B)')}</td></tr>
+</table></div>`)}
+<p>ולגבי מאורע יסודי: הכתיב המדויק הוא ${m('Pr({' + LF + '})')}. הרבה פעמים כותבים בקיצור ${m('Pr(' + LF + ')')}, וזה בסדר, כל עוד זוכרים שבפנים צריכה להיות קבוצה.</p>
+${box('def', 'מרחב הסתברות', `השלישייה ${m('(Ω, ℱ, Pr)')} נקראת <b>מרחב הסתברות</b>: מה יכול לקרות, על מה מותר לשאול, וכמה סיכוי יש לכל דבר.`)}`
+  },
+
+  /* 8 */
+  { type: 'story', title: 'האפליקציה של קובי והאקסיומות',
+    html: `
+${say('kobi', 'דני, אחי! בניתי אפליקציה שמנבאת הזמנות. היא נותנת מספר לכל מאורע. תכניס אותה לדוכן ונעשה מיליונים!')}
+${say('noa', 'רגע. לא כל פונקציה שמחזירה מספרים בין 0 ל-1 היא הסתברות. כדי לקבל את התואר, היא צריכה לקיים שלוש <b>אקסיומות</b>:')}
+<div class="formula-card"><b>1. לבלתי אפשרי אין סיכוי</b>${mb('Pr(∅) = 0')}</div>
+<div class="formula-card"><b>2. משהו בטוח יקרה</b>${mb('Pr(Ω) = 1')}</div>
+<div class="formula-card"><b>3. חתיכות זרות: ההסתברויות מתחברות</b>
+<p>אם כמה מאורעות <b>לא יכולים לקרות יחד</b>, הסיכוי ש<b>אחד מהם</b> יקרה הוא <b>סכום</b> הסיכויים שלהם. בכתיב המלא:</p>
+${mb('Pr( <span class="big">⋃</span><sub>n∈ℕ</sub> A<sub>n</sub> ) = <span class="big">∑</span><sub>n∈ℕ</sub> Pr(A<sub>n</sub>)')}
+<p style="text-align:center;color:var(--muted)">נראה מסובך? במסך הבא נפרק את השורה הזאת חלק אחרי חלק. 👈</p></div>
+${box('tip', 'איך לחשוב על זה: 100 לקוחות', `<p>דמיינו 100 לקוחות שמגיעים לדוכן. אפשר לחשוב על ${m('Pr(A)')} כעל <b>החלק מהלקוחות</b> שאצלם A קורה. למשל, אם 30 מהם מזמינים פיתה, ${m('Pr(פיתה) = 0.3')}.</p>
+<ul>
+<li>אף לקוח לא מזמין משהו שלא בתפריט, ולכן ${m('Pr(∅) = 0')}.</li>
+<li><b>כל</b> הלקוחות מזמינים משהו, כלומר 100%, ולכן ${m('Pr(Ω) = 1')}.</li>
+<li>אם 30 מזמינים פיתה ו-25 מזמינים לאפה, ואף אחד לא מזמין את שתיהן, אז 55 מזמינים פיתה <b>או</b> לאפה: ${m('0.3 + 0.25 = 0.55')}.</li>
+<li>ואין "מינוס 5 לקוחות", ולכן הסתברות לא יכולה להיות שלילית.</li>
+</ul>`)}`
+  },
+
+  /* 8b */
+  { type: 'concept', title: 'אקסיומה 3, לאט לאט',
+    html: `
+<h3>שלב 1: מה זה "זרים"?</h3>
+<p>שני מאורעות הם <b>זרים</b> אם אין להם אף תוצאה משותפת, כלומר הם <b>לא יכולים לקרות יחד</b>:</p>
+${mb('A ∩ B = ∅')}
+<ul>
+<li>"פיתה" ו"לאפה": <b>זרים</b>. לקוח מזמין מנה אחת בלבד.</li>
+<li>"חריף" ו"פיתה": <b>לא זרים</b>. התוצאה ${m(P + H)} נמצאת בשניהם.</li>
+</ul>
+
+<h3>שלב 2: שני מאורעות זרים</h3>
+<p>אם ${m('A ∩ B = ∅')}, אז ${m('Pr(A ∪ B) = Pr(A) + Pr(B)')}. למשל, אם ${m('Pr(פיתה) = 0.3')} ו-${m('Pr(לאפה) = 0.25')}:</p>
+${mb('Pr(פיתה ∪ לאפה) = 0.3 + 0.25 = 0.55')}
+
+<h3>שלב 3: כמה מאורעות, "זרים בזוגות"</h3>
+<p>כשיש יותר משני מאורעות, דורשים ש<b>כל זוג</b> מהם יהיה זר. זה נקרא <b>זרים בזוגות</b>. "פיתה", "לאפה" ו"צלחת" זרים בזוגות, כי אין לקוח שמזמין שתיים מהן. לכן:</p>
+${mb('Pr(פיתה ∪ לאפה ∪ צלחת) = Pr(פיתה) + Pr(לאפה) + Pr(צלחת)')}
+
+<h3>שלב 4: עכשיו קוראים את הכתיב המלא</h3>
+${mb('Pr( <span class="big">⋃</span><sub>n∈ℕ</sub> A<sub>n</sub> ) = <span class="big">∑</span><sub>n∈ℕ</sub> Pr(A<sub>n</sub>)')}
+<div class="tblwrap"><table class="tbl">
+<tr><th class="c">החלק בכתיב</th><th>איך קוראים</th></tr>
+<tr><td class="c">${m('(A<sub>n</sub>)<sub>n∈ℕ</sub>')}</td><td>סדרה של מאורעות: ${m('A<sub>1</sub>, A<sub>2</sub>, A<sub>3</sub>, …')}</td></tr>
+<tr><td class="c">${m('A<sub>i</sub> ∩ A<sub>j</sub> = ∅')} לכל ${m('i ≠ j')}</td><td>התנאי: הם <b>זרים בזוגות</b>. כל שניים שונים מהם לא יכולים לקרות יחד.</td></tr>
+<tr><td class="c">${m('<span class="big">⋃</span><sub>n∈ℕ</sub> A<sub>n</sub>')}</td><td>האיחוד של כולם: "<b>לפחות אחד</b> מהם קרה"</td></tr>
+<tr><td class="c">${m('<span class="big">∑</span><sub>n∈ℕ</sub> Pr(A<sub>n</sub>)')}</td><td>הסכום של כל ההסתברויות: ${m('Pr(A<sub>1</sub>) + Pr(A<sub>2</sub>) + Pr(A<sub>3</sub>) + …')}</td></tr>
+</table></div>
+<p><b>במילים:</b> אם יש סדרה של מאורעות שאף שניים מהם לא יכולים לקרות יחד, אז הסיכוי שלפחות אחד מהם יקרה שווה לסכום הסיכויים שלהם.</p>
+<p style="color:var(--muted);font-size:.93em">למה הסדרה יכולה להיות אינסופית? כי יש מרחבי מדגם אינסופיים. למשל: "כמה לקוחות יגיעו עד הלקוח הראשון שיבקש חריף?" התשובה יכולה להיות 1, 2, 3, וכן הלאה בלי סוף. אם יש רק מספר סופי של מאורעות, משלימים את הסדרה ב-${m('∅')}, שההסתברות שלו 0.</p>
+
+<h3>שלב 5: למה חייבים "זרים"?</h3>
+${box('warn', '', `אם ${m('Pr(חריף) = 0.6')} ו-${m('Pr(פיתה) = 0.5')}, החיבור נותן ${m('1.1')}, וזו לא יכולה להיות הסתברות. הסיבה: את מי שהזמין ${m(P + H)} ספרנו <b>פעמיים</b>, פעם ב"חריף" ופעם ב"פיתה". הזרות מבטיחה שאף תוצאה לא נספרת פעמיים.`)}
+
+<h3>שלב 6: מסקנה שימושית</h3>
+<p>כל מאורע הוא איחוד זר של התוצאות שבו. לכן, כש-${m('Ω')} סופי, <b>מספיק לדעת את ההסתברות של כל תוצאה בנפרד</b>:</p>
+${mb('Pr(חריף) = Pr({' + P + H + '}) + Pr({' + LF + H + '}) + Pr({' + PL + H + '})')}
+<p>ההסתברויות של התוצאות צריכות להיות אי-שליליות, ו<b>הסכום של כולן חייב להיות 1</b>, כי יחד הן מרכיבות את ${m('Ω')}. את זה נבדוק בתרגיל הבא.</p>`,
+    activity: { kind: 'mcq', q: 'איזה מהאוספים הבאים הוא אוסף של מאורעות <b>זרים בזוגות</b>?', options: [
+      { t: '"פיתה", "לאפה", "צלחת"', ok: true, fb: 'נכון. אין לקוח שמזמין שתיים מהמנות, ולכן כל זוג זר.' },
+      { t: '"חריף", "פיתה"', fb: 'פיתה עם חריף (' + m(P + H) + ') נמצאת בשניהם, ולכן הם לא זרים.' },
+      { t: '"חריף", "בלי חריף", "פיתה"', fb: 'הזוג "חריף" ו"בלי חריף" זר, אבל "פיתה" חותך את שניהם. בזוגות פירושו <b>כל</b> זוג.' },
+      { t: '"לאפה", "לאפה עם חריף"', fb: m(LF + H) + ' נמצאת בשניהם. זה אפילו מקרה של הכלה: "לאפה עם חריף" ⊆ "לאפה".' }
+    ] }
+  },
+
+  /* 9 */
+  { type: 'activity', title: 'חוקית או לא? בודקים את האפליקציה',
+    html: `<p>קובי מציג כמה גרסאות של האפליקציה. בכל אחת מופיעות ההסתברויות שהיא נותנת. האם זו פונקציית הסתברות חוקית?</p>${legend}`,
+    activity: { kind: 'classify', labels: ['חוקית', 'לא חוקית'], items: [
+      { t: 'כל אחת משש התוצאות מקבלת ' + m('1/6'), ans: 0, ex: 'חוקית: כל המספרים אי-שליליים, והסכום הוא ' + m('6 · 1/6 = 1') + '.' },
+      { t: m('Pr({' + P + '}) = 0.5 ,  Pr({' + P + H + '}) = 0.3') + ', וכל אחת מארבע האחרות מקבלת ' + m('0.1'), ans: 1, hint: 'חברו את כל המספרים.', ex: 'לא חוקית: הסכום הוא ' + m('0.5 + 0.3 + 4·0.1 = 1.2') + ', כלומר ' + m('Pr(Ω) = 1.2') + '. סתירה לאקסיומה 2.' },
+      { t: m('Pr({' + P + H + '}) = 1') + ', וכל השאר ' + m('0'), ans: 0, ex: 'חוקית! משעממת, אבל חוקית. כנראה שיש לדוכן לקוח אחד: קובי.' },
+      { t: m('Pr(חריף) = 0.6') + ' וגם ' + m('Pr(בלי חריף) = 0.6'), ans: 1, hint: 'מה החיתוך של "חריף" ו"בלי חריף"? ומה האיחוד שלהם?', ex: 'לא חוקית: שני המאורעות זרים והאיחוד שלהם הוא Ω, ולכן לפי אקסיומה 3 צריך להתקיים ' + m('0.6 + 0.6 = Pr(Ω) = 1') + '.' },
+      { t: m('Pr(∅) = 0.01') + ' "כי תמיד יש סיכוי", ושאר הערכים כמו בגרסה הראשונה', ans: 1, ex: 'לא חוקית: אקסיומה 1 דורשת ' + m('Pr(∅) = 0') + '. לבלתי אפשרי אין "קצת סיכוי".' },
+      { t: m('Pr({' + PL + '}) = −0.1 ,  Pr({' + PL + H + '}) = 0.3') + ', וכל אחת מארבע האחרות ' + m('0.2'), ans: 1, hint: 'הסכום אמנם יוצא 1… אבל בדקו את הטווח.', ex: 'לא חוקית: הסכום הוא אכן 1, אבל ' + m('Pr : ℱ → [0,1]') + ', ומספר שלילי לא נמצא בטווח.' },
+      { t: m('Pr({' + P + '}) = 0.4 ,  Pr({' + LF + '}) = 0.4 ,  Pr({' + PL + '}) = 0.2') + ', ולכל המנות החריפות ' + m('0'), ans: 0, ex: 'חוקית: אי-שלילי וסכום 1. דני מרים גבה: אף אחד לא לוקח חריף? זה מודל חוקי, אבל כנראה לא מציאותי. <b>חוקי ≠ נכון לדוכן שלנו.</b>' }
+    ] }
+  },
+
+  /* 10 */
+  { type: 'concept', title: 'ארבע תכונות שנובעות מהאקסיומות',
+    html: `
+<p>מהאקסיומות אפשר להוכיח כלים שימושיים מאוד. יהיו ${m('A, B ∈ ℱ')} מאורעות:</p>
+<div class="formula-card"><b>① איחוד זר</b>${mb('A ∩ B = ∅  ⟹  Pr(A ∪ B) = Pr(A) + Pr(B)')}
+<p>לקוח לא יכול להזמין גם פיתה וגם לאפה, ולכן ${m('Pr(פיתה ∪ לאפה) = Pr(פיתה) + Pr(לאפה)')}. (זה מקרה פרטי של אקסיומה 3: משלימים בעוד אינסוף ${m('∅')}-ים.)</p></div>
+<div class="formula-card"><b>② משלים</b>${mb('Pr(A) = 1 − Pr(Ω ∖ A) = 1 − Pr(' + ov('A') + ')')}
+<p><b>למה?</b> A והמשלים שלו זרים, והאיחוד שלהם הוא Ω. לפי ①: ${m('Pr(A) + Pr(' + ov('A') + ') = Pr(Ω) = 1')}.<br>
+💡 לפעמים הרבה יותר קל לחשב את מה ש<b>לא</b> קרה. (סימונים נוספים למשלים שתראו: ${m('A<sup>c</sup>')}, ${m('Ω ∖ A')}.)</p></div>
+<div class="formula-card"><b>③ מונוטוניות</b>${mb('A ⊆ B  ⟹  Pr(A) ≤ Pr(B)')}
+${say('dani', 'נועה, אני בטוח שהסיכוי ל"פיתה עם חריף" גבוה מהסיכוי ל"פיתה"!')}
+${say('noa', 'בלתי אפשרי. כל פיתה עם חריף היא קודם כול פיתה. אם A גורר את B, ל-A אין יותר סיכוי מאשר ל-B.')}
+<p><b>למה?</b> ${m('B = A ∪ (B ∖ A)')} כאיחוד זר, ולכן ${m('Pr(B) = Pr(A) + Pr(B ∖ A) ≥ Pr(A)')}.</p></div>
+<div class="formula-card"><b>④ הכלה והדחה (איחוד כללי)</b>
+<p>ב-① ראינו מה קורה כשהמאורעות זרים. אבל מה הסיכוי ש<b>לפחות אחד</b> משני מאורעות יקרה, כשהם <b>כן יכולים לקרות יחד</b>? למשל "חריף" ו"פיתה": לקוח יכול להזמין פיתה עם חריף.</p>
+<p>נחזור ל-100 לקוחות: 40 לקחו חריף, 30 הזמינו פיתה, ו-10 מהם הזמינו פיתה <b>עם</b> חריף. כמה לקוחות לקחו חריף <b>או</b> פיתה?</p>
+<p>אם פשוט נחבר, ${m('40 + 30 = 70')}, נטעה: את 10 הלקוחות שהזמינו פיתה עם חריף ספרנו <b>פעמיים</b>, פעם בין מזמיני החריף ופעם בין מזמיני הפיתה. כדי לתקן, מחסירים אותם פעם אחת: ${m('40 + 30 − 10 = 60')}.</p>
+<p>הלקוחות שנספרו פעמיים הם בדיוק אלה שבשני המאורעות, כלומר ב<b>חיתוך</b> ${m('A ∩ B')}. ובכתיב של הסתברות:</p>
+${mb('Pr(A ∪ B) = Pr(A) + Pr(B) − Pr(A ∩ B)')}
+<p>ואם המאורעות זרים, אז ${m('A ∩ B = ∅')}, ההסתברות של החיתוך היא 0, וחוזרים בדיוק ל-①.</p></div>`
+  },
+
+  /* 11 */
+  { type: 'activity', title: 'מחשבים בדוכן',
+    html: `<p>נועה סיכמה את הנתונים מהחודש האחרון:</p>
+${mb('Pr(חריף) = 0.6 ,   Pr(פיתה) = 0.5 ,   Pr(פיתה ∩ חריף) = 0.3')}
+<p>חשבו (אפשר לכתוב עשרוני, שבר או אחוזים):</p>`,
+    activity: { kind: 'numeric', items: [
+      { q: 'מה הסיכוי שהלקוח הבא יזמין פיתה <b>או</b> ייקח חריף? ' + m('Pr(פיתה ∪ חריף) = ?'), answer: 0.8,
+        hint: 'הכלה והדחה: חברו ואז החסירו את החיתוך.', ex: m('0.5 + 0.6 − 0.3 = 0.8') },
+      { q: 'מה הסיכוי שהלקוח <b>לא</b> יזמין פיתה <b>וגם לא</b> ייקח חריף?', answer: 0.2,
+        hint: '"לא A וגם לא B" הוא המשלים של "A או B" (חוק דה-מורגן).', ex: m('Pr(' + ov('פיתה ∪ חריף') + ') = 1 − 0.8 = 0.2') },
+      { q: 'מה הסיכוי לפיתה <b>בלי</b> חריף? ' + m('Pr(פיתה ∖ חריף) = ?'), answer: 0.2,
+        hint: 'פיתה = (פיתה עם חריף) ∪ (פיתה בלי חריף), וזה איחוד זר.', ex: m('Pr(פיתה) − Pr(פיתה ∩ חריף) = 0.5 − 0.3 = 0.2') }
+    ] }
+  },
+
+  /* 12 */
+  { type: 'concept', title: 'מילון עברית ↔ מתמטיקה',
+    html: `
+<p>זה אולי המסך הכי חשוב בפרק. רוב הטעויות במבחנים הן לא בחשבון, אלא ב<b>תרגום</b>.</p>
+<div class="tblwrap"><table class="tbl">
+<tr><th>בעברית</th><th class="c">בכתיב מתמטי</th></tr>
+<tr><td>A <b>וגם</b> B קרו</td><td class="c">${m('A ∩ B')}</td></tr>
+<tr><td>A <b>או</b> B קרה (או שניהם)</td><td class="c">${m('A ∪ B')}</td></tr>
+<tr><td>A <b>לא</b> קרה</td><td class="c">${m(ov('A') + '  =  Ω ∖ A  =  A<sup>c</sup>')}</td></tr>
+<tr><td>A קרה, <b>אבל לא</b> B</td><td class="c">${m('A ∖ B  =  A ∩ ' + ov('B'))}</td></tr>
+<tr><td><b>אם</b> A קרה <b>אז</b> B קרה (A גורר את B)</td><td class="c">${m('A ⊆ B')}</td></tr>
+<tr><td>A ו-B <b>לא יכולים לקרות יחד</b> (זרים)</td><td class="c">${m('A ∩ B = ∅')}</td></tr>
+<tr><td><b>אף אחד</b> מהם לא קרה</td><td class="c">${m(ov('A ∪ B') + '  =  ' + ov('A') + ' ∩ ' + ov('B'))}</td></tr>
+<tr><td><b>הסיכוי</b> ש-A יקרה הוא 30%</td><td class="c">${m('Pr(A) = 0.3')}</td></tr>
+<tr><td>משהו שקורה <b>תמיד</b> / <b>אף פעם</b></td><td class="c">${m('Ω')} / ${m('∅')}</td></tr>
+</table></div>
+${box('warn', 'מלכודת קלאסית', `"A ו-B לא יכולים לקרות יחד" נכתב ${m('A ∩ B = ∅')} (קבוצה ריקה), ולא ${m('A ∩ B = 0')}. החיתוך הוא קבוצה, ו-0 הוא מספר. מה שכן נכון הוא ${m('Pr(A ∩ B) = 0')}.`)}`
+  },
+
+  /* 13 */
+  { type: 'activity', title: 'תרגמו לכתיב מתמטי',
+    html: `<p>נסמן: ${m('A')} = "הלקוח לקח חריף", ${m('B')} = "הלקוח הזמין פיתה". בחרו לכל משפט את הכתיב המתאים.</p>`,
+    activity: { kind: 'translate',
+      pool: ['A ∩ B', 'A ∪ B', 'Ω ∖ A', 'B ∖ A', 'B ⊆ A', 'A ⊆ B', 'A ∩ B = ∅', 'Pr(A) = 0.6', 'Pr(A) ∩ Pr(B)', 'A + B'],
+      items: [
+        { t: 'הלקוח לקח חריף <b>וגם</b> הזמין פיתה', ans: 'A ∩ B' },
+        { t: 'הלקוח לקח חריף <b>או</b> הזמין פיתה', ans: 'A ∪ B' },
+        { t: 'הלקוח <b>לא</b> לקח חריף', ans: 'Ω ∖ A' },
+        { t: 'הלקוח הזמין פיתה <b>בלי</b> חריף', ans: 'B ∖ A' },
+        { t: '<b>כל</b> מי שמזמין פיתה לוקח חריף', ans: 'B ⊆ A', ex: 'אם B קרה אז גם A קרה, ולכן B ⊆ A. שימו לב לכיוון!' },
+        { t: '<b>אין</b> אף לקוח שמזמין פיתה עם חריף', ans: 'A ∩ B = ∅' },
+        { t: '60% מהלקוחות לוקחים חריף', ans: 'Pr(A) = 0.6' }
+      ],
+      fb: 'שימו לב שחלק מהאפשרויות ברשימה (כמו A + B) הן בכלל לא כתיב חוקי.' }
+  },
+
+  /* 14 */
+  { type: 'activity', title: 'מצאו את הבאג',
+    html: `${say('dani', 'כתבתי פתרון לשיעורי הבית של נועה. אני חושב שהוא מושלם.')}${say('noa', 'דני… בוא נעבור על זה ביחד.')}`,
+    activity: { kind: 'mcq', items: [
+      { q: 'איזו מהשורות הבאות כתובה בצורה <b>תקינה</b>?', options: [
+        { t: m('Pr(A) ∪ Pr(B)'), fb: 'Pr(A) הוא מספר. אין דבר כזה "איחוד של מספרים".' },
+        { t: m('Pr(A ∪ B)'), ok: true, fb: 'נכון! האיחוד נמצא בתוך ה-Pr, בין קבוצות.' },
+        { t: m('Pr(A) ∩ B'), fb: 'מערבב מספר וקבוצה. אין לזה משמעות.' },
+        { t: m('Pr(A + B)'), fb: 'A ו-B הן קבוצות, ואין להן חיבור. כנראה התכוונתם ל-' + m('A ∪ B') + '.' }
+      ] },
+      { q: 'דני כתב: "' + m('Pr(A) = 0.6 ,  Pr(B) = 0.5') + ', ולכן ' + m('Pr(A ∪ B) = 1.1') + '". מה הבעיה?', options: [
+        { t: 'אין בעיה, ככה מחשבים איחוד', fb: 'הסתברות לא יכולה להיות גדולה מ-1, אז משהו בטוח לא בסדר.' },
+        { t: 'A ו-B לא זרים, ולכן צריך להחסיר את ' + m('Pr(A ∩ B)'), ok: true, fb: 'בדיוק. החיבור הפשוט מותר רק למאורעות זרים. במקרה הכללי משתמשים בהכלה והדחה.' },
+        { t: 'צריך להכפיל במקום לחבר', fb: 'כפל שייך לחיתוך, ורק בתנאים מסוימים (נראה בפרק 3). כאן מדובר באיחוד.' },
+        { t: 'צריך לחלק ב-2', fb: 'אין כלל כזה. 🙂' }
+      ] },
+      { q: 'כדי לומר ש"A ו-B לא יכולים לקרות יחד", איך כותבים?', options: [
+        { t: m('A ∩ B = 0'), fb: 'החיתוך הוא קבוצה, ו-0 הוא מספר. צריך את הקבוצה הריקה.' },
+        { t: m('A ∩ B = ∅'), ok: true, fb: 'נכון. ומזה נובע ' + m('Pr(A ∩ B) = 0') + '.' },
+        { t: m('Pr(A) ∩ Pr(B) = ∅'), fb: 'אי אפשר לחתוך מספרים.' },
+        { t: m('A = ' + ov('B')), fb: 'זה אומר הרבה יותר: שבדיוק אחד מהם קורה תמיד. זרות לא דורשת את זה.' }
+      ] }
+    ] }
+  },
+
+  /* 15 */
+  { type: 'quiz', title: 'בוחן סיום: פרק 1',
+    html: `<p>6 שאלות, ניסיון אחד לכל שאלה. אחרי כל תשובה יופיע הסבר.</p>`,
+    activity: { kind: 'quiz', items: [
+      { q: 'מטילים קובייה. מה מרחב המדגם?', options: [m('Ω = {1,2,3,4,5,6}'), m('Ω = 6'), m('Ω = {{1},{2},…,{6}}'), m('Ω = [0,1]')], answer: 0,
+        ex: 'Ω היא קבוצת התוצאות: כל המספרים שיכולים לצאת.' },
+      { q: 'מטילים קובייה ו-' + m('ℱ = 2<sup>Ω</sup>') + '. מה מהבאים הוא <b>מאורע</b>?', options: [m('{2, 4, 6}'), m('3'), m('1/2'), m('Pr({6})')], answer: 0,
+        ex: 'מאורע הוא תת-קבוצה של Ω. ‏3 היא תוצאה, ו-1/2 ו-Pr({6}) הם מספרים.' },
+      { q: m('A ∩ B = ∅') + ', ' + m('Pr(A) = 0.3') + ', ' + m('Pr(B) = 0.5') + '. מהו ' + m('Pr(A ∪ B)') + '?', options: ['0.8', '0.15', '0.65', 'אי אפשר לדעת'], answer: 0,
+        ex: 'המאורעות זרים, ולכן מחברים: ' + m('0.3 + 0.5 = 0.8') + '.' },
+      { q: m('Pr(A) = 0.7') + '. מהו ' + m('Pr(' + ov('A') + ')') + '?', options: ['0.3', '0.7', '1.7', '−0.7'], answer: 0,
+        ex: m('Pr(' + ov('A') + ') = 1 − Pr(A) = 0.3') },
+      { q: 'ידוע ש-' + m('A ⊆ B') + ' ו-' + m('Pr(B) = 0.4') + '. איזה ערך <b>יכול</b> להיות ' + m('Pr(A)') + '?', options: ['0.25', '0.5', '0.45', '1'], answer: 0,
+        ex: 'לפי מונוטוניות ' + m('Pr(A) ≤ Pr(B) = 0.4') + ', ומבין האפשרויות רק 0.25 עומד בזה.' },
+      { q: m('Pr(A) = 0.5 ,  Pr(B) = 0.4 ,  Pr(A ∪ B) = 0.7') + '. מהו ' + m('Pr(A ∩ B)') + '?', options: ['0.2', '0.1', '0.9', '0.35'], answer: 0,
+        ex: 'מהכלה והדחה: ' + m('Pr(A ∩ B) = Pr(A) + Pr(B) − Pr(A ∪ B) = 0.5 + 0.4 − 0.7 = 0.2') + '.' }
+    ] }
+  },
+
+  /* 16 */
+  { type: 'summary', title: 'דף עזר: פרק 1',
+    html: `
+<div class="tblwrap"><table class="tbl">
+<tr><th>מושג</th><th class="c">כתיב</th><th>במילים</th></tr>
+<tr><td>מרחב המדגם</td><td class="c">${m('Ω')}</td><td>כל התוצאות האפשריות</td></tr>
+<tr><td>תוצאה</td><td class="c">${m('ω ∈ Ω')}</td><td>מה שקרה בדיוק</td></tr>
+<tr><td>מאורע</td><td class="c">${m('A ⊆ Ω ,  A ∈ ℱ')}</td><td>קבוצת תוצאות, כלומר שאלת כן/לא</td></tr>
+<tr><td>קבוצת המאורעות</td><td class="c">${m('ℱ = 2<sup>Ω</sup>')}</td><td>כל תתי-הקבוצות של Ω</td></tr>
+<tr><td>פונקציית הסתברות</td><td class="c">${m('Pr : ℱ → [0,1]')}</td><td>מאורע ← מספר</td></tr>
+<tr><td>אקסיומות</td><td class="c">${m('Pr(∅)=0 ,  Pr(Ω)=1')}<br>${m('Pr(⋃A<sub>n</sub>) = ∑Pr(A<sub>n</sub>)')} לזרים</td><td>ריק, ודאי, וחיבור של חתיכות זרות</td></tr>
+<tr><td>משלים</td><td class="c">${m('Pr(' + ov('A') + ') = 1 − Pr(A)')}</td><td></td></tr>
+<tr><td>מונוטוניות</td><td class="c">${m('A ⊆ B ⟹ Pr(A) ≤ Pr(B)')}</td><td></td></tr>
+<tr><td>הכלה והדחה</td><td class="c">${m('Pr(A∪B) = Pr(A)+Pr(B)−Pr(A∩B)')}</td><td></td></tr>
+</table></div>
+${say('dani', 'טוב, הבנתי. אבל עדיין לא ענית לי: כמה חומוס להזמין למשמרת הלילה?')}
+${say('noa', 'זה תלוי. בלילה הלקוחות מתנהגים אחרת. וכשאנחנו <b>יודעים משהו</b> על הלקוח, ההסתברויות משתנות. זה בדיוק הנושא של הפרק הבא: <b>הסתברות מותנית</b>. 🌙')}`
+  }
+  ]
+});
+})();
+
+</script>
+</body>
+</html>

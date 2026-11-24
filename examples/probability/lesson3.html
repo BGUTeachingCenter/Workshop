@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>חולצת המזל: אי-תלות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf5ea; --card:#fffdf8; --ink:#2a221c; --muted:#6e6255; --line:#e7dcc8;
+  --olive:#56732a; --olive-l:#eaf0dc; --chili:#c4351b; --chili-l:#fbe4dd;
+  --tahini:#f3e7cc; --pita:#b98443; --night:#26305a; --night-l:#e3e6f3;
+  --math:#6a3d9a; --math-l:#f1ebfa; --good:#2f7d3a; --good-l:#e3f3e5; --bad:#b3261e; --bad-l:#fbe6e4;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Rubik,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.7;direction:rtl;min-height:100vh;display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer;color:inherit}
+button:disabled{cursor:default}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:var(--night);color:#fff;padding:10px 16px;display:flex;gap:12px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;gap:10px;align-items:center;font-weight:500}
+.badge{background:var(--pita);color:#fff;border-radius:999px;padding:1px 12px;font-size:.85em;white-space:nowrap}
+.prog{display:flex;align-items:center;gap:10px;flex:1;min-width:180px;max-width:380px}
+.bar{flex:1;height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#f2b84b;transition:width .35s}
+.pc{font-size:.85em;opacity:.85;white-space:nowrap}
+.restart{background:none;border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:0 10px;font-size:.8em;color:#fff}
+
+main{flex:1;width:100%;max-width:880px;margin:0 auto;padding:22px 16px 120px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 30px;box-shadow:0 3px 0 var(--line);animation:fade .35s}
+.kicker{font-size:.85em;color:var(--muted);font-weight:500;letter-spacing:.02em}
+h2{margin:.1em 0 .5em;font-size:1.65em;line-height:1.3}
+h3{margin:1.2em 0 .3em;font-size:1.15em}
+p{margin:.5em 0}
+ul,ol{padding-inline-start:1.4em;margin:.4em 0}
+li{margin:.2em 0}
+
+/* nav */
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:5;background:rgba(250,245,234,.97);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;gap:10px}
+.navbar .hint{font-size:.85em;color:var(--muted);text-align:center;flex:1}
+.btn{background:var(--olive);color:#fff;border:0;border-radius:12px;padding:10px 22px;font-weight:500;white-space:nowrap}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:disabled{opacity:.35}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:6px 16px;font-size:.95em}
+
+/* math */
+.m{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Times New Roman",serif;color:var(--math);white-space:nowrap;font-size:1.1em;line-height:1.3}
+.m sub,.m sup{font-size:.7em}
+.mblock{text-align:center;margin:14px 0;font-size:1.3em;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.ov{text-decoration:overline}
+.big{font-size:1.4em;vertical-align:-.15em}
+
+/* characters */
+.say{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+.say .av{font-size:1.9em;line-height:1;flex:none;width:54px;height:54px;border-radius:50%;background:var(--tahini);display:grid;place-items:center}
+.say .bub{background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:8px 14px;flex:1}
+.say .who{font-weight:700;font-size:.8em;color:var(--muted);margin-bottom:2px}
+.say.noa .av{background:var(--olive-l)} .say.noa .bub{background:#fbfdf6}
+.say.kobi .av{background:#dfe9f7} .say.kobi .bub{background:#f7faff}
+.say.sigma .av{background:#efe3f7}
+
+/* boxes */
+.box{border-radius:12px;padding:12px 16px;margin:14px 0;border-inline-start:5px solid var(--line);background:#fff}
+.box-t{font-weight:700;margin-bottom:4px}
+.box.def{background:var(--math-l);border-color:var(--math)}
+.box.tip{background:var(--olive-l);border-color:var(--olive)}
+.box.warn{background:var(--chili-l);border-color:var(--chili)}
+.box.note{background:var(--tahini);border-color:var(--pita)}
+.goals{list-style:none;padding:0}
+.goals li{padding:4px 0 4px 0}
+.goals li::before{content:"✔";color:var(--olive);font-weight:700;margin-inline-end:8px}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;font-size:.95em;color:var(--muted);margin:6px 0}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:.97em}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
+.tbl th{background:var(--tahini);font-weight:500}
+.tbl td.c,.tbl th.c{text-align:center}
+.tblwrap{overflow-x:auto}
+.nest{display:flex;flex-direction:column;gap:6px;max-width:520px;margin:14px auto}
+.nest div{border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:#fff}
+.formula-card{border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:10px 0;background:#fff}
+.formula-card .mblock{margin:6px 0}
+
+/* activities */
+.activity{margin-top:20px;padding:18px;border:2px dashed #dccfb6;border-radius:14px;background:#fff}
+.activity .instr{font-weight:500;margin-bottom:8px}
+.q{font-weight:500;margin:6px 0}
+.opt{display:block;width:100%;text-align:start;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--olive)}
+.opt.right{background:var(--good-l);border-color:var(--good)}
+.opt.wrong{background:var(--bad-l);border-color:var(--bad)}
+.fb:empty{display:none}
+.fb{margin-top:10px;border-radius:10px;padding:10px 14px}
+.fb.good{background:var(--good-l)}
+.fb.bad{background:var(--bad-l)}
+.item-sep{border:0;border-top:1px solid var(--line);margin:18px 0}
+.row-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
+.chip{font-size:1.6em;min-width:80px;padding:8px 12px;border-radius:14px;border:2px solid var(--line);background:#fff;transition:transform .12s,background .12s}
+.chip.on{border-color:var(--olive);background:var(--olive-l);transform:translateY(-3px)}
+.setview{text-align:center;font-size:1.2em;margin:8px 0;min-height:1.6em}
+
+.cl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;background:#fff}
+.cl .txt{flex:1 1 260px}
+.cl .btns{display:flex;gap:6px;flex-wrap:wrap}
+.cl .btns button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:5px 14px}
+.cl .btns button:hover:not(:disabled){border-color:var(--olive)}
+.cl.ok{background:var(--good-l);border-color:var(--good)}
+.cl.ok .btns button.picked{background:var(--good);color:#fff;border-color:var(--good)}
+.cl .ex{flex-basis:100%;font-size:.94em}
+.cl .ex:empty{display:none}
+.cl.no{animation:shake .35s;border-color:var(--bad)}
+
+.tr{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0}
+.tr .txt{flex:1 1 280px}
+.tr select{font-size:1.05em;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);min-width:200px;direction:ltr;font-family:"Cambria Math","Times New Roman",serif;color:var(--math);background:#fff}
+.tr.ok{background:var(--good-l);border-color:var(--good)}
+.tr.no{background:var(--bad-l);border-color:var(--bad)}
+.tr .ex{flex-basis:100%;font-size:.93em}
+.tr .ex:empty{display:none}
+
+.num{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.num input{font:inherit;width:140px;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);direction:ltr;text-align:center}
+
+/* widgets */
+.seg{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 16px}
+.seg button.on{background:var(--night);color:#fff;border-color:var(--night)}
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:440px;margin:12px auto;direction:ltr}
+.cell{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;font-size:clamp(11px,3.2vw,19px);background:#fff3d9;border:1px solid #ecdcb9;transition:opacity .35s,filter .35s,transform .35s}
+.cell.night{background:var(--night);border-color:var(--night)}
+.cell.out{opacity:.1;filter:grayscale(1);transform:scale(.8)}
+.calc{background:var(--tahini);border-radius:12px;padding:12px 16px;text-align:center;margin-top:10px}
+.calc .mblock{font-size:1.15em;margin:6px 0}
+
+.sl{display:grid;grid-template-columns:minmax(150px,auto) 1fr 70px;gap:10px;align-items:center;margin:6px 0}
+.sl output{font-family:"Cambria Math","Times New Roman",serif;color:var(--math);text-align:center;direction:ltr;font-size:1.1em}
+input[type=range]{width:100%;accent-color:var(--olive)}
+.tree{width:100%;max-width:660px;display:block;margin:6px auto}
+.tree text{font-family:Rubik,Arial,sans-serif}
+
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.panel{border:1.5px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.panel.b{border-color:var(--night)}
+.panel .pt{font-weight:500;font-size:.92em;margin-bottom:6px}
+.dots{display:flex;flex-wrap:wrap;gap:3px;direction:ltr}
+.dot{width:15px;height:15px;border-radius:3px;background:#eadfc6}
+.dot.a{background:var(--chili)}
+.panel .pr{margin-top:8px;font-size:.95em}
+.status{text-align:center;font-weight:700;padding:10px;border-radius:10px;margin-top:12px}
+.status.yes{background:var(--good-l);color:var(--good)}
+.status.no{background:var(--bad-l);color:var(--bad)}
+
+.qhead{display:flex;justify-content:space-between;color:var(--muted);font-size:.9em}
+.score{font-size:2.2em;font-weight:700;text-align:center;color:var(--olive)}
+.reveal{display:none}
+.reveal.show{display:block;animation:fade .4s}
+
+.hub{display:grid;gap:14px}
+.hub a{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;box-shadow:0 3px 0 var(--line)}
+.hub a:hover{border-color:var(--olive)}
+.hub .n{color:var(--pita);font-weight:700;font-size:.9em}
+.hub h3{margin:.1em 0 .2em}
+
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+@media (max-width:620px){
+  body{font-size:16px}
+  .card{padding:18px 16px}
+  h2{font-size:1.35em}
+  .panels{grid-template-columns:1fr}
+  .sl{grid-template-columns:1fr 60px}
+  .sl label{grid-column:1/-1}
+  .mblock{font-size:1.1em}
+  .chip{min-width:64px;font-size:1.4em}
+  .say .av{width:44px;height:44px;font-size:1.5em}
+  .btn{padding:10px 16px}
+}
+.defs{display:flex;flex-wrap:wrap;gap:6px 28px;justify-content:center;margin:14px 0;font-size:1.05em}
+.m bdi{font-family:Rubik,Arial,sans-serif;font-size:.9em}
+.restart.admin.on{background:#f2b84b;color:#26305a;border-color:#f2b84b;font-weight:700}
+.tbl.rules tr.yes td,.tbl.rules tr.yes th{background:var(--good-l)}
+.tbl.rules tr.yes th{color:var(--good)}
+.tbl.rules tr.no td,.tbl.rules tr.no th{background:var(--bad-l)}
+.tbl.rules tr.no th{color:var(--bad)}
+.tbl.rules tr.no .m{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:2px}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="badge"></span><span class="ltitle"></span></div>
+  <div class="prog"><div class="bar"><i></i></div><span class="pc"></span><button class="restart admin" id="admin" title="מעבר חופשי בין מסכים בלי לענות על התרגולים"></button><button class="restart" id="restart" title="חזרה למסך הראשון">↺ מההתחלה</button></div>
+</header>
+<main id="stage" aria-live="polite"></main>
+<nav class="navbar">
+  <button class="btn ghost" id="prev">→ הקודם</button>
+  <span class="hint" id="gatehint"></span>
+  <button class="btn" id="next">הבא ←</button>
+</nav>
+<script>
+/* ===== Lomda engine: screens, activities, widgets, SCORM hook ===== */
+(function () {
+'use strict';
+
+/* ---------- content helpers (global, used by lesson files) ---------- */
+const CHARS = {
+  dani:  { name: 'דני, בעל הדוכן', emoji: '👨🏻‍🍳' },
+  noa:   { name: 'נועה, סטודנטית לחקר ביצועים', emoji: '👩🏽‍🎓' },
+  kobi:  { name: 'קובי, בן-דוד ויזם', emoji: '😎' },
+  sigma: { name: 'סיגמא, החתול של הדוכן', emoji: '🐈' }
+};
+/* Hebrew words inside a formula are isolated so the LTR formula keeps its order (e.g. Pr(A | B)) */
+const heb = s => String(s).replace(/[\u0590-\u05FF]+(?:[ \-][\u0590-\u05FF]+)*/g, w => '<bdi>' + w + '</bdi>');
+window.m   = s => '<span class="m">' + heb(s) + '</span>';
+window.mb  = s => '<div class="mblock"><span class="m">' + heb(s) + '</span></div>';
+window.defs = arr => '<div class="defs">' + arr.map(d => '<span>' + window.m(d[0] + ' =') + ' "' + d[1] + '"</span>').join('') + '</div>';
+window.ov  = s => '<span class="ov">' + s + '</span>';
+window.say = (who, t) => {
+  const c = CHARS[who];
+  return '<div class="say ' + who + '"><div class="av" aria-hidden="true">' + c.emoji +
+    '</div><div class="bub"><div class="who">' + c.name + '</div>' + t + '</div></div>';
+};
+window.box = (kind, title, html) =>
+  '<div class="box ' + kind + '">' + (title ? '<div class="box-t">' + title + '</div>' : '') + html + '</div>';
+
+/* ---------- utils ---------- */
+function h(tag, attrs, html) {
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (k === 'class') e.className = v;
+    else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+function shuffle(arr, seed) {
+  const a = arr.slice();
+  let s = seed || Math.floor(Math.random() * 1e9);
+  const rnd = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const fmt = (x, d) => String(+x.toFixed(d == null ? 3 : d));
+function parseNum(raw) {
+  let s = String(raw).trim().replace(/\s/g, '').replace(',', '.');
+  let pct = false;
+  if (s.endsWith('%')) { pct = true; s = s.slice(0, -1); }
+  let v;
+  if (s.includes('/')) { const p = s.split('/'); v = parseFloat(p[0]) / parseFloat(p[1]); }
+  else v = parseFloat(s);
+  if (!isFinite(v)) return NaN;
+  return pct ? v / 100 : v;
+}
+
+/* ---------- SCORM 1.2 / 2004 adapter (no-op outside an LMS) ---------- */
+const SCORM = {
+  api: null, v: null,
+  find() {
+    const scan = start => {
+      let w = start;
+      for (let n = 0; w && n < 12; n++) {
+        try {
+          if (w.API_1484_11) { this.api = w.API_1484_11; this.v = '2004'; return true; }
+          if (w.API) { this.api = w.API; this.v = '12'; return true; }
+        } catch (e) { /* cross-origin */ }
+        if (w.parent === w) break;
+        w = w.parent;
+      }
+      return false;
+    };
+    if (!scan(window)) { try { if (window.opener) scan(window.opener); } catch (e) {} }
+  },
+  init() {
+    this.find();
+    if (!this.api) return;
+    try { this.v === '2004' ? this.api.Initialize('') : this.api.LMSInitialize(''); } catch (e) { this.api = null; return; }
+    const st = this.v === '2004' ? this.get('', 'cmi.completion_status') : this.get('cmi.core.lesson_status', '');
+    if (st !== 'completed' && st !== 'passed') this.set('cmi.core.lesson_status', 'cmi.completion_status', 'incomplete');
+    this.set('cmi.core.exit', 'cmi.exit', 'suspend');
+  },
+  get(k12, k04) {
+    if (!this.api) return '';
+    try { return this.v === '2004' ? this.api.GetValue(k04) : this.api.LMSGetValue(k12); } catch (e) { return ''; }
+  },
+  set(k12, k04, val) {
+    if (!this.api) return;
+    try { this.v === '2004' ? this.api.SetValue(k04, String(val)) : this.api.LMSSetValue(k12, String(val)); } catch (e) {}
+  },
+  commit() { if (!this.api) return; try { this.v === '2004' ? this.api.Commit('') : this.api.LMSCommit(''); } catch (e) {} },
+  finish() {
+    if (!this.api) return;
+    try { this.commit(); this.v === '2004' ? this.api.Terminate('') : this.api.LMSFinish(''); } catch (e) {}
+    this.api = null;
+  },
+  location(i) { this.set('cmi.core.lesson_location', 'cmi.location', i); },
+  suspend(str) { this.set('cmi.suspend_data', 'cmi.suspend_data', str); this.commit(); },
+  score(pct) {
+    this.set('cmi.core.score.min', 'cmi.score.min', 0);
+    this.set('cmi.core.score.max', 'cmi.score.max', 100);
+    this.set('cmi.core.score.raw', 'cmi.score.raw', pct);
+    if (this.v === '2004') this.set('', 'cmi.score.scaled', (pct / 100).toFixed(2));
+    this.commit();
+  },
+  complete() {
+    this.set('cmi.core.lesson_status', 'cmi.completion_status', 'completed');
+    this.set('cmi.core.exit', 'cmi.exit', '');
+    this.commit();
+  }
+};
+
+/* ---------- activities ---------- */
+const ACT = {};
+
+/* Multiple choice. a = {q, options:[{t, ok, fb}]}  or  {items:[...]} */
+ACT.mcq = (box, a, done) => {
+  const items = a.items || [a];
+  let solved = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  items.forEach((it, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    box.append(h('div', { class: 'q' }, it.q));
+    const opts = h('div', { class: 'opts' });
+    const fb = h('div', { class: 'fb' });
+    (it.noShuffle ? it.options : shuffle(it.options)).forEach(o => {
+      const b = h('button', { class: 'opt' }, o.t);
+      b.onclick = () => {
+        fb.className = 'fb ' + (o.ok ? 'good' : 'bad');
+        fb.innerHTML = o.fb || (o.ok ? 'נכון! 🎉' : 'לא בדיוק — נסו שוב.');
+        if (o.ok) {
+          b.classList.add('right');
+          opts.querySelectorAll('.opt').forEach(x => x.disabled = true);
+          if (++solved === items.length) done();
+        } else b.classList.add('wrong');
+      };
+      opts.append(b);
+    });
+    box.append(opts, fb);
+  });
+};
+
+/* Build a subset of Ω by clicking outcomes. a = {omega:[{id,label}], tasks:[{prompt, answer:[ids], name, fb}]} */
+ACT.subset = (box, a, done) => {
+  let t = 0;
+  const sel = new Set();
+  const prompt = h('div', { class: 'q' });
+  const chips = h('div', { class: 'chips' });
+  const view = h('div', { class: 'setview' });
+  const fb = h('div', { class: 'fb' });
+  const btn = h('button', { class: 'btn' }, 'בדיקה');
+  const actions = h('div', { class: 'row-actions' }); actions.append(btn);
+  const chipEls = {};
+  a.omega.forEach(o => {
+    const c = h('button', { class: 'chip', 'aria-pressed': 'false' }, o.label);
+    c.onclick = () => {
+      if (btn.dataset.state === 'next') return;
+      sel.has(o.id) ? sel.delete(o.id) : sel.add(o.id);
+      c.classList.toggle('on'); c.setAttribute('aria-pressed', sel.has(o.id));
+      fb.className = 'fb'; fb.innerHTML = '';
+      showSet();
+    };
+    chipEls[o.id] = c; chips.append(c);
+  });
+  function showSet() {
+    const name = a.tasks[t].name || 'A';
+    const labels = a.omega.filter(o => sel.has(o.id)).map(o => o.label);
+    view.innerHTML = m(name + ' = ' + (labels.length ? '{' + labels.join(', ') + '}' : '∅'));
+  }
+  function load() {
+    sel.clear();
+    Object.values(chipEls).forEach(c => { c.classList.remove('on'); c.setAttribute('aria-pressed', 'false'); });
+    prompt.innerHTML = '<span style="color:var(--muted)">משימה ' + (t + 1) + ' מתוך ' + a.tasks.length + ':</span> ' + a.tasks[t].prompt;
+    fb.className = 'fb'; fb.innerHTML = '';
+    btn.textContent = 'בדיקה'; btn.dataset.state = 'check';
+    showSet();
+  }
+  btn.onclick = () => {
+    if (btn.dataset.state === 'next') { t++; load(); return; }
+    if (btn.dataset.state === 'done') return;
+    const ans = new Set(a.tasks[t].answer);
+    const extra = [...sel].filter(x => !ans.has(x)).length;
+    const missing = [...ans].filter(x => !sel.has(x)).length;
+    if (!extra && !missing) {
+      fb.className = 'fb good';
+      fb.innerHTML = '✔ מצוין! ' + (a.tasks[t].fb || '');
+      if (t < a.tasks.length - 1) { btn.textContent = 'למשימה הבאה'; btn.dataset.state = 'next'; }
+      else { btn.textContent = 'סיימתם את כל המשימות 🎉'; btn.dataset.state = 'done'; btn.disabled = true; done(); }
+    } else {
+      const parts = [];
+      if (extra) parts.push('יש ' + extra + ' תוצאות מיותרות');
+      if (missing) parts.push('חסרות ' + missing + ' תוצאות');
+      fb.className = 'fb bad';
+      fb.innerHTML = 'עוד לא. ' + parts.join(' ו') + '. שאלו את עצמכם לגבי כל תוצאה: "אם זה מה שהלקוח הזמין — האם התשובה היא כן?"';
+    }
+  };
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  box.append(prompt, chips, view, actions, fb);
+  load();
+};
+
+/* Classify statements. a = {labels:[..], items:[{t, ans (index), ex, hint}]} */
+ACT.classify = (box, a, done) => {
+  let ok = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  a.items.forEach(it => {
+    const row = h('div', { class: 'cl' });
+    const txt = h('div', { class: 'txt' }, it.t);
+    const btns = h('div', { class: 'btns' });
+    const ex = h('div', { class: 'ex' });
+    a.labels.forEach((lab, li) => {
+      const b = h('button', {}, lab);
+      b.onclick = () => {
+        if (li === it.ans) {
+          row.classList.remove('no'); row.classList.add('ok'); b.classList.add('picked');
+          btns.querySelectorAll('button').forEach(x => x.disabled = true);
+          ex.innerHTML = it.ex || '';
+          if (++ok === a.items.length) done();
+        } else {
+          row.classList.remove('no'); void row.offsetWidth; row.classList.add('no');
+          ex.innerHTML = '✗ ' + (it.hint || 'לא בדיוק — חשבו שוב.');
+        }
+      };
+      btns.append(b);
+    });
+    row.append(txt, btns, ex);
+    box.append(row);
+  });
+};
+
+/* Translate Hebrew to notation. a = {pool:[strings], items:[{t, ans, ex}]} */
+ACT.translate = (box, a, done) => {
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  const rows = a.items.map(it => {
+    const row = h('div', { class: 'tr' });
+    const sel = h('select', { 'aria-label': 'בחירת סימון' });
+    sel.append(h('option', { value: '' }, 'בחרו…'));
+    const pool = shuffle(a.pool.includes(it.ans) ? a.pool : a.pool.concat([it.ans]), 7);
+    pool.forEach(p => { const o = h('option', { value: p }); o.textContent = p; sel.append(o); });
+    const ex = h('div', { class: 'ex' });
+    sel.onchange = () => { row.classList.remove('ok', 'no'); ex.innerHTML = ''; };
+    row.append(h('div', { class: 'txt' }, it.t), sel, ex);
+    box.append(row);
+    return { row, sel, ex, it };
+  });
+  const fb = h('div', { class: 'fb' });
+  const btn = h('button', { class: 'btn' }, 'בדיקה');
+  const act = h('div', { class: 'row-actions' }); act.append(btn);
+  box.append(act, fb);
+  btn.onclick = () => {
+    let good = 0;
+    rows.forEach(r => {
+      const right = r.sel.value === r.it.ans;
+      r.row.classList.toggle('ok', right);
+      r.row.classList.toggle('no', !right);
+      r.ex.innerHTML = right ? (r.it.ex || '') : '';
+      if (right) { good++; r.sel.disabled = true; }
+    });
+    if (good === rows.length) { fb.className = 'fb good'; fb.innerHTML = '✔ כל התרגומים נכונים! ' + (a.fb || ''); btn.disabled = true; done(); }
+    else { fb.className = 'fb bad'; fb.innerHTML = good + ' מתוך ' + rows.length + ' נכונים. תקנו את השורות האדומות ובדקו שוב.'; }
+  };
+};
+
+/* Numeric answers. a = {items:[{q, answer, tol, hint, ex}]} */
+ACT.numeric = (box, a, done) => {
+  let solved = 0;
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  a.items.forEach((it, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    box.append(h('div', { class: 'q' }, it.q));
+    const wrap = h('div', { class: 'num' });
+    const inp = h('input', { type: 'text', inputmode: 'decimal', placeholder: 'למשל 0.25', 'aria-label': 'תשובה' });
+    const b = h('button', { class: 'btn small' }, 'בדיקה');
+    const fb = h('div', { class: 'fb' });
+    let tries = 0;
+    const check = () => {
+      const v = parseNum(inp.value);
+      if (isNaN(v)) { fb.className = 'fb bad'; fb.innerHTML = 'הקלידו מספר (אפשר גם שבר כמו 3/4 או אחוזים כמו 75%).'; return; }
+      if (Math.abs(v - it.answer) <= (it.tol || 0.005)) {
+        fb.className = 'fb good'; fb.innerHTML = '✔ נכון! ' + (it.ex || '');
+        inp.disabled = true; b.disabled = true;
+        if (++solved === a.items.length) done();
+      } else {
+        tries++;
+        fb.className = 'fb bad';
+        fb.innerHTML = 'לא בדיוק. ' + (tries >= 1 && it.hint ? '💡 ' + it.hint : '');
+        if (tries >= 3 && it.ex) {
+          fb.innerHTML += '<div style="margin-top:6px"><b>הפתרון:</b> ' + it.ex + '</div>';
+          inp.value = fmt(it.answer, 4);
+        }
+      }
+    };
+    b.onclick = check;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+    wrap.append(inp, b);
+    box.append(wrap, fb);
+  });
+};
+
+/* Final quiz: one attempt per question, scored. a = {items:[{q, options:[..], answer, ex}]} */
+ACT.quiz = (box, a, done, ctx) => {
+  let i = 0, score = 0;
+  const n = a.items.length;
+  const run = () => {
+    box.innerHTML = '';
+    if (i >= n) {
+      const pct = Math.round(100 * score / n);
+      box.append(h('div', { class: 'score' }, score + ' / ' + n));
+      const msg = pct === 100 ? 'מושלם! דני תולה את התמונה שלכם על הקיר של הדוכן 🏆'
+        : pct >= 70 ? 'יפה מאוד! אפשר לעבור לפרק הבא — ושווה להציץ שוב בשאלות שפספסתם.'
+        : 'שווה לחזור על המסכים הקודמים ולנסות שוב. גם נועה לא הבינה הכול בפעם הראשונה.';
+      box.append(h('p', { style: 'text-align:center' }, msg));
+      const again = h('button', { class: 'btn ghost' }, 'לנסות שוב את הבוחן');
+      again.onclick = () => { i = 0; score = 0; run(); };
+      const act = h('div', { class: 'row-actions' }); act.append(again); box.append(act);
+      ctx.reportScore(pct);
+      done();
+      return;
+    }
+    const it = a.items[i];
+    box.append(h('div', { class: 'qhead' }, '<span>שאלה ' + (i + 1) + ' מתוך ' + n + '</span><span>ניקוד: ' + score + '</span>'));
+    box.append(h('div', { class: 'q' }, it.q));
+    const opts = h('div');
+    const fb = h('div', { class: 'fb' });
+    const nextB = h('button', { class: 'btn', style: 'display:none' }, i < n - 1 ? 'לשאלה הבאה' : 'לתוצאות');
+    nextB.onclick = () => { i++; run(); };
+    const order = shuffle(it.options.map((t, k) => ({ t, k })));
+    order.forEach(o => {
+      const b = h('button', { class: 'opt' }, o.t);
+      b.onclick = () => {
+        const right = o.k === it.answer;
+        if (right) score++;
+        opts.querySelectorAll('.opt').forEach((x, xi) => {
+          x.disabled = true;
+          if (order[xi].k === it.answer) x.classList.add('right');
+        });
+        if (!right) b.classList.add('wrong');
+        fb.className = 'fb ' + (right ? 'good' : 'bad');
+        fb.innerHTML = (right ? '✔ נכון! ' : '✗ לא נכון. ') + (it.ex || '');
+        nextB.style.display = '';
+      };
+      opts.append(b);
+    });
+    const act = h('div', { class: 'row-actions' }); act.append(nextB);
+    box.append(opts, fb, act);
+  };
+  run();
+};
+
+/* Custom widgets */
+ACT.widget = (box, a, done) => WIDGETS[a.name](box, a, done);
+const WIDGETS = {};
+
+/* 100 customers: conditional probability by "shrinking the world" */
+WIDGETS.condGrid = (box, a, done) => {
+  const nAB = 30, nB = 40, nA = 42;
+  const types = [];
+  for (let i = 0; i < 100; i++) {
+    const inB = i < nB, inA = i < nAB || (i >= nB && i < nB + (nA - nAB));
+    types.push({ A: inA, B: inB });
+  }
+  const cells = shuffle(types, 20261106);
+  box.append(h('div', { class: 'instr' }, 'כל משבצת = לקוח אחד מאתמול. לחצו על הכפתורים וצפו מה קורה לעולם.'));
+  box.append(h('div', { class: 'legend' },
+    '<span><span style="display:inline-block;width:14px;height:14px;background:var(--night);border-radius:3px;vertical-align:-2px"></span> הגיע אחרי חצות (' + m('B') + ')</span>' +
+    '<span><span style="display:inline-block;width:14px;height:14px;background:#fff3d9;border:1px solid #ecdcb9;border-radius:3px;vertical-align:-2px"></span> הגיע לפני חצות</span>' +
+    '<span>🌶️ ביקש חריף כפול (' + m('A') + ')</span><span>🙂 לא ביקש</span>'));
+  const seg = h('div', { class: 'seg' });
+  const grid = h('div', { class: 'grid100', role: 'img', 'aria-label': '100 לקוחות' });
+  const els = cells.map(c => {
+    const e = h('div', { class: 'cell' + (c.B ? ' night' : '') }, c.A ? '🌶️' : '🙂');
+    grid.append(e); return e;
+  });
+  const calc = h('div', { class: 'calc' });
+  const seen = new Set();
+  const modes = {
+    all: { label: 'כל הלקוחות (' + 'Ω' + ')', keep: () => true,
+      html: () => 'בוחרים לקוח אקראי מבין 100 הלקוחות. כל לקוח באותו סיכוי.' +
+        mb('Pr(A) = |A| / |Ω| = 42 / 100 = 0.42') + mb('Pr(B) = 0.40 ,   Pr(A ∩ B) = 0.30') },
+    B: { label: 'בהינתן B: רק לקוחות לילה', keep: c => c.B,
+      html: () => 'יודעים שהלקוח הגיע אחרי חצות ⇐ <b>העולם הצטמצם ל-40 לקוחות</b>. מתוכם 30 ביקשו חריף כפול.' +
+        mb('Pr(A | B) = |A ∩ B| / |B| = 30 / 40 = 0.75') + mb('= Pr(A ∩ B) / Pr(B) = 0.30 / 0.40') },
+    A: { label: 'בהינתן A: רק מבקשי חריף כפול', keep: c => c.A,
+      html: () => 'עכשיו יודעים שהלקוח ביקש חריף כפול ⇐ העולם הוא 42 לקוחות. כמה מהם לילה?' +
+        mb('Pr(B | A) = |A ∩ B| / |A| = 30 / 42 ≈ 0.714') + '<div>שימו לב: זה <b>לא</b> אותו מספר כמו ' + m('Pr(A | B)') + '!</div>' }
+  };
+  const btns = {};
+  Object.keys(modes).forEach(k => {
+    const b = h('button', {}, modes[k].label);
+    b.onclick = () => set(k);
+    btns[k] = b; seg.append(b);
+  });
+  function set(k) {
+    Object.keys(btns).forEach(x => btns[x].classList.toggle('on', x === k));
+    els.forEach((e, i) => e.classList.toggle('out', !modes[k].keep(cells[i])));
+    calc.innerHTML = modes[k].html();
+    seen.add(k);
+    if (seen.has('A') && seen.has('B')) done();
+  }
+  box.append(seg, grid, calc);
+  set('all');
+};
+
+/* Probability tree for total probability */
+WIDGETS.tree = (box, a, done) => {
+  const st = { p: 0.7, q1: 0.10, q2: 0.02 };
+  box.append(h('div', { class: 'instr' }, 'הזיזו את המחוונים וצפו איך ' + m('Pr(A)') + ' מורכב משני ענפים.'));
+  const sliders = h('div');
+  const mk = (key, label, min, max, step) => {
+    const row = h('div', { class: 'sl' });
+    const id = 'sl-' + key;
+    const lab = h('label', { for: id }, label);
+    const inp = h('input', { type: 'range', id, min, max, step, value: st[key] });
+    const out = h('output', {}, fmt(st[key], 2));
+    inp.oninput = () => { st[key] = +inp.value; out.textContent = fmt(st[key], 2); draw(); };
+    row.append(lab, inp, out); sliders.append(row);
+  };
+  mk('p', 'פיתות מהדוד: ' + m('Pr(B)'), 0.05, 0.95, 0.05);
+  mk('q1', 'קרועות אצל הדוד: ' + m('Pr(A | B)'), 0, 0.5, 0.01);
+  mk('q2', 'קרועות בגורמה: ' + m('Pr(A | B̄)'), 0, 0.5, 0.01);
+  const svgWrap = h('div');
+  const calc = h('div', { class: 'calc' });
+  box.append(sliders, svgWrap, calc);
+  function draw() {
+    const { p, q1, q2 } = st;
+    const ink = '#2a221c', chili = '#c4351b', muted = '#6e6255', math = '#6a3d9a';
+    const node = (x, y, t, col) => '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-size="16" font-weight="500" fill="' + (col || ink) + '">' + t + '</text>';
+    const edge = (x1, y1, x2, y2, lab, w) => {
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#b9a989" stroke-width="' + (1.5 + 6 * w) + '" stroke-linecap="round"/>' +
+        '<rect x="' + (mx - 30) + '" y="' + (my - 13) + '" width="60" height="24" rx="8" fill="#fffdf8" stroke="#e7dcc8"/>' +
+        '<text x="' + mx + '" y="' + (my + 5) + '" text-anchor="middle" font-size="14" fill="' + math + '">' + fmt(lab, 2) + '</text>';
+    };
+    const leaf = (x, t, val, hot) => node(x, 262, t, hot ? chili : ink) +
+      '<text x="' + x + '" y="286" text-anchor="middle" font-size="15" fill="' + (hot ? chili : muted) + '" font-weight="' + (hot ? 700 : 400) + '">' + fmt(val, 3) + '</text>';
+    svgWrap.innerHTML = '<svg class="tree" viewBox="0 0 640 300" role="img" aria-label="עץ הסתברות">' +
+      node(320, 24, '🫓 פיתה אקראית') +
+      edge(320, 34, 165, 120, p, p) + edge(320, 34, 475, 120, 1 - p, 1 - p) +
+      node(165, 140, 'מאפיית הדוד (B)') + node(475, 140, 'מאפיית הגורמה (B̄)') +
+      edge(165, 150, 85, 240, q1, q1) + edge(165, 150, 245, 240, 1 - q1, 1 - q1) +
+      edge(475, 150, 395, 240, q2, q2) + edge(475, 150, 555, 240, 1 - q2, 1 - q2) +
+      leaf(85, 'קרועה (A)', p * q1, true) + leaf(245, 'שלמה', p * (1 - q1)) +
+      leaf(395, 'קרועה (A)', (1 - p) * q2, true) + leaf(555, 'שלמה', (1 - p) * (1 - q2)) +
+      '</svg>';
+    const tot = p * q1 + (1 - p) * q2;
+    calc.innerHTML = 'מכפילים לאורך כל ענף, ומחברים את הענפים שמסתיימים ב-A:' +
+      mb('Pr(A) = Pr(B)·Pr(A | B) + Pr(B̄)·Pr(A | B̄)') +
+      mb('= ' + fmt(p, 2) + '·' + fmt(q1, 2) + ' + ' + fmt(1 - p, 2) + '·' + fmt(q2, 2) + ' = <b>' + fmt(tot, 4) + '</b>');
+  }
+  draw();
+  done();
+};
+
+/* Independence from data: for each case the student decides whether A depends on B.
+   a = {aLabel, cases:[{icon, name, nB, kB, nA, ans:'indep'|'dep', fb}]}
+   nB = days with B (out of 100), kB = good days among them, nA = good days overall. */
+WIDGETS.indepCases = (box, a, done) => {
+  if (a.instr) box.append(h('div', { class: 'instr' }, a.instr));
+  box.append(h('div', { class: 'legend' }, '<span>כל ריבוע = יום אחד מתוך 100</span><span><span class="dot a" style="display:inline-block;vertical-align:-2px"></span> ' + a.aLabel + '</span>'));
+  const dots = (n, red) => { let s = ''; for (let i = 0; i < n; i++) s += '<span class="dot' + (i < red ? ' a' : '') + '"></span>'; return s; };
+  let solved = 0;
+  a.cases.forEach((c, idx) => {
+    if (idx) box.append(h('hr', { class: 'item-sep' }));
+    const nN = 100 - c.nB, kN = c.nA - c.kB;
+    box.append(h('div', { class: 'q' }, c.icon + ' <b>' + c.name + '</b>'));
+    const panels = h('div', { class: 'panels' });
+    panels.append(
+      h('div', { class: 'panel b' }, '<div class="pt">' + c.icon + ' ימים עם ' + c.short + ' (' + m('B') + '): ' + c.nB + ' ימים</div><div class="dots">' + dots(c.nB, c.kB) + '</div><div class="pr">' + c.kB + ' ימים טובים מתוך ' + c.nB + '</div>'),
+      h('div', { class: 'panel' }, '<div class="pt">ימים בלי ' + c.short + ' (' + m(ov('B')) + '): ' + nN + ' ימים</div><div class="dots">' + dots(nN, kN) + '</div><div class="pr">' + kN + ' ימים טובים מתוך ' + nN + '</div>'));
+    const row = h('div', { class: 'row-actions' });
+    const fb = h('div', { class: 'fb' });
+    const btns = [['indep', 'בלתי תלויים'], ['dep', 'תלויים']].map(([k, label]) => {
+      const b = h('button', { class: 'btn ghost small' }, label);
+      b.onclick = () => {
+        const prod = (c.nA / 100) * (c.nB / 100), inter = c.kB / 100;
+        const calc = mb('Pr(A)·Pr(B) = ' + fmt(c.nA / 100, 2) + '·' + fmt(c.nB / 100, 2) + ' = ' + fmt(prod, 4) +
+            (c.ans === 'indep' ? '  =  ' : '  ≠  ') + fmt(inter, 2) + ' = Pr(A ∩ B)') +
+          mb('Pr(A | B) = ' + c.kB + '/' + c.nB + ' = ' + fmt(c.kB / c.nB, 2)) +
+          mb('Pr(A | ' + ov('B') + ') = ' + kN + '/' + nN + ' = ' + fmt(kN / nN, 2));
+        if (k === c.ans) {
+          fb.className = 'fb good'; fb.innerHTML = '✔ ' + c.fb + calc;
+          btns.forEach(x => x.disabled = true); b.classList.remove('ghost');
+          if (++solved === a.cases.length) done();
+        } else {
+          fb.className = 'fb bad';
+          fb.innerHTML = 'לא בדיוק. השוו את <b>אחוז</b> הימים הטובים בשתי הקופסאות, ולא את המספר שלהם.';
+        }
+      };
+      row.append(b); return b;
+    });
+    box.append(panels, row, fb);
+  });
+};
+
+/* ---------- player ---------- */
+let L, cur = 0, doneSet = new Set(), review = false, stage, nextB, prevB, hint, barI, pc;
+
+function storeKey() { return 'lomda-' + L.id; }
+function save() {
+  const data = JSON.stringify({ cur, done: [...doneSet] });
+  SCORM.location(cur);
+  SCORM.suspend(data);
+  try { localStorage.setItem(storeKey(), data); } catch (e) {}
+}
+function load() {
+  let raw = SCORM.get('cmi.suspend_data', 'cmi.suspend_data');
+  if (!raw) { try { raw = localStorage.getItem(storeKey()); } catch (e) {} }
+  if (!raw) return;
+  try { const d = JSON.parse(raw); cur = Math.min(d.cur || 0, L.screens.length - 1); doneSet = new Set(d.done || []); } catch (e) {}
+}
+function canNext() {
+  const s = L.screens[cur];
+  return review || !s.activity || s.activity.optional || doneSet.has(cur);
+}
+function updateNav() {
+  const n = L.screens.length;
+  prevB.disabled = cur === 0;
+  const last = cur === n - 1;
+  nextB.textContent = last ? 'סיום ✓' : 'הבא ←';
+  nextB.disabled = !canNext() || (last && !L.nextHref);
+  if (last && L.nextHref) nextB.textContent = L.nextLabel || 'לפרק הבא ←';
+  hint.textContent = canNext() ? '' : 'השלימו את התרגול כדי להמשיך';
+  barI.style.width = (100 * (cur + 1) / n) + '%';
+  pc.textContent = 'מסך ' + (cur + 1) + ' מתוך ' + n;
+}
+function render(i) {
+  cur = i;
+  const s = L.screens[i];
+  stage.innerHTML = '';
+  const card = h('article', { class: 'card t-' + (s.type || 'concept') });
+  const kick = { story: '📖 סיפור', concept: '💡 מושג', activity: '🎯 תרגול', quiz: '🏁 בוחן סיום', summary: '📋 סיכום' }[s.type] || '';
+  card.append(h('div', { class: 'kicker' }, kick));
+  card.append(h('h2', {}, s.title));
+  if (s.html) card.append(h('div', { class: 'body' }, s.html));
+  let rev = null;
+  if (s.reveal) rev = h('div', { class: 'body reveal' + (doneSet.has(i) ? ' show' : '') }, s.reveal);
+  if (s.activity) {
+    const a = h('div', { class: 'activity' });
+    card.append(a);
+    ACT[s.activity.kind](a, s.activity, () => {
+      doneSet.add(i); if (rev) rev.classList.add('show'); updateNav(); save();
+    }, { reportScore: pct => SCORM.score(pct) });
+  }
+  if (s.after) card.append(h('div', { class: 'body' }, s.after));
+  if (rev) card.append(rev);
+  stage.append(card);
+  updateNav();
+  window.scrollTo(0, 0);
+  if (i === L.screens.length - 1) { doneSet.add(i); SCORM.complete(); }
+  save();
+}
+
+window.Lomda = {
+  start(lesson) {
+    L = lesson;
+    review = /[?&]review=1/.test(location.search);
+    try { if (localStorage.getItem('lomda-admin') === '1') review = true; } catch (e) {}
+    const adminB = document.getElementById('admin');
+    const paintAdmin = () => { adminB.classList.toggle('on', review); adminB.textContent = review ? '🔓 מצב מנהל: פעיל' : '🔑 מנהל'; };
+    adminB.onclick = () => {
+      review = !review;
+      try { localStorage.setItem('lomda-admin', review ? '1' : '0'); } catch (e) {}
+      paintAdmin(); updateNav();
+    };
+    paintAdmin();
+    document.title = L.title;
+    document.querySelector('.badge').textContent = L.badge;
+    document.querySelector('.ltitle').textContent = L.title;
+    stage = document.getElementById('stage');
+    nextB = document.getElementById('next');
+    prevB = document.getElementById('prev');
+    hint = document.getElementById('gatehint');
+    barI = document.querySelector('.bar i');
+    pc = document.querySelector('.pc');
+    SCORM.init();
+    load();
+    nextB.onclick = () => {
+      if (!canNext()) return;
+      if (cur < L.screens.length - 1) render(cur + 1);
+      else if (L.nextHref) location.href = L.nextHref;
+    };
+    prevB.onclick = () => { if (cur > 0) render(cur - 1); };
+    document.getElementById('restart').onclick = () => { doneSet = new Set(); render(0); };
+    window.addEventListener('beforeunload', () => SCORM.finish());
+    window.addEventListener('pagehide', () => SCORM.finish());
+    render(cur);
+  }
+};
+})();
+
+</script>
+<script>
+/* פרק 3: אי-תלות */
+(function () {
+const Bb = ov('B'), Ab = ov('A');
+const coinRow = (o, a, b, c) => `<tr><td class="c">${m(o)}</td><td class="c">${a ? '✔' : ''}</td><td class="c">${b ? '✔' : ''}</td><td class="c">${c ? '✔' : ''}</td></tr>`;
+
+Lomda.start({
+  id: 'prob-3',
+  badge: 'פרק 3',
+  title: 'חולצת המזל: אי-תלות',
+  nextHref: 'index.html',
+  nextLabel: 'לתפריט הפרקים ←',
+  screens: [
+
+  /* 1 */
+  { type: 'story', title: 'אמונות טפלות בדוכן',
+    html: `
+${say('dani', 'זאת <b>חולצת המזל</b> שלי 👕. כשאני לובש אותה, המכירות טובות יותר. מדע.')}
+${say('sigma', 'מיאו. (תרגום: גם כשאני יושב על הדלפק, הפיתות לא נקרעות. אין קשר. בכלל.)')}
+${say('noa', 'יש לנו שתי טענות על <b>קשר</b> בין מאורעות. במתמטיקה, "אין קשר" נקרא <b>אי-תלות</b>. בואו נבדוק את שתי הטענות כמו שצריך.')}
+${box('note', 'בסוף הפרק הזה תדעו:', `<ul class="goals">
+<li>מה זה אומר ששני מאורעות <b>בלתי תלויים</b>, באינטואיציה ובכתיב</li>
+<li>למה ההגדרה הרשמית היא ${m('Pr(A ∩ B) = Pr(A)·Pr(B)')}, ולא דרך הסתברות מותנית</li>
+<li>להבדיל בין <b>זרים</b> לבין <b>בלתי תלויים</b> (רמז: כמעט הפוכים)</li>
+<li>מתי <b>אוסף</b> של מאורעות הוא בלתי תלוי, ולמה אי-תלות בזוגות לא מספיקה</li></ul>`)}`
+  },
+
+  /* 2 */
+  { type: 'concept', title: 'מה זה "אין קשר"?',
+    html: `
+<p><b>אינטואיציה:</b> A ו-B בלתי תלויים אם <b>הידיעה ש-B קרה לא משנה את הסיכוי ל-A</b>.</p>
+${mb('Pr(A | B) = Pr(A)')}
+<p>אם החולצה לא משפיעה, אז הסיכוי ליום טוב <i>עם</i> החולצה זהה לסיכוי ליום טוב באופן כללי.</p>
+<p>נציב את ההגדרה של הסתברות מותנית:</p>
+${mb('Pr(A ∩ B) / Pr(B) = Pr(A)    ⟺    Pr(A ∩ B) = Pr(A) · Pr(B)')}
+${box('def', 'הגדרה: אי-תלות של זוג מאורעות', `נאמר כי זוג מאורעות ${m('A, B ∈ ℱ')} הם <b>בלתי תלויים</b> אם ${mb('Pr(A ∩ B) = Pr(A) · Pr(B)')}`)}
+<h3>שתי דרכים לכתוב את אותו רעיון</h3>
+<div class="tblwrap"><table class="tbl">
+<tr><th class="c">${m('Pr(A | B) = Pr(A)')}</th><th class="c">${m('Pr(A ∩ B) = Pr(A) · Pr(B)')}</th></tr>
+<tr><td>הניסוח האינטואיטיבי: עוזר <b>להבין</b> מה זה אי-תלות</td><td><b>ההגדרה.</b> זה מה שכותבים ובודקים בתרגילים ובמבחן</td></tr>
+</table></div>
+<p>כש-${m('Pr(B) > 0')}, שתי השורות אומרות בדיוק את אותו הדבר. ובכל זאת כדאי לעבוד עם המכפלה, משתי סיבות:</p>
+<ul>
+<li><b>בדיקה אחת עובדת לשני הכיוונים.</b> ב-${m('Pr(A ∩ B) = Pr(A) · Pr(B)')} ל-A ול-B יש אותו תפקיד. לכן אם הראיתם שהחולצה לא משנה את הסיכוי למכירות טובות, הראיתם גם שהמכירות לא "מגלות" שום דבר על החולצה: ${m('Pr(B | A) = Pr(B)')}. לא צריך לבדוק פעמיים.</li>
+<li><b>אין חלוקה.</b> אין צורך לוודא קודם ש-${m('Pr(B) > 0')}, כי לא מחלקים בו.</li>
+</ul>`
+  },
+
+  /* 3 */
+  { type: 'activity', title: 'מה באמת משפיע על המכירות?',
+    html: `
+${say('dani', 'זה לא רק החולצה. יש לי עוד תיאוריות: גשם מבריח לקוחות, ביום חמישי כולם רעבים, כשאני שר הלקוחות נהנים יותר, ובירח מלא… אתם יודעים.')}
+${say('noa', 'יש לי נתונים מ-100 ימי עבודה. בכל יום סימנתי אם המכירות היו טובות. בואו נבדוק כל תיאוריה בנפרד.')}
+<p>בכל התיאוריות ${m('A')} = "יום עם מכירות טובות". היו 50 ימים כאלה, כלומר ${m('Pr(A) = 0.5')}. מה שמשתנה הוא ${m('B')}.</p>`,
+    activity: { kind: 'widget', name: 'indepCases', aLabel: 'יום עם מכירות טובות (' + m('A') + ')',
+      instr: '🎯 לכל תיאוריה: האם המכירות הטובות <b>תלויות</b> ב-B? רמז: השוו את <b>אחוז</b> הריבועים האדומים בשתי הקופסאות.',
+      cases: [
+        { icon: '🌧️', name: 'B = "ירד גשם"', short: 'גשם', nB: 30, kB: 6, nA: 50, ans: 'dep',
+          fb: 'תלויים. בימי גשם רק 20% מהימים טובים, ובשאר הימים בערך 63%. הגשם באמת מבריח לקוחות.' },
+        { icon: '🎤', name: 'B = "דני שר בזמן העבודה"', short: 'שירה', nB: 60, kB: 30, nA: 50, ans: 'indep',
+          fb: 'בלתי תלויים. 50% ימים טובים עם שירה וגם בלעדיה. ב-60 ימי השירה יש יותר ימים טובים (30 מול 20), אבל רק כי יש יותר ימי שירה. ה<b>אחוז</b> זהה.' },
+        { icon: '📅', name: 'B = "יום חמישי"', short: 'יום חמישי', nB: 20, kB: 16, nA: 50, ans: 'dep',
+          fb: 'תלויים. ביום חמישי 80% מהימים טובים, ובשאר הימים בערך 43%. דני צדק, ביום חמישי כולם רעבים.' },
+        { icon: '🌕', name: 'B = "ירח מלא"', short: 'ירח מלא', nB: 10, kB: 5, nA: 50, ans: 'indep',
+          fb: 'בלתי תלויים. 5 מתוך 10 ו-45 מתוך 90: בשני המקרים 50%. לירח אין השפעה על הפלאפל.' }
+      ] },
+    reveal: box('tip', 'מה ראינו?', `אי-תלות פירושה ש<b>אחוז</b> הימים הטובים זהה כש-B קורה וכשהוא לא קורה: ${m('Pr(A | B) = Pr(A | ' + Bb + ') = Pr(A)')}. המספר הגולמי של הימים הטובים יכול להיות שונה, כמו בשירה. ובדיוק באותם מקרים מתקיימת גם ההגדרה ${m('Pr(A ∩ B) = Pr(A)·Pr(B)')}, כמו שראיתם בחישוב מתחת לכל תיאוריה.`)
+  },
+
+  /* 4 */
+  { type: 'activity', title: 'בודקים את הטענות',
+    html: `<p>אחרי חודשים של מעקב, נועה מציגה את הנתונים.</p>`,
+    activity: { kind: 'mcq', items: [
+      { q: '👕 <b>החולצה:</b> ' + m('Pr(חולצה) = 0.4') + ', ' + m('Pr(מכירות טובות) = 0.5') + ', ' + m('Pr(חולצה ∩ מכירות טובות) = 0.2') + '. מה המסקנה?', options: [
+        { t: 'בלתי תלויים: החולצה לא משפיעה', ok: true, fb: m('0.4 · 0.5 = 0.2') + ', בדיוק החיתוך. ' + m('Pr(טובות | חולצה) = 0.2/0.4 = 0.5 = Pr(טובות)') + '. סליחה דני, זו סתם חולצה.' },
+        { t: 'תלויים: החולצה מעלה את המכירות', fb: 'בדקו: מה זה ' + m('Pr(חולצה)·Pr(טובות)') + '?' },
+        { t: 'תלויים: החולצה מורידה את המכירות', fb: 'בדקו: מה זה ' + m('Pr(חולצה)·Pr(טובות)') + '?' }
+      ] },
+      { q: '🐈 <b>החתול:</b> ' + m('Pr(סיגמא על הדלפק) = 0.2') + ', ' + m('Pr(פיתה קרועה) = 0.1') + ', ' + m('Pr(שניהם) = 0.08') + '. מה המסקנה?', options: [
+        { t: 'בלתי תלויים: סיגמא חף מפשע', fb: 'אם היו בלתי תלויים, החיתוך היה ' + m('0.2 · 0.1 = 0.02') + '. אבל הוא 0.08.' },
+        { t: 'תלויים: כשסיגמא על הדלפק, הסיכוי לפיתה קרועה גבוה פי 4', ok: true, fb: m('Pr(קרועה | סיגמא) = 0.08/0.2 = 0.4') + ', לעומת ' + m('Pr(קרועה) = 0.1') + '. סיגמא כנראה יושב <i>על</i> הפיתות. 🐾' },
+        { t: 'אי אפשר לדעת בלי ' + m('Pr(קרועה | סיגמא)'), fb: 'אפשר! יש מספיק נתונים: משווים את ' + m('Pr(A∩B)') + ' ל-' + m('Pr(A)Pr(B)') + '.' }
+      ] }
+    ] },
+    reveal: say('sigma', 'מיאו. (תרגום: אני דורש עורך דין.)')
+  },
+
+  /* 5 */
+  { type: 'activity', title: 'זרים ≠ בלתי תלויים',
+    html: `
+${say('dani', 'טוב, אבל "פיתה" ו"לאפה" בטוח בלתי תלויים. אין ביניהם שום קשר! אחד בפיתה, אחד בלאפה.')}
+${say('noa', 'דני, הם <b>זרים</b>: לקוח לא יכול להזמין את שניהם. ואם אני יודעת שהלקוח הזמין פיתה, מה הסיכוי שהוא הזמין לאפה?')}
+${say('dani', 'אפס… אה.')}`,
+    activity: { kind: 'mcq', q: 'נניח ' + m('A ∩ B = ∅') + ', ' + m('Pr(A) = 0.5') + ', ' + m('Pr(B) = 0.3') + '. האם A ו-B בלתי תלויים?', options: [
+      { t: 'כן, כי אין ביניהם חפיפה', fb: 'זה הבלבול הקלאסי. בדקו את ההגדרה: ' + m('Pr(A ∩ B) = ?') + ' ומה זה ' + m('Pr(A)·Pr(B)') + '?' },
+      { t: 'לא: ' + m('Pr(A ∩ B) = 0 ≠ 0.15 = Pr(A)·Pr(B)'), ok: true, fb: 'נכון! מאורעות זרים (עם הסתברויות חיוביות) הם <b>תלויים מאוד</b>: הידיעה שאחד קרה אומרת בוודאות שהשני לא קרה. ' + m('Pr(B | A) = 0 ≠ 0.3') + '.' },
+      { t: 'אי אפשר לדעת', fb: 'יש מספיק מידע. הציבו בהגדרה.' }
+    ] },
+    reveal: box('warn', 'לזכור', `<b>זרות</b> (${m('A ∩ B = ∅')}) היא תכונה של ה<b>קבוצות</b>, ואפשר לראות אותה בציור. <b>אי-תלות</b> (${m('Pr(A∩B) = Pr(A)Pr(B)')}) היא תכונה של <b>ההסתברויות</b>, ואי אפשר לבדוק אותה בלי מספרים. אם ${m('Pr(A), Pr(B) > 0')}, מאורעות זרים לעולם אינם בלתי תלויים.`)
+  },
+
+  /* 6 */
+  { type: 'concept', title: 'יותר משני מאורעות',
+    html: `
+<p>נועה רוצה לבדוק שלוש אמונות טפלות ביחד: החולצה (A), החתול (B), והגשם (C). מתי שלושתם "בלי שום קשר"?</p>
+${box('def', 'הגדרה: אי-תלות של אוסף', `נאמר כי אוסף מאורעות ${m('{A<sub>i</sub> | i ∈ I}')} הוא <b>בלתי תלוי</b> אם <b>לכל תת-קבוצה סופית</b> ${m('J ⊆ I')} מתקיים
+${mb('Pr( <span class="big">⋂</span><sub>i∈J</sub> A<sub>i</sub> ) = <span class="big">∏</span><sub>i∈J</sub> Pr(A<sub>i</sub>)')}`)}
+<p><b>במילים:</b> לא משנה איזה צירוף של מאורעות תבחרו, ההסתברות שכולם יקרו היא מכפלת ההסתברויות.</p>
+<h3>מה זה אומר עבור A, B, C?</h3>
+<p>צריך לבדוק <b>ארבע</b> משוואות:</p>
+${mb('Pr(A∩B) = Pr(A)Pr(B)')}
+${mb('Pr(A∩C) = Pr(A)Pr(C)')}
+${mb('Pr(B∩C) = Pr(B)Pr(C)')}
+${mb('Pr(A∩B∩C) = Pr(A)Pr(B)Pr(C)')}
+<p style="color:var(--muted);font-size:.93em">(תת-קבוצות עם איבר אחד נותנות משוואה טריוויאלית, ${m('Pr(A) = Pr(A)')}. באופן כללי, ל-n מאורעות יש ${m('2<sup>n</sup> − n − 1')} משוואות לבדוק.)</p>
+${say('dani', 'ארבע משוואות? אם כל זוג בלתי תלוי, ברור שגם השלושה ביחד. לא?')}
+${say('noa', 'ממש לא. אני אראה לך במטבע.')}`
+  },
+
+  /* 7 */
+  { type: 'activity', title: 'מי מנקה את המטגנת? 🪙🪙',
+    html: `
+<p>דני ונועה מטילים כל אחד מטבע הוגן (ע = עץ, פ = פלי), כדי להחליט מי מנקה את המטגנת. ארבע התוצאות שוות-הסתברות (כל אחת ${m('1/4')}). הזוג הוא ${m('(דני, נועה)')}.</p>
+${defs([['A', 'לדני יצא עץ'], ['B', 'לנועה יצא עץ'], ['C', 'יצאה אותה תוצאה לשניהם']])}
+<div class="tblwrap"><table class="tbl" style="max-width:520px;margin:10px auto">
+<tr><th class="c">תוצאה</th><th class="c">A</th><th class="c">B</th><th class="c">C</th></tr>
+${coinRow('(ע, ע)', 1, 1, 1)}${coinRow('(ע, פ)', 1, 0, 0)}${coinRow('(פ, ע)', 0, 1, 0)}${coinRow('(פ, פ)', 0, 0, 1)}
+</table></div>
+<p>לכל אחד מהמאורעות יש שתי תוצאות, ולכן ${m('Pr(A) = Pr(B) = Pr(C) = 1/2')}.</p>`,
+    activity: { kind: 'mcq', items: [
+      { q: 'מהו ' + m('Pr(A ∩ C)') + '? והאם A ו-C בלתי תלויים?', options: [
+        { t: m('1/4') + ', ושווה ל-' + m('1/2 · 1/2') + ', ולכן כן', ok: true, fb: 'נכון. החיתוך הוא רק ' + m('(ע, ע)') + '. באותו אופן גם A ו-B, וגם B ו-C, בלתי תלויים. כל <b>זוג</b> בלתי תלוי!' },
+        { t: m('1/2') + ', ולכן לא', fb: 'ספרו בטבלה: באילו שורות יש ✔ גם ב-A וגם ב-C?' },
+        { t: m('0') + ', ולכן לא', fb: 'ספרו בטבלה: יש שורה עם ✔ גם ב-A וגם ב-C.' }
+      ] },
+      { q: 'ועכשיו לשלושה: מהו ' + m('Pr(A ∩ B ∩ C)') + '? האם האוסף ' + m('{A, B, C}') + ' בלתי תלוי?', options: [
+        { t: m('1/8') + ', ולכן כן', fb: 'ספרו בטבלה: באיזו שורה יש שלושה ✔?' },
+        { t: m('1/4 ≠ 1/8 = Pr(A)Pr(B)Pr(C)') + ', ולכן לא', ok: true, fb: '<b>בדיוק.</b> האוסף <b>אינו</b> בלתי תלוי, למרות שכל זוג בלתי תלוי. אינטואיציה: אם יודעים מה קרה ב-A וב-B, C נקבע לגמרי (אם לשניהם יצא עץ, ודאי יצא אותו דבר).' },
+        { t: m('0') + ', ולכן לא', fb: 'יש שורה עם שלושה ✔.' }
+      ] }
+    ] },
+    reveal: box('warn', 'המסקנה', `<b>אי-תלות בזוגות ⇏ אי-תלות של האוסף.</b> לכן ההגדרה דורשת את המכפלה עבור <b>כל</b> תת-קבוצה סופית ${m('J')}. ולהפך: גם המשוואה של השלישייה לבדה לא מספיקה, ובודקים את כולן.`)
+  },
+
+  /* 8 */
+  { type: 'activity', title: 'תרגמו לכתיב',
+    html: `<p>בחרו את הכתיב המתאים לכל משפט.</p>`,
+    activity: { kind: 'translate',
+      pool: ['Pr(A ∩ B) = Pr(A)·Pr(B)', 'Pr(A | B) = Pr(A)', 'A ∩ B = ∅', 'Pr(A ∪ B) = Pr(A) + Pr(B)', 'Pr(A ∩ B) = Pr(A | B)·Pr(B)', 'Pr(A ∩ B ∩ C) = Pr(A)·Pr(B)·Pr(C)', 'Pr(A | B) > Pr(A)'],
+      items: [
+        { t: 'A ו-B בלתי תלויים (לפי ההגדרה)', ans: 'Pr(A ∩ B) = Pr(A)·Pr(B)' },
+        { t: 'הידיעה ש-B קרה לא משנה את הסיכוי ל-A', ans: 'Pr(A | B) = Pr(A)' },
+        { t: 'A ו-B לא יכולים לקרות יחד', ans: 'A ∩ B = ∅' },
+        { t: 'כש-B קורה, A נעשה סביר יותר', ans: 'Pr(A | B) > Pr(A)', ex: 'זו תלות "חיובית", כמו סיגמא והפיתות.' },
+        { t: 'כלל הכפל (נכון תמיד, גם בלי אי-תלות)', ans: 'Pr(A ∩ B) = Pr(A | B)·Pr(B)' },
+        { t: 'החיבור הפשוט שמותר כשהמאורעות זרים', ans: 'Pr(A ∪ B) = Pr(A) + Pr(B)' }
+      ] }
+  },
+
+  /* 9 */
+  { type: 'activity', title: 'נכון או שגוי?',
+    html: '',
+    activity: { kind: 'classify', labels: ['נכון', 'שגוי'], items: [
+      { t: 'אם ' + m('A ∩ B = ∅') + ' אז A ו-B בלתי תלויים', ans: 1, ex: 'שגוי (אלא אם אחד מהם בהסתברות 0). זרים = תלויים מאוד.' },
+      { t: 'כל מאורע A בלתי תלוי ב-' + m('Ω'), ans: 0, ex: 'נכון: ' + m('Pr(A ∩ Ω) = Pr(A) = Pr(A) · 1 = Pr(A)·Pr(Ω)') + '. לדעת ש"משהו קרה" זה לא מידע.' },
+      { t: 'אם A ו-B בלתי תלויים, אז גם A ו-' + Bb + ' בלתי תלויים', ans: 0, ex: 'נכון: ' + m('Pr(A ∩ ' + Bb + ') = Pr(A) − Pr(A ∩ B) = Pr(A) − Pr(A)Pr(B) = Pr(A)(1 − Pr(B)) = Pr(A)Pr(' + Bb + ')') + '.' },
+      { t: 'אם כל זוג מתוך A, B, C בלתי תלוי, אז האוסף ' + m('{A, B, C}') + ' בלתי תלוי', ans: 1, ex: 'שגוי: ראינו את דוגמת המטבעות.' },
+      { t: 'אם A ו-B בלתי תלויים ו-' + m('Pr(B) > 0') + ', אז ' + m('Pr(A | B) = Pr(A)'), ans: 0, ex: 'נכון: ' + m('Pr(A|B) = Pr(A)Pr(B)/Pr(B) = Pr(A)') + '.' },
+      { t: 'כדי לבדוק אי-תלות, מספיק להסתכל בדיאגרמת ון', ans: 1, ex: 'שגוי: אי-תלות תלויה ב<b>מספרים</b>, כלומר בפונקציה Pr, ולא רק בצורת הקבוצות.' }
+    ] }
+  },
+
+  /* 10 */
+  { type: 'quiz', title: 'בוחן סיום: פרק 3',
+    html: `<p>6 שאלות, ניסיון אחד לכל שאלה.</p>`,
+    activity: { kind: 'quiz', items: [
+      { q: 'A ו-B בלתי תלויים, ' + m('Pr(A) = 0.3') + ', ' + m('Pr(B) = 0.6') + '. מהו ' + m('Pr(A ∩ B)') + '?', options: ['0.18', '0.9', '0', '0.5'], answer: 0,
+        ex: m('0.3 · 0.6 = 0.18') },
+      { q: 'A ו-B בלתי תלויים, ' + m('Pr(A) = 0.3') + ', ' + m('Pr(B) = 0.6') + '. מהו ' + m('Pr(A ∪ B)') + '?', options: ['0.72', '0.9', '0.18', '0.82'], answer: 0,
+        ex: 'הכלה והדחה: ' + m('0.3 + 0.6 − 0.18 = 0.72') + '. (אפשר גם דרך המשלים: ' + m('1 − 0.7·0.4 = 0.72') + '.)' },
+      { q: m('Pr(A) = 0.5') + ', ' + m('Pr(B) = 0.4') + ', ' + m('Pr(A ∩ B) = 0.3') + '. מה נכון?', options: ['A ו-B תלויים, ו-' + m('Pr(A|B) = 0.75'), 'A ו-B בלתי תלויים', 'A ו-B זרים', 'A ו-B תלויים, ו-' + m('Pr(A|B) = 0.3')], answer: 0,
+        ex: m('0.5·0.4 = 0.2 ≠ 0.3') + ', ולכן הם תלויים. ' + m('Pr(A|B) = 0.3/0.4 = 0.75') + '.' },
+      { q: 'מאורעות A, B עם ' + m('Pr(A), Pr(B) > 0') + ' ו-' + m('A ∩ B = ∅') + '. מה נכון בוודאות?', options: ['הם תלויים', 'הם בלתי תלויים', m('Pr(A) + Pr(B) = 1'), m('Pr(A|B) = Pr(A)')], answer: 0,
+        ex: m('Pr(A∩B) = 0 < Pr(A)Pr(B)') + '.' },
+      { q: 'כמה משוואות (לא טריוויאליות) צריך לבדוק כדי להראות שאוסף של 3 מאורעות הוא בלתי תלוי?', options: ['4', '3', '1', '8'], answer: 0,
+        ex: 'שלושה זוגות ועוד השלישייה: ' + m('2³ − 3 − 1 = 4') + '.' },
+      { q: 'מטילים קובייה הוגנת. A = "יצא זוגי", B = "יצא 1 או 2". האם הם בלתי תלויים?', options: ['כן', 'לא, כי ' + m('Pr(A∩B) = 1/6 ≠ 1/2 · 1/3'), 'לא, כי הם זרים', 'אי אפשר לדעת'], answer: 0,
+        ex: m('A ∩ B = {2}') + ', ולכן ' + m('Pr(A∩B) = 1/6') + '. גם ' + m('Pr(A)Pr(B) = 1/2 · 1/3 = 1/6') + '. בלתי תלויים! (מפתיע? אחד מכל שניים ב-B הוא זוגי, בדיוק כמו בכל הקובייה.)' }
+    ] }
+  },
+
+  /* 11 */
+  { type: 'summary', title: 'דף עזר: פרק 3',
+    html: `
+<div class="tblwrap"><table class="tbl">
+<tr><th>מושג</th><th class="c">כתיב</th><th>במילים</th></tr>
+<tr><td>זוג בלתי תלוי</td><td class="c">${m('Pr(A ∩ B) = Pr(A)·Pr(B)')}</td><td>ההגדרה הרשמית: סימטרית ותמיד מוגדרת</td></tr>
+<tr><td>אינטואיציה</td><td class="c">${m('Pr(A | B) = Pr(A)')}<br>(כאשר ${m('Pr(B) > 0')})</td><td>הידיעה על B לא משנה את הסיכוי ל-A</td></tr>
+<tr><td>אוסף בלתי תלוי</td><td class="c">${m('Pr(⋂<sub>i∈J</sub> A<sub>i</sub>) = ∏<sub>i∈J</sub> Pr(A<sub>i</sub>)')}<br>לכל ${m('J ⊆ I')} סופית</td><td>כל צירוף, לא רק זוגות</td></tr>
+<tr><td>משלים</td><td class="c">${m('A, B')} ב"ת ${m('⟹')} ${m('A, ' + Bb)} ב"ת</td><td></td></tr>
+</table></div>
+${box('warn', 'שלוש מלכודות', `<ul style="margin:0"><li><b>זרים ≠ בלתי תלויים.</b> אם ההסתברויות חיוביות, זרים הם תמיד תלויים.</li><li>אי-תלות בזוגות לא מבטיחה אי-תלות של האוסף</li><li>אי-תלות היא תכונה של המספרים (Pr), לא של הציור</li></ul>`)}
+${say('dani', 'טוב. החולצה הולכת לכביסה. וסיגמא, אתה מורחק מהדלפק.')}
+${say('sigma', 'מיאו. (תרגום: זה תלוי.)')}
+${say('noa', 'עכשיו יש לכם את כל אבני הבסיס: <b>מרחב הסתברות, מאורעות, הסתברות מותנית ואי-תלות</b>. כל המודלים הסטוכסטיים בקורס בנויים מהן. בהצלחה! 🎓')}`
+  }
+  ]
+});
+})();
+
+</script>
+</body>
+</html>
