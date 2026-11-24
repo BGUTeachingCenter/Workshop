@@ -55,7 +55,10 @@ export async function unitView(unitId) {
     : `${eyebrow}<h1>${unit.title}</h1>${unit.lead ? `<p class="lead">${unit.lead}</p>` : ""}`;
   card.append(header);
 
-  if (showSlides) card.append(renderSlides(unit.slides));
+  // בשקף האחרון: "הבא" ממשיך ליחידה הבאה (או חוזר למסע בסוף).
+  if (showSlides) card.append(renderSlides(unit.slides, next
+    ? { label: "ליחידה הבאה", go: () => navigate("/unit/" + next.id) }
+    : { label: "חזרה למסע", go: () => navigate("/workshop") }));
 
   // המנחה חושף/ת את ההנחיה למשתתפים ישירות מהיחידה (מתחת לשקפים, מעל ההנחיה).
   if (user.role === "admin") {

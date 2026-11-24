@@ -1,5 +1,6 @@
 // קונטיינר שקפים (מצגת) לראש היחידה. מכיל שקף אחד או יותר, עם ניווט ביניהם.
 // כל שקף: { title, body }  (body = HTML - פסקאות, רשימות, הדגשות).
+// end (לא חובה): { label, go } - בשקף האחרון כפתור "הבא" הופך לכפתור הזה (למשל "ליחידה הבאה").
 const el = (tag, cls, html) => {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -7,14 +8,14 @@ const el = (tag, cls, html) => {
   return n;
 };
 
-export function renderSlides(slides) {
+export function renderSlides(slides, end) {
   const wrap = el("section", "slides");
   wrap.setAttribute("aria-roledescription", "מצגת");
   const stage = el("div", "slide-stage");
   wrap.append(stage);
 
   let cur = 0;
-  const multi = slides.length > 1;
+  const multi = slides.length > 1 || !!end;
 
   const draw = () => {
     const s = slides[cur];
@@ -39,11 +40,14 @@ export function renderSlides(slides) {
       counter.textContent = `${cur + 1} / ${slides.length}`;
       dotEls.forEach((d, i) => d.classList.toggle("active", i === cur));
       prev.disabled = cur === 0;
-      next.disabled = cur === slides.length - 1;
+      const last = cur === slides.length - 1;
+      next.classList.toggle("end", last && !!end);
+      next.textContent = last && end ? end.label : "הבא";
+      next.disabled = last && !end;
     };
     function go(i) { cur = Math.min(Math.max(i, 0), slides.length - 1); draw(); sync(); }
     prev.addEventListener("click", () => go(cur - 1));
-    next.addEventListener("click", () => go(cur + 1));
+    next.addEventListener("click", () => (cur === slides.length - 1 && end ? end.go() : go(cur + 1)));
 
     footer.append(prev, dots, counter, next);
     wrap.append(footer);

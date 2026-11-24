@@ -273,6 +273,8 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .slide-nav { background: none; border: 1px solid var(--border-strong); border-radius: 999px; padding: 7px 16px; font: inherit; font-weight: 600; font-size: .9rem; color: var(--heading); cursor: pointer; }
 .slide-nav:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }
 .slide-nav:disabled { opacity: .4; cursor: default; }
+.slide-nav.end { background: var(--accent); border-color: var(--accent); color: #fff; }
+.slide-nav.end:hover { background: var(--accent-deep); color: #fff; }
 .slide-dots { display: flex; gap: 7px; margin-inline-start: auto; }
 .slide-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; background: var(--border-strong); cursor: pointer; padding: 0; }
 .slide-dot.active { background: var(--accent); }
