@@ -194,7 +194,7 @@ input[type=range]{width:100%;accent-color:var(--olive)}
 .tbl.rules tr.no .m{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:2px}
 
 </style>
-</head>
+<style>#admin{display:none!important}</style></head>
 <body>
 <header class="top">
   <div class="brand"><span class="badge"></span><span class="ltitle"></span></div>
@@ -763,7 +763,7 @@ window.Lomda = {
   start(lesson) {
     L = lesson;
     review = /[?&]review=1/.test(location.search);
-    try { if (localStorage.getItem('lomda-admin') === '1') review = true; } catch (e) {}
+    
     const adminB = document.getElementById('admin');
     const paintAdmin = () => { adminB.classList.toggle('on', review); adminB.textContent = review ? '🔓 מצב מנהל: פעיל' : '🔑 מנהל'; };
     adminB.onclick = () => {
@@ -814,7 +814,7 @@ Lomda.start({
   id: 'prob-1',
   badge: 'פרק 1',
   title: 'דוכן Ω: כל מה שיכול לקרות',
-  nextHref: 'lesson2.html',
+  
   screens: [
 
   /* 1 */

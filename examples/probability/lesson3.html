@@ -194,7 +194,7 @@ input[type=range]{width:100%;accent-color:var(--olive)}
 .tbl.rules tr.no .m{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:2px}
 
 </style>
-</head>
+<style>#admin{display:none!important}</style></head>
 <body>
 <header class="top">
   <div class="brand"><span class="badge"></span><span class="ltitle"></span></div>
@@ -763,7 +763,7 @@ window.Lomda = {
   start(lesson) {
     L = lesson;
     review = /[?&]review=1/.test(location.search);
-    try { if (localStorage.getItem('lomda-admin') === '1') review = true; } catch (e) {}
+    
     const adminB = document.getElementById('admin');
     const paintAdmin = () => { adminB.classList.toggle('on', review); adminB.textContent = review ? '🔓 מצב מנהל: פעיל' : '🔑 מנהל'; };
     adminB.onclick = () => {
@@ -808,7 +808,7 @@ Lomda.start({
   id: 'prob-3',
   badge: 'פרק 3',
   title: 'חולצת המזל: אי-תלות',
-  nextHref: 'index.html',
+  
   nextLabel: 'לתפריט הפרקים ←',
   screens: [
 
@@ -1002,7 +1002,7 @@ ${coinRow('(ע, ע)', 1, 1, 1)}${coinRow('(ע, פ)', 1, 0, 0)}${coinRow('(פ, ע
 ${box('warn', 'שלוש מלכודות', `<ul style="margin:0"><li><b>זרים ≠ בלתי תלויים.</b> אם ההסתברויות חיוביות, זרים הם תמיד תלויים.</li><li>אי-תלות בזוגות לא מבטיחה אי-תלות של האוסף</li><li>אי-תלות היא תכונה של המספרים (Pr), לא של הציור</li></ul>`)}
 ${say('dani', 'טוב. החולצה הולכת לכביסה. וסיגמא, אתה מורחק מהדלפק.')}
 ${say('sigma', 'מיאו. (תרגום: זה תלוי.)')}
-${say('noa', 'עכשיו יש לכם את כל אבני הבסיס: <b>מרחב הסתברות, מאורעות, הסתברות מותנית ואי-תלות</b>. כל המודלים הסטוכסטיים בקורס בנויים מהן. בהצלחה! 🎓')}`
+${say('noa', 'עכשיו יש לכם את כל אבני הבסיס: <b>מרחב הסתברות, מאורעות, הסתברות מותנית ואי-תלות</b>. כל מה שנלמד בהמשך הקורס בנוי מהן. בהצלחה! 🎓')}`
   }
   ]
 });
