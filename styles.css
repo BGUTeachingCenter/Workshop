@@ -207,6 +207,7 @@ button.unit-row-inner:hover { border-color: var(--accent); border-inline-start-c
 .b-recall blockquote.empty { color: var(--muted); font-weight: 400; }
 .b-prompt-box, .b-code { }
 .b-note { margin-top: 8px; font-size: .86rem; color: var(--muted); }
+.b-note.b-filled { color: var(--ok); font-weight: 600; }
 .codebox { position: relative; background: #2c2a28; border-radius: var(--radius); overflow: hidden; }
 .codebox pre { margin: 0; padding: 48px 20px 20px; color: #f4efe8; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: .9rem; line-height: 1.6; white-space: pre-wrap; text-align: start; overflow-x: auto; }
 .copy-btn { position: absolute; inset-block-start: 10px; inset-inline-start: 10px; background: rgba(255,255,255,.12); color: #fff; border: 0; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }

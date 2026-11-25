@@ -65,10 +65,18 @@ const renderers = {
     return n;
   },
 
-  prompt: (b) => {
+  // fill (לא חובה): { "[טקסט במקום]": "<מזהה תשובה>" } - משלים את הפרומפט ממה שנכתב ביחידות קודמות.
+  // תשובה ריקה משאירה את הסוגריים המרובעים, כך שאפשר להשלים ידנית.
+  prompt: (b, ctx) => {
     const n = el("div", "b-prompt-box");
     n.append(el("span", "b-label", b.label || "פְּרוֹמְפְּט ל־AI"));
-    n.append(copyable(b.code));
+    let code = b.code, filled = 0;
+    Object.entries(b.fill || {}).forEach(([slot, id]) => {
+      const ans = String(ctx?.getAnswer?.(id) || "").replace(/\s+/g, " ").trim().replace(/[.。]+$/, "");
+      if (ans && code.includes(slot)) { code = code.split(slot).join(ans); filled++; }
+    });
+    n.append(copyable(code));
+    if (filled) n.append(el("p", "b-note b-filled", "✓ השלמנו את הפרומפט ממה שכתבת ביחידות הקודמות. אפשר לערוך אותו אחרי ההעתקה."));
     if (b.note) n.append(el("p", "b-note", b.note));
     return n;
   },
