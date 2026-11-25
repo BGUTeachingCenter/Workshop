@@ -14,7 +14,7 @@
 //
 // מבנה Firestore:
 //   users/{uid}      { name, email, role, createdAt, lastSeen, groups: [<groupId>] }
-//   workshop/config  { openUnits: { <unitId>: bool }, activeGroup: <groupId> }
+//   workshop/config  { openUnits: { <unitId>: bool }, activeGroup: <groupId>, groupOpen: { <groupId>: { <unitId>: bool } } }  ← ראו app/openmap.js
 //   groups/{gid}     { name, createdAt }              ← רק מנחה קורא וכותב
 //   progress/{uid}   { answers: {}, checks: {} }      ← הבעלים כותב; מנחה קורא
 //
@@ -23,6 +23,8 @@
 // העברה בין קבוצות נעשית ידנית בלוח הניהול.
 
 import { firebaseConfig, WORKSHOP_PASSWORD, ADMIN_EMAILS } from "../config.js";
+import { openMapFor, startGroup } from "../openmap.js";
+import { allUnits } from "../../content/index.js";
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
@@ -68,7 +70,7 @@ async function resolveUser(fbUser) {
       email: fbUser.email, role, createdAt: Date.now(), lastSeen: Date.now(), groups: group ? [group] : [],
     };
     await setDoc(ref, rec);
-    return { uid: fbUser.uid, ...rec };
+    return { uid: fbUser.uid, ...rec, group: rec.groups[0] || null };
   }
   const data = snap.data();
   const groups = Array.isArray(data.groups) ? data.groups : [];
@@ -76,7 +78,7 @@ async function resolveUser(fbUser) {
   if (data.role !== role) patch.role = data.role = role;
   if (group && groups.length === 0) patch.groups = [group]; // שיוך פעם אחת: לקבוצה שפעילה בכניסה הראשונה
   await setDoc(ref, patch, { merge: true });
-  return { uid: fbUser.uid, name: data.name, email: fbUser.email, role: data.role };
+  return { uid: fbUser.uid, name: data.name, email: fbUser.email, role: data.role, group: (patch.groups || groups)[0] || null };
 }
 
 function friendly(err) {
@@ -187,22 +189,27 @@ export const data = {
     const snap = await getDoc(doc(db, "workshop", "config"));
     return snap.exists() ? { openUnits: {}, ...snap.data() } : { openUnits: {} };
   },
-  async setUnitOpen(unitId, open) {
-    await setDoc(doc(db, "workshop", "config"), { openUnits: { [unitId]: !!open } }, { merge: true });
+  // changes = { <unitId>: bool }. עם groupId - למפה של הקבוצה (שמתחילה מהמפה הכללית אם עוד אין לה).
+  async setOpen(changes, groupId) {
+    const ref = doc(db, "workshop", "config");
+    if (!groupId) return setDoc(ref, { openUnits: changes }, { merge: true });
+    const base = openMapFor(await this.getConfig(), groupId);
+    await setDoc(ref, { groupOpen: { [groupId]: { ...base, ...changes } } }, { merge: true });
   },
-  async setAllUnitsOpen(unitIds, open) {
-    const openUnits = Object.fromEntries(unitIds.map((id) => [id, !!open]));
-    await setDoc(doc(db, "workshop", "config"), { openUnits }, { merge: true });
-  },
+  async setUnitOpen(unitId, open, groupId) { return this.setOpen({ [unitId]: !!open }, groupId); },
+  async setAllUnitsOpen(unitIds, open, groupId) { return this.setOpen(Object.fromEntries(unitIds.map((id) => [id, !!open])), groupId); },
   async listGroups() {
     const qs = await getDocs(collection(db, "groups"));
     return qs.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   },
-  // קבוצה חדשה הופכת לפעילה (אלא אם activate:false). מחזיר את המזהה שלה.
+  // קבוצה חדשה הופכת לפעילה (אלא אם activate:false) ומתחילה כשהכול סגור; הקבוצה הקודמת שומרת את מה שנפתח לה.
   async createGroup(name, { activate = true } = {}) {
     const id = "g" + Date.now().toString(36);
     await setDoc(doc(db, "groups", id), { name, createdAt: Date.now() });
-    if (activate) await setDoc(doc(db, "workshop", "config"), { activeGroup: id }, { merge: true });
+    if (activate) {
+      const patch = startGroup(await this.getConfig(), id, allUnits.map((u) => u.id));
+      await setDoc(doc(db, "workshop", "config"), patch, { merge: true });
+    }
     return id;
   },
   // העברה ידנית של משתתפים לקבוצה אחת (מחליפה כל שיוך קודם). דורש הרשאת מנחה לעדכן users.

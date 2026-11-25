@@ -3,6 +3,7 @@ import { auth, data } from "../api.js";
 import { meetings } from "../../content/index.js";
 import { navigate } from "../router.js";
 import { applyMeetingAccent } from "../colors.js";
+import { openMapFor, groupOf } from "../openmap.js";
 
 const unitTouched = (unit, progress) =>
   unit.blocks.some((b) => (b.id && progress.answers[b.id]) ||
@@ -11,7 +12,8 @@ const unitTouched = (unit, progress) =>
 export async function workshopView() {
   const user = auth.current();
   const [config, progress] = await Promise.all([data.getConfig(), data.getProgress(user.uid)]);
-  const isOpen = (id) => !!config.openUnits[id];
+  const openMap = openMapFor(config, user.role === "admin" ? config.activeGroup : groupOf(user));
+  const isOpen = (id) => !!openMap[id];
 
   const openCount = meetings.flatMap((m) => m.units).filter((u) => isOpen(u.id)).length;
   const totalCount = meetings.flatMap((m) => m.units).length;

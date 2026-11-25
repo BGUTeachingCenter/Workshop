@@ -6,6 +6,7 @@ import { renderSlides } from "../render/slides.js";
 import { renderGlossary } from "../render/glossary.js";
 import { navigate } from "../router.js";
 import { applyMeetingAccent } from "../colors.js";
+import { openMapFor, groupOf, applyOpen } from "../openmap.js";
 
 export async function unitView(unitId) {
   const user = auth.current();
@@ -15,7 +16,9 @@ export async function unitView(unitId) {
   wrap.className = "unit";
 
   if (!unit) { wrap.innerHTML = `<div class="notice">היחידה לא נמצאה.</div>`; return wrap; }
-  if (user.role !== "admin" && !config.openUnits[unit.id]) {
+  // המשתתף/ת רואה את המצב של הקבוצה שלו/ה; המנחה - של הקבוצה הפעילה.
+  const openMap = openMapFor(config, user.role === "admin" ? config.activeGroup : groupOf(user));
+  if (user.role !== "admin" && !openMap[unit.id]) {
     wrap.innerHTML = `<div class="notice locked"><strong>היחידה עדיין נעולה</strong><p>היא תיפתח בהמשך המפגש, בהנחיית המנחה.</p>
       <button class="text-btn" type="button" onclick="location.hash='#/workshop'">→ חזרה למסע</button></div>`;
     return wrap;
@@ -36,7 +39,7 @@ export async function unitView(unitId) {
   };
 
   // המנחה מנווט/ת על כל היחידות; משתתפ/ת רק על הפתוחות.
-  const navUnits = user.role === "admin" ? allUnits : allUnits.filter((u) => config.openUnits[u.id]);
+  const navUnits = user.role === "admin" ? allUnits : allUnits.filter((u) => openMap[u.id]);
   const idx = navUnits.findIndex((u) => u.id === unit.id);
   const prev = navUnits[idx - 1];
   const next = navUnits[idx + 1];
@@ -62,7 +65,7 @@ export async function unitView(unitId) {
 
   // המנחה חושף/ת את ההנחיה למשתתפים ישירות מהיחידה (מתחת לשקפים, מעל ההנחיה).
   if (user.role === "admin") {
-    let open = !!config.openUnits[unit.id];
+    let open = !!openMap[unit.id];
     const toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "reveal-toggle";
@@ -74,8 +77,8 @@ export async function unitView(unitId) {
     paint();
     toggle.addEventListener("click", async () => {
       open = !open; paint();
-      await data.setUnitOpen(unit.id, open);
-      config.openUnits[unit.id] = open;
+      await data.setUnitOpen(unit.id, open, config.activeGroup);
+      applyOpen(config, config.activeGroup, { [unit.id]: open });
     });
     card.append(toggle);
   }

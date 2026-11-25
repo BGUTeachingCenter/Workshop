@@ -2,6 +2,7 @@
 import { data } from "../api.js";
 import { meetings, checkCatalog, unitCheckStatus } from "../../content/index.js";
 import { applyMeetingAccent } from "../colors.js";
+import { openMapFor, applyOpen, startGroup } from "../openmap.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const when = (t) => t ? new Date(t).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
@@ -86,6 +87,7 @@ export async function adminView() {
   }
 
   let selected = config.activeGroup || ALL;
+  const allIds = meetings.flatMap((m) => m.units.map((u) => u.id));
 
   function renderGroups() {
     const active = groups.find((g) => g.id === config.activeGroup);
@@ -105,14 +107,9 @@ export async function adminView() {
       try {
         const id = await data.createGroup(name);
         groups.unshift({ id, name, createdAt: Date.now() });
-        config.activeGroup = id; selected = id;
-        if (confirm(`הקבוצה "${name}" נפתחה והיא הפעילה עכשיו.\nלסגור את כל היחידות, כדי שהקבוצה תתחיל מההתחלה?`)) {
-          const ids = meetings.flatMap((m) => m.units.map((u) => u.id));
-          await data.setAllUnitsOpen(ids, false);
-          ids.forEach((u) => { config.openUnits[u] = false; });
-          wrap.querySelectorAll(".switch").forEach((t) => { t.classList.remove("on"); t.setAttribute("aria-checked", "false"); });
-        }
-        renderGroups(); renderTracking();
+        startGroup(config, id, allIds); selected = id;
+        alert(`הקבוצה "${name}" נפתחה והיא הפעילה עכשיו. כל היחידות סגורות לה.\nהקבוצות הקודמות שומרות על מה שנפתח להן.`);
+        renderGroups(); renderTracking(); renderGates();
       } catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
       finally { add.disabled = false; }
     });
@@ -134,7 +131,7 @@ export async function adminView() {
       act.type = "button"; act.textContent = "הפיכה לקבוצה הפעילה";
       act.addEventListener("click", async () => {
         act.disabled = true;
-        try { await data.setActiveGroup(selected); config.activeGroup = selected; renderGroups(); }
+        try { await data.setActiveGroup(selected); config.activeGroup = selected; renderGroups(); renderGates(); }
         catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); act.disabled = false; }
       });
       row.append(act);
@@ -145,7 +142,7 @@ export async function adminView() {
       stop.title = "כניסות חדשות לא יצורפו לאף קבוצה";
       stop.addEventListener("click", async () => {
         if (!confirm("לסיים את הקבוצה הפעילה? מי שכבר נכנסו יישארו ברשימה שלה; כניסות חדשות לא יצורפו לאף קבוצה.")) return;
-        try { await data.setActiveGroup(null); config.activeGroup = null; renderGroups(); }
+        try { await data.setActiveGroup(null); config.activeGroup = null; renderGroups(); renderGates(); }
         catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
       });
       row.append(stop);
@@ -273,59 +270,72 @@ export async function adminView() {
   renderTracking();
   renderStaff();
 
-  // --- פתיחה/סגירה של כל היחידות בבת אחת ---
-  const allIds = meetings.flatMap((m) => m.units.map((u) => u.id));
-  const bulk = document.createElement("div");
-  bulk.className = "admin-bulk";
-  [[true, "פתיחת כל היחידות"], [false, "סגירת כל היחידות"]].forEach(([open, label]) => {
-    const btn = document.createElement("button");
-    btn.type = "button"; btn.textContent = label;
-    btn.addEventListener("click", async () => {
-      if (!confirm(`${open ? "לפתוח" : "לסגור"} את כל ${allIds.length} היחידות למשתתפים?`)) return;
-      btn.disabled = true;
-      try {
-        await data.setAllUnitsOpen(allIds, open);
-        allIds.forEach((id) => { config.openUnits[id] = open; });
-        wrap.querySelectorAll(".switch").forEach((t) => { t.classList.toggle("on", open); t.setAttribute("aria-checked", String(open)); });
-      } catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
-      finally { btn.disabled = false; }
-    });
-    bulk.append(btn);
-  });
-  wrap.append(bulk);
-
-  // --- שליטה בפתיחת יחידות ---
-  meetings.forEach((m) => {
-    const sec = document.createElement("section");
-    sec.className = "admin-block";
-    sec.innerHTML = `<h2>${m.subtitle} · ${m.title}</h2>`;
-    const list = document.createElement("ul");
-    list.className = "gate-list";
-    m.units.forEach((u, i) => {
-      const li = document.createElement("li");
-      const on = !!config.openUnits[u.id];
-      li.innerHTML = `<span class="gate-num">${String(i+1).padStart(2,"0")}</span>
-        <span class="gate-title">${u.title}</span>`;
-      const toggle = document.createElement("button");
-      toggle.type = "button";
-      toggle.className = "switch" + (on ? " on" : "");
-      toggle.setAttribute("role", "switch");
-      toggle.setAttribute("aria-checked", String(on));
-      toggle.setAttribute("aria-label", `פתיחת ${u.title}`);
-      toggle.innerHTML = `<span class="knob"></span>`;
-      toggle.addEventListener("click", async () => {
-        const next = !(toggle.classList.contains("on"));
-        toggle.classList.toggle("on", next);
-        toggle.setAttribute("aria-checked", String(next));
-        await data.setUnitOpen(u.id, next);
-        config.openUnits[u.id] = next;
+  // --- פתיחה וסגירה של יחידות - תמיד עבור הקבוצה הפעילה ---
+  const gatesBox = document.createElement("div");
+  wrap.append(gatesBox);
+  function renderGates() {
+    gatesBox.innerHTML = "";
+    const gid = config.activeGroup || null;
+    const gname = groups.find((g) => g.id === gid)?.name;
+    const map = openMapFor(config, gid);
+    const head = document.createElement("section");
+    head.className = "admin-block gates-head";
+    head.innerHTML = `<h2>פתיחה וסגירה של יחידות</h2><p class="group-active">${gid
+      ? `עבור הקבוצה הפעילה: <strong>${esc(gname || "")}</strong>. לכל קבוצה מצב משלה - שינוי כאן לא משפיע על קבוצות אחרות.`
+      : `אין קבוצה פעילה - השינויים חלים על מי שלא שייך לאף קבוצה.`}</p>`;
+    const bulk = document.createElement("div");
+    bulk.className = "admin-bulk";
+    [[true, "פתיחת כל היחידות"], [false, "סגירת כל היחידות"]].forEach(([open, label]) => {
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.textContent = label;
+      btn.addEventListener("click", async () => {
+        if (!confirm(`${open ? "לפתוח" : "לסגור"} את כל ${allIds.length} היחידות${gname ? ` לקבוצה "${gname}"` : ""}?`)) return;
+        btn.disabled = true;
+        try {
+          await data.setAllUnitsOpen(allIds, open, gid);
+          applyOpen(config, gid, Object.fromEntries(allIds.map((id) => [id, open])));
+          gatesBox.querySelectorAll(".switch").forEach((t) => { t.classList.toggle("on", open); t.setAttribute("aria-checked", String(open)); });
+        } catch (err) { alert("הפעולה נכשלה: " + (err.message || err)); }
+        finally { btn.disabled = false; }
       });
-      li.append(toggle);
-      list.append(li);
+      bulk.append(btn);
     });
-    sec.append(list);
-    wrap.append(sec);
-  });
+    head.append(bulk);
+    gatesBox.append(head);
+
+    meetings.forEach((m) => {
+      const sec = document.createElement("section");
+      sec.className = "admin-block";
+      sec.innerHTML = `<h2>${m.subtitle} · ${m.title}</h2>`;
+      const list = document.createElement("ul");
+      list.className = "gate-list";
+      m.units.forEach((u, i) => {
+        const li = document.createElement("li");
+        const on = !!map[u.id];
+        li.innerHTML = `<span class="gate-num">${String(i+1).padStart(2,"0")}</span>
+          <span class="gate-title">${u.title}</span>`;
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "switch" + (on ? " on" : "");
+        toggle.setAttribute("role", "switch");
+        toggle.setAttribute("aria-checked", String(on));
+        toggle.setAttribute("aria-label", `פתיחת ${u.title}`);
+        toggle.innerHTML = `<span class="knob"></span>`;
+        toggle.addEventListener("click", async () => {
+          const next = !(toggle.classList.contains("on"));
+          toggle.classList.toggle("on", next);
+          toggle.setAttribute("aria-checked", String(next));
+          await data.setUnitOpen(u.id, next, gid);
+          applyOpen(config, gid, { [u.id]: next });
+        });
+        li.append(toggle);
+        list.append(li);
+      });
+      sec.append(list);
+      gatesBox.append(sec);
+    });
+  }
+  renderGates();
 
   return wrap;
 }

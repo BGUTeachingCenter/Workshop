@@ -1,6 +1,7 @@
 // Backend מדומה מבוסס localStorage - מדמה את Firebase כדי שנוכל לפתח ולבדוק בלי פרויקט ענן.
 // אותו ממשק בדיוק ימומש ב-backend/firebase.js בשלב 3.
-import { defaultOpenUnits } from "../../content/index.js";
+import { defaultOpenUnits, allUnits } from "../../content/index.js";
+import { applyOpen, startGroup } from "../openmap.js";
 
 const K = {
   user: "wk:currentUser",
@@ -58,17 +59,13 @@ export const data = {
     if (!cfg) { cfg = { openUnits: defaultOpenUnits() }; write(K.config, cfg); }
     return cfg;
   },
-  async setUnitOpen(unitId, open) {
+  async setOpen(changes, groupId) {
     const cfg = await this.getConfig();
-    cfg.openUnits[unitId] = !!open;
-    write(K.config, cfg);
-    return cfg;
-  },
-  async setAllUnitsOpen(unitIds, open) {
-    const cfg = await this.getConfig();
-    unitIds.forEach((id) => { cfg.openUnits[id] = !!open; });
+    applyOpen(cfg, groupId, changes);
     write(K.config, cfg);
   },
+  async setUnitOpen(unitId, open, groupId) { return this.setOpen({ [unitId]: !!open }, groupId); },
+  async setAllUnitsOpen(unitIds, open, groupId) { return this.setOpen(Object.fromEntries(unitIds.map((id) => [id, !!open])), groupId); },
   async listUsers() { return Object.values(read(K.users, {})); },
   async listAdmins() {
     const root = Object.values(read(K.users, {})).filter((u) => u.email.includes("+admin")).map((u) => ({ email: u.email, root: true }));
@@ -86,7 +83,7 @@ export const data = {
     const id = "g" + Date.now().toString(36);
     groups[id] = { id, name, createdAt: Date.now() };
     write(K.groups, groups);
-    if (activate) await this.setActiveGroup(id);
+    if (activate) { const cfg = await this.getConfig(); startGroup(cfg, id, allUnits.map((u) => u.id)); write(K.config, cfg); }
     return id;
   },
   async moveUsersToGroup(uids, gid) {
