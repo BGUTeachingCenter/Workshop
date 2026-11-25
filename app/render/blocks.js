@@ -8,13 +8,16 @@ const el = (tag, cls, html) => {
   return n;
 };
 
-const copyable = (text) => {
+const escHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// html (לא חובה): תצוגה עם הדגשות; ההעתקה תמיד של הטקסט הנקי.
+const copyable = (text, html) => {
   const box = el("div", "codebox");
   const btn = el("button", "copy-btn", "העתקה");
   btn.type = "button";
   const pre = el("pre");
   pre.dir = "auto"; // עברית → RTL, קוד באנגלית → LTR
-  pre.textContent = text;
+  if (html != null) pre.innerHTML = html; else pre.textContent = text;
   btn.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(text);
@@ -40,7 +43,8 @@ const renderers = {
     const n = el("div", "b-reflection");
     if (b.label) n.append(el("span", "b-label", b.label));
     n.append(el("p", "b-prompt", b.prompt));
-    const ta = el("textarea", "b-answer");
+    const ta = el(b.short ? "input" : "textarea", "b-answer" + (b.short ? " short" : ""));
+    if (b.short) ta.type = "text";
     ta.placeholder = b.placeholder || "";
     ta.value = ctx.getAnswer(b.id) || "";
     let t;
@@ -70,13 +74,20 @@ const renderers = {
   prompt: (b, ctx) => {
     const n = el("div", "b-prompt-box");
     n.append(el("span", "b-label", b.label || "פְּרוֹמְפְּט ל־AI"));
-    let code = b.code, filled = 0;
+    // מה שהושלם מסומן בתצוגה (b-fill); מה שעוד חסר מסומן כמקום להשלמה (b-slot).
+    let code = b.code, html = b.fill ? escHtml(b.code) : null, filled = 0;
     Object.entries(b.fill || {}).forEach(([slot, id]) => {
       const ans = String(ctx?.getAnswer?.(id) || "").replace(/\s+/g, " ").trim().replace(/[.。]+$/, "");
-      if (ans && code.includes(slot)) { code = code.split(slot).join(ans); filled++; }
+      if (!code.includes(slot)) return;
+      if (ans) {
+        code = code.split(slot).join(ans); filled++;
+        html = html.split(escHtml(slot)).join(`<mark class="b-fill" title="מה שכתבת קודם">${escHtml(ans)}</mark>`);
+      } else {
+        html = html.split(escHtml(slot)).join(`<span class="b-slot">${escHtml(slot)}</span>`);
+      }
     });
-    n.append(copyable(code));
-    if (filled) n.append(el("p", "b-note b-filled", "✓ השלמנו את הפרומפט ממה שכתבת ביחידות הקודמות. אפשר לערוך אותו אחרי ההעתקה."));
+    n.append(copyable(code, html));
+    if (filled) n.append(el("p", "b-note b-filled", "✓ החלקים המסומנים הם מה שכתבת ביחידות הקודמות. אפשר לערוך אותם אחרי ההעתקה."));
     if (b.note) n.append(el("p", "b-note", b.note));
     return n;
   },
